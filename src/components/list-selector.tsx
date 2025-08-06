@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from 'react';
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -9,8 +7,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SlidersHorizontal } from "lucide-react";
-import Link from 'next/link';
+import { cn } from "@/lib/utils";
 
 const options = [
   { name: 'Positions' },
@@ -20,15 +17,25 @@ const options = [
   { name: 'Alerts' },
 ];
 
-export function ListSelector() {
-  const [isOpen, setIsOpen] = useState(false);
+type ListSelectorProps = {
+  children: React.ReactNode;
+  selected: string;
+  setSelected: (selected: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+};
+
+export function ListSelector({ children, selected, setSelected, isOpen, setIsOpen }: ListSelectorProps) {
+
+  const handleSelect = (optionName: string) => {
+    setSelected(optionName);
+    setIsOpen(false);
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Open list selector">
-          <SlidersHorizontal className="h-6 w-6 text-white" />
-        </Button>
+        {children}
       </SheetTrigger>
       <SheetContent side="bottom" className="bg-[#181818] text-white border-t-0 rounded-t-2xl">
         <SheetHeader className="text-left">
@@ -38,10 +45,19 @@ export function ListSelector() {
           <ul className="space-y-2">
             {options.map((opt) => (
               <li key={opt.name}>
-                <button 
-                  onClick={() => setIsOpen(false)} 
-                  className="w-full text-left py-3 text-xl hover:opacity-80 transition-opacity"
+                <button
+                  onClick={() => handleSelect(opt.name)}
+                  className={cn(
+                    "w-full text-left py-3 text-xl hover:opacity-80 transition-opacity flex items-center gap-4",
+                    selected === opt.name ? "text-accent font-bold" : "text-white"
+                  )}
                 >
+                  <div
+                    className={cn(
+                      "h-2 w-2 rounded-full",
+                      selected === opt.name ? "bg-accent" : ""
+                    )}
+                  />
                   {opt.name}
                 </button>
               </li>
