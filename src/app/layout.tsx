@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import './globals.css';
+import { BottomNav } from '@/components/bottom-nav';
 
 export const metadata: Metadata = {
   title: 'Firebase Studio App',
@@ -18,7 +19,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        <div className="pb-16">{children}</div>
+        <BottomNav />
+      </body>
     </html>
   );
 }
