@@ -70,13 +70,15 @@ export default function ListPage() {
           <Button variant="ghost" size="icon" className="-ml-2 h-auto p-2" aria-label="Open list selector" onClick={() => setIsSidebarOpen(true)}>
             <ChevronLeft className="h-6 w-6 text-white" />
           </Button>
-          <h1 className="text-lg font-bold tracking-tight">
+          <h1 className="text-lg font-bold tracking-tight text-center flex-1">
             {parentKey}
           </h1>
+          {/* Add a spacer to balance the header */}
+          <div className="w-8" />
         </header>
 
         {subOptions.length > 0 && (
-          <div className="flex w-full items-center justify-start gap-4 mb-2" role="tablist">
+          <div className="flex w-full items-center justify-start gap-4 mb-2 overflow-x-auto pb-2" role="tablist">
             {subOptions.map((option) => (
               <Button
                 key={option}
@@ -86,10 +88,10 @@ export default function ListPage() {
                 size="sm"
                 onClick={() => setSelected(option)}
                 className={cn(
-                  "px-1 py-1 text-sm text-white transition-all h-auto rounded-none border-b-2",
+                  "px-1 py-1 text-sm text-white transition-all h-auto rounded-none whitespace-nowrap",
                   selected === option
-                    ? "font-bold border-white"
-                    : "font-normal border-transparent text-neutral-400"
+                    ? "font-bold opacity-100"
+                    : "font-normal text-neutral-400 opacity-60"
                 )}
               >
                 {option}
@@ -103,4 +105,3 @@ export default function ListPage() {
     </main>
   );
 }
-
