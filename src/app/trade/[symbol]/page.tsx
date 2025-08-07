@@ -34,9 +34,8 @@ const chartData: { [key: string]: { time: string, value: number }[] } = {
   // Add more if you want
 };
 
-export default function SymbolPage({ params }: { params: { symbol: string } }) {
-  const { symbol } = params;
-  const data = symbols[symbol] || { name: symbol, price: 0.00 };
+export default function SymbolPage({ params: { symbol } }: { params: { symbol: string } }) {
+  const data = symbols[symbol.toUpperCase()] || { name: symbol.toUpperCase(), price: 0.00 };
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -62,7 +61,7 @@ export default function SymbolPage({ params }: { params: { symbol: string } }) {
     });
 
     // Use dummy data for chart (fallback to AAPL)
-    lineSeries.setData(chartData[symbol] || chartData["AAPL"]);
+    lineSeries.setData(chartData[symbol.toUpperCase() as keyof typeof chartData] || chartData["AAPL"]);
 
     chart.timeScale().fitContent();
 
