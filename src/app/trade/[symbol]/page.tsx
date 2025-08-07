@@ -3,8 +3,8 @@
 
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import React, { useRef, useEffect } from "react";
-import { createChart } from "lightweight-charts";
+import React, { useRef, useEffect, useState } from "react";
+import type { IChartApi, ISeriesApi } from "lightweight-charts";
 import { useParams } from 'next/navigation';
 
 // Dummy data for demonstration
@@ -32,7 +32,21 @@ const chartData: { [key: string]: { time: string, value: number }[] } = {
     { time: '2024-07-04', value: 182.30 },
     { time: '2024-07-05', value: 183.01 },
   ],
-  // Add more if you want
+  VOO: [
+    { time: '2024-07-01', value: 500.00 }, { time: '2024-07-02', value: 501.50 },
+    { time: '2024-07-03', value: 503.25 }, { time: '2024-07-04', value: 502.80 },
+    { time: '2024-07-05', value: 504.23 },
+  ],
+  QQQ: [
+    { time: '2024-07-01', value: 440.10 }, { time: '2024-07-02', value: 442.30 },
+    { time: '2024-07-03', value: 444.80 }, { time: '2024-07-04', value: 443.90 },
+    { time: '2024-07-05', value: 445.20 },
+  ],
+  ARKK: [
+    { time: '2024-07-01', value: 42.50 }, { time: '2024-07-02', value: 42.80 },
+    { time: '2024-07-03', value: 43.00 }, { time: '2024-07-04', value: 42.90 },
+    { time: '2024-07-05', value: 43.12 },
+  ],
 };
 
 export default function SymbolPage() {
@@ -40,49 +54,59 @@ export default function SymbolPage() {
   const symbol = (params.symbol || '') as string;
   const data = symbols[symbol.toUpperCase()] || { name: symbol.toUpperCase(), price: 0.00 };
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<ISeriesApi<'Line'> | null>(null);
 
   useEffect(() => {
     if (!chartContainerRef.current || !symbol) return;
 
-    // Create the chart
-    const chart = createChart(chartContainerRef.current, {
-      width: chartContainerRef.current.clientWidth,
-      height: 220,
-      layout: {
-        background: { type: "solid", color: "#000" },
-        textColor: "#fff",
-      },
-      grid: {
-        vertLines: { color: "#222" },
-        horzLines: { color: "#222" },
-      },
-    });
+    // Dynamically import createChart to ensure it only runs on the client
+    import('lightweight-charts').then(({ createChart }) => {
+      if (!chartContainerRef.current) return;
 
-    const lineSeries = chart.addLineSeries({
-      color: "#fff",
-      lineWidth: 2,
-    });
+      const chart = createChart(chartContainerRef.current, {
+        width: chartContainerRef.current.clientWidth,
+        height: 220,
+        layout: {
+          background: { type: "solid", color: "#000" },
+          textColor: "#fff",
+        },
+        grid: {
+          vertLines: { color: "#222" },
+          horzLines: { color: "#222" },
+        },
+      });
+      chartRef.current = chart;
 
-    // Use dummy data for chart (fallback to AAPL)
-    const seriesData = chartData[symbol.toUpperCase() as keyof typeof chartData] || chartData["AAPL"];
-    if (seriesData) {
-      lineSeries.setData(seriesData);
-    }
-    
-    chart.timeScale().fitContent();
+      const lineSeries = chart.addLineSeries({
+        color: "#fff",
+        lineWidth: 2,
+      });
+      seriesRef.current = lineSeries;
 
-    // Responsive resize
-    const handleResize = () => {
-      if (chartContainerRef.current) {
-        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+      const seriesData = chartData[symbol.toUpperCase() as keyof typeof chartData] || chartData["AAPL"];
+      if (seriesData) {
+        lineSeries.setData(seriesData);
       }
-    };
-    window.addEventListener("resize", handleResize);
+      
+      chart.timeScale().fitContent();
 
-    return () => {
-      chart.remove();
-      window.removeEventListener("resize", handleResize);
-    };
+      const handleResize = () => {
+        if (chartContainerRef.current && chartRef.current) {
+          chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
+        }
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      // Cleanup on component unmount
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        if (chartRef.current) {
+          chartRef.current.remove();
+        }
+      };
+    });
   }, [symbol]);
 
   return (
