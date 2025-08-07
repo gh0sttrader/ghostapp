@@ -21,7 +21,6 @@ export default function TradePage() {
             type="text"
             className="w-full bg-transparent border-none outline-none text-white text-lg placeholder-neutral-500"
             placeholder="Search"
-            disabled
           />
         </header>
 
