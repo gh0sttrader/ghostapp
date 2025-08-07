@@ -25,8 +25,8 @@ export function BottomNav() {
             <Button
               variant="ghost"
               className={cn(
-                "flex-1 flex flex-col h-full w-full justify-center items-center rounded-none text-white hover:bg-neutral-900 hover:text-white",
-                isActive ? 'text-accent' : 'text-white'
+                "flex-1 flex flex-col h-full w-full justify-center items-center rounded-none text-white",
+                isActive ? 'font-bold' : 'font-normal'
               )}
               aria-label={item.name}
               aria-current={isActive ? 'page' : undefined}
