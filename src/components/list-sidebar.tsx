@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -9,9 +10,10 @@ import {
 } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Settings, Plus } from "lucide-react";
+import { Settings, Plus, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
 
 const mainOptions = [
   {
@@ -42,15 +44,22 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
 
   useEffect(() => {
     if (isOpen) {
-      // Logic to collapse sections can be added here if needed,
-      // for now, it remembers the state while open.
     } else {
-      // setOpenSections([]); // Let's keep it open
     }
   }, [isOpen]);
 
   const handleSelect = (optionName: string) => {
     setSelected(optionName);
+    setIsOpen(false);
+  };
+
+  const handleParentSelect = (optionName: string) => {
+    const parent = mainOptions.find(opt => opt.name === optionName);
+    if (parent && parent.subItems) {
+      setSelected(parent.subItems[0]); // Select 'All'
+    } else {
+      setSelected(optionName);
+    }
     setIsOpen(false);
   };
 
@@ -68,9 +77,17 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
-                  <AccordionTrigger className={cn("text-base font-semibold hover:no-underline py-1.5 px-4 rounded-md hover:bg-transparent", selected === opt.name ? "font-bold" : "font-normal")}>
-                    {opt.name}
-                  </AccordionTrigger>
+                  <AccordionPrimitive.Header className="flex items-center justify-between py-1.5 px-4 rounded-md">
+                    <span
+                      onClick={() => handleParentSelect(opt.name)}
+                      className={cn("text-base font-semibold cursor-pointer", selected === opt.name || opt.subItems.includes(selected) ? "font-bold" : "font-normal")}
+                    >
+                      {opt.name}
+                    </span>
+                    <AccordionTrigger className="p-0 [&[data-state=open]>svg]:rotate-180">
+                      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                    </AccordionTrigger>
+                  </AccordionPrimitive.Header>
                   <AccordionContent className="pb-0 pl-6">
                     <ul className="space-y-0.5">
                       {opt.subItems.map(subItem => (
