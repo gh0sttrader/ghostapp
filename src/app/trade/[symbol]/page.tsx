@@ -1,36 +1,34 @@
-
 "use client";
-
-import { ChevronLeft } from 'lucide-react';
-import Link from 'next/link';
-import React, { useRef, useEffect, useState } from "react";
-import type { IChartApi, ISeriesApi } from "lightweight-charts";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
+import React, { useEffect, useRef } from "react";
+import { createChart, LineSeries } from "lightweight-charts";
 import { useParams } from 'next/navigation';
 
-// Dummy data for demonstration
-const symbols: { [key: string]: { name: string, price: number } } = {
+// dummy symbol data
+const symbols: Record<string, { name: string; price: number }> = {
   AAPL: { name: "Apple", price: 218.75 },
   TSLA: { name: "Tesla Inc.", price: 183.01 },
-  VOO: { name: "Vanguard S&P 500 ETF", price: 504.23 },
-  QQQ: { name: "Invesco QQQ Trust", price: 445.20 },
+  VOO:  { name: "Vanguard S&P 500 ETF", price: 504.23 },
+  QQQ:  { name: "Invesco QQQ Trust", price: 445.2 },
   ARKK: { name: "ARK Innovation ETF", price: 43.12 },
 };
 
-// Dummy chart data (timestamps should be in YYYY-MM-DD format)
-const chartData: { [key: string]: { time: string, value: number }[] } = {
+// dummy chart data
+const chartData: Record<string, { time: string; value: number }[]> = {
   AAPL: [
-    { time: '2024-07-01', value: 210.31 },
-    { time: '2024-07-02', value: 213.20 },
-    { time: '2024-07-03', value: 216.02 },
-    { time: '2024-07-04', value: 217.00 },
-    { time: '2024-07-05', value: 218.75 },
+    { time: "2024-07-01", value: 210.31 },
+    { time: "2024-07-02", value: 213.2 },
+    { time: "2024-07-03", value: 216.02 },
+    { time: "2024-07-04", value: 217.0 },
+    { time: "2024-07-05", value: 218.75 },
   ],
   TSLA: [
-    { time: '2024-07-01', value: 178.14 },
-    { time: '2024-07-02', value: 180.00 },
-    { time: '2024-07-03', value: 181.60 },
-    { time: '2024-07-04', value: 182.30 },
-    { time: '2024-07-05', value: 183.01 },
+    { time: "2024-07-01", value: 178.14 },
+    { time: "2024-07-02", value: 180.0 },
+    { time: "2024-07-03", value: 181.6 },
+    { time: "2024-07-04", value: 182.3 },
+    { time: "2024-07-05", value: 183.01 },
   ],
   VOO: [
     { time: '2024-07-01', value: 500.00 }, { time: '2024-07-02', value: 501.50 },
@@ -51,62 +49,41 @@ const chartData: { [key: string]: { time: string, value: number }[] } = {
 
 export default function SymbolPage() {
   const params = useParams();
-  const symbol = (params.symbol || '') as string;
-  const data = symbols[symbol.toUpperCase()] || { name: symbol.toUpperCase(), price: 0.00 };
-  const chartContainerRef = useRef<HTMLDivElement | null>(null);
-  const chartRef = useRef<IChartApi | null>(null);
-  const seriesRef = useRef<ISeriesApi<'Line'> | null>(null);
+  const symbol = ((params.symbol || '') as string).toUpperCase();
+  const data = symbols[symbol] || { name: symbol, price: 0 };
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!chartContainerRef.current || !symbol) return;
+    if (!containerRef.current || !symbol) return;
 
-    // Dynamically import createChart to ensure it only runs on the client
-    import('lightweight-charts').then(({ createChart }) => {
-      if (!chartContainerRef.current) return;
-
-      const chart = createChart(chartContainerRef.current, {
-        width: chartContainerRef.current.clientWidth,
-        height: 220,
-        layout: {
-          background: { type: "solid", color: "#000" },
-          textColor: "#fff",
-        },
-        grid: {
-          vertLines: { color: "#222" },
-          horzLines: { color: "#222" },
-        },
-      });
-      chartRef.current = chart;
-
-      const lineSeries = chart.addLineSeries({
-        color: "#fff",
-        lineWidth: 2,
-      });
-      seriesRef.current = lineSeries;
-
-      const seriesData = chartData[symbol.toUpperCase() as keyof typeof chartData] || chartData["AAPL"];
-      if (seriesData) {
-        lineSeries.setData(seriesData);
-      }
-      
-      chart.timeScale().fitContent();
-
-      const handleResize = () => {
-        if (chartContainerRef.current && chartRef.current) {
-          chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
-        }
-      };
-
-      window.addEventListener("resize", handleResize);
-
-      // Cleanup on component unmount
-      return () => {
-        window.removeEventListener("resize", handleResize);
-        if (chartRef.current) {
-          chartRef.current.remove();
-        }
-      };
+    const chart = createChart(containerRef.current, {
+      width: containerRef.current.clientWidth,
+      height: 220,
+      layout: { background: { type: "solid", color: "#000" }, textColor: "#fff" },
+      grid: { vertLines: { color: "#1a1a1a" }, horzLines: { color: "#1a1a1a" } },
+      rightPriceScale: { borderVisible: false },
+      timeScale: { borderVisible: false },
     });
+
+    const series = chart.addSeries(LineSeries, { color: "#fff", lineWidth: 2 });
+    
+    const seriesData = chartData[symbol] ?? chartData["AAPL"];
+    series.setData(seriesData);
+    
+    chart.timeScale().fitContent();
+
+    const handleResize = () => {
+      if (containerRef.current) {
+        chart.applyOptions({ width: containerRef.current.clientWidth });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
   }, [symbol]);
 
   return (
@@ -120,18 +97,12 @@ export default function SymbolPage() {
 
         <div className="flex flex-col mt-2">
           <h1 className="text-white text-2xl font-bold mb-1">{data.name}</h1>
-          <p className="text-white text-4xl font-semibold">${data.price.toFixed(2)}</p>
+          <p className="text-white text-4xl font-semibold">
+            ${data.price.toFixed(2)}
+          </p>
         </div>
 
-        {/* Chart */}
-        <div
-          ref={chartContainerRef}
-          style={{
-            width: "100%",
-            height: "220px",
-            marginTop: "1.5rem",
-          }}
-        />
+        <div ref={containerRef} className="w-full h-[220px] mt-6" />
       </div>
     </main>
   );
