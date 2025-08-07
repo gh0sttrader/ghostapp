@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 const mainOptions = [
   {
     name: 'Positions',
-    subItems: ['Account 1', 'Account 2'],
+    subItems: ['Taxable', 'Roth'],
   },
   {
     name: 'Watchlists',
