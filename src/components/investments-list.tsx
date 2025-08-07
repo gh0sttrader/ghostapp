@@ -58,12 +58,12 @@ export function InvestmentsList() {
              <ChevronDown className="h-4 w-4 text-neutral-400" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-neutral-900 border-neutral-700 text-white w-40">
+        <DropdownMenuContent className="bg-transparent backdrop-blur-xl border-neutral-700/50 text-white w-40">
           {filterOptions.map((filter) => (
             <DropdownMenuItem
               key={filter}
               onClick={() => setSelectedFilter(filter)}
-              className={cn("focus:bg-neutral-800 focus:text-white", selectedFilter === filter ? 'font-bold' : 'font-normal')}
+              className={cn("focus:bg-white/10 focus:text-white", selectedFilter === filter ? 'font-bold' : 'font-normal')}
             >
               {filter}
             </DropdownMenuItem>
