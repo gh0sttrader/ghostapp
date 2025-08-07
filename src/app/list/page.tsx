@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { ListSidebar } from '@/components/list-sidebar';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PositionsList } from '@/components/positions-list';
 
 export default function ListPage() {
-  const [selected, setSelected] = useState('Positions');
+  const [selected, setSelected] = useState('Taxable');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -26,9 +27,13 @@ export default function ListPage() {
             {selected}
           </h1>
         </header>
-        <div className="text-center text-muted-foreground py-20">
-          <p>Your {selected.toLowerCase()} will appear here.</p>
-        </div>
+        {(selected === 'Taxable' || selected === 'Roth') ? (
+          <PositionsList account={selected} />
+        ) : (
+          <div className="text-center text-muted-foreground py-20">
+            <p>Your {selected.toLowerCase()} will appear here.</p>
+          </div>
+        )}
       </div>
     </main>
   );
