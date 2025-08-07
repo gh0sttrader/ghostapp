@@ -12,6 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Settings, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 const mainOptions = [
   {
@@ -38,6 +39,13 @@ type ListSidebarProps = {
 };
 
 export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSidebarProps) {
+  const [openSections, setOpenSections] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setOpenSections([]);
+    }
+  }, [isOpen]);
 
   const handleSelect = (optionName: string) => {
     setSelected(optionName);
@@ -54,7 +62,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-2">
-          <Accordion type="multiple" className="w-full" defaultValue={['Positions', 'Watchlists', 'Screeners']}>
+          <Accordion type="multiple" className="w-full" value={openSections} onValueChange={setOpenSections}>
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
