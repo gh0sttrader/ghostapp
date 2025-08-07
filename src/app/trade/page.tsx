@@ -2,6 +2,7 @@
 "use client";
 
 import { Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const RECENT_SEARCHES = [
   { symbol: 'AAPL', name: 'Apple Inc.' },
@@ -12,15 +13,22 @@ const RECENT_SEARCHES = [
 ];
 
 export default function TradePage() {
+  const router = useRouter();
+
+  const handleSearchClick = (symbol: string) => {
+    router.push(`/trade/${symbol}`);
+  };
+
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
       <div className="w-full max-w-md px-4 py-3 sm:px-6 mx-auto">
         <header className="flex items-center py-4">
           <Search className="text-neutral-400 w-5 h-5 mr-3" />
           <input
-            type="text"
+            type="search"
             className="w-full bg-transparent border-none outline-none text-white text-lg placeholder-neutral-500"
             placeholder="Search"
+            autoFocus={false}
           />
         </header>
 
@@ -30,7 +38,11 @@ export default function TradePage() {
           </h2>
           <div className="flex flex-col">
             {RECENT_SEARCHES.map((item) => (
-              <button key={item.symbol} className="text-left py-2.5 border-b border-neutral-800/50 flex flex-col">
+              <button
+                key={item.symbol}
+                className="text-left py-2.5 border-b border-neutral-800/50 flex flex-col"
+                onClick={() => handleSearchClick(item.symbol)}
+              >
                 <span className="text-white font-semibold text-sm">{item.symbol}</span>
                 <span className="text-neutral-400 text-xs">{item.name}</span>
               </button>
