@@ -17,7 +17,7 @@ type Investment = {
 
 function InvestmentRow({ item }: { item: Investment }) {
   return (
-    <div className="flex flex-row items-center py-2 border-b border-neutral-800">
+    <div className="flex flex-row items-center py-2">
       <div className="flex-1">
         <p className="text-white text-sm font-semibold">{item.ticker}</p>
         <p className="text-neutral-400 text-xs">{item.name}</p>
@@ -31,7 +31,7 @@ function InvestmentRow({ item }: { item: Investment }) {
 
 export function InvestmentsList() {
   return (
-    <section className="mt-6">
+    <section className="mt-8">
       <h2 className="text-sm font-bold text-white mb-2">Investments</h2>
       <div>
         {investments.map((item, idx) => (
