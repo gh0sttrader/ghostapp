@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PositionsList } from '@/components/positions-list';
 import { Watchlist } from '@/components/watchlist';
 import { ScreenerList } from '@/components/screener-list';
+import { NewsList } from '@/components/news-list';
 
 export default function ListPage() {
   const [selected, setSelected] = useState('Taxable');
@@ -35,6 +36,8 @@ export default function ListPage() {
           <Watchlist type={selected} />
         ) : (selected === 'Top Gainers' || selected === 'Top Losers') ? (
           <ScreenerList type={selected} />
+        ) : selected === 'News' ? (
+          <NewsList />
         ) : (
           <div className="text-center text-muted-foreground py-20">
             <p>Your {selected.toLowerCase()} will appear here.</p>
