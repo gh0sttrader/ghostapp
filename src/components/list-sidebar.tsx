@@ -3,6 +3,9 @@
 import {
   Sheet,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -40,9 +43,12 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetContent side="left" className="bg-[#181818] text-white w-[75%] max-w-sm p-0 border-r-0 rounded-r-3xl flex flex-col">
-        <div className="p-6 pt-10">
-          <h2 className="text-2xl font-bold mb-6">My Lists</h2>
-        </div>
+        <SheetHeader className="p-6 pt-10 text-left">
+          <SheetTitle className="text-2xl font-bold mb-6 text-white">My Lists</SheetTitle>
+          <SheetDescription className="sr-only">
+            A list of sections to navigate to, including positions, watchlists, screeners, news, and alerts.
+          </SheetDescription>
+        </SheetHeader>
         <div className="flex-1 overflow-y-auto px-2">
           <Accordion type="multiple" className="w-full">
             {mainOptions.map((opt) => (
