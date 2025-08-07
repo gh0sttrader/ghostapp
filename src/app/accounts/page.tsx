@@ -12,6 +12,7 @@ import { ChevronDown } from 'lucide-react';
 import { AccountSwitcher } from '@/components/account-switcher';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { InvestmentsList } from '@/components/investments-list';
 
 const chartData = {
   '1D': [
@@ -148,6 +149,8 @@ export default function AccountsPage() {
             </Button>
           ))}
         </div>
+
+        <InvestmentsList />
 
         <AccountSwitcher
           isOpen={isSheetOpen}
