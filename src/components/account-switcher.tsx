@@ -29,7 +29,7 @@ export function AccountSwitcher({ isOpen, setIsOpen, selectedAccount, setSelecte
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="bottom" className="bg-card/80 text-white border-t-0 rounded-t-2xl h-auto backdrop-blur-xl">
+      <SheetContent side="bottom" className="bg-transparent text-white border-0 rounded-t-2xl h-auto backdrop-blur-2xl">
         <SheetHeader className="text-left mb-2">
           <SheetTitle className="text-base font-semibold text-center">Select Account</SheetTitle>
           <SheetDescription className="sr-only">
@@ -44,7 +44,7 @@ export function AccountSwitcher({ isOpen, setIsOpen, selectedAccount, setSelecte
               onClick={() => handleSelect(account)}
               className="w-full flex justify-between items-center py-4 text-base"
             >
-              <span className={cn(selectedAccount === account ? "font-bold" : "font-normal")}>
+              <span className={cn("text-white", selectedAccount === account ? "font-bold" : "font-normal")}>
                 {account}
               </span>
               {selectedAccount === account && <Check className="h-4 w-4 text-accent" />}
