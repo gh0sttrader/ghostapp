@@ -46,7 +46,7 @@ export function BottomNav() {
               aria-current={isActive ? 'page' : undefined}
             >
               <item.icon className="h-6 w-6" />
-              <span className="text-xs mt-0.5">{item.name}</span>
+              <span className="text-xs mt-[1px]">{item.name}</span>
             </Button>
           </Link>
         );
