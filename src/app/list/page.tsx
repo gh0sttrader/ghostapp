@@ -11,7 +11,7 @@ import { NewsList } from '@/components/news-list';
 import { AlertsList } from '@/components/alerts-list';
 
 export default function ListPage() {
-  const [selected, setSelected] = useState('Taxable');
+  const [selected, setSelected] = useState('All');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -31,8 +31,8 @@ export default function ListPage() {
             {selected}
           </h1>
         </header>
-        {(selected === 'Taxable' || selected === 'Roth') ? (
-          <PositionsList account={selected} />
+        {(selected === 'All' || selected === 'Taxable' || selected === 'Roth') ? (
+          <PositionsList account={selected as 'All' | 'Taxable' | 'Roth'} />
         ) : (selected === 'Short' || selected === 'Long') ? (
           <Watchlist type={selected} />
         ) : (selected === 'Top Gainers' || selected === 'Top Losers') ? (

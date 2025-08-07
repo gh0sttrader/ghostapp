@@ -39,7 +39,22 @@ function PositionRow({ item }: { item: Position }) {
   );
 }
 
-export function PositionsList({ account }: { account: "Taxable" | "Roth" }) {
+export function PositionsList({ account }: { account: "All" | "Taxable" | "Roth" }) {
+  if (account === 'All') {
+    return (
+      <div>
+        <h3 className="text-neutral-400 text-xs font-semibold mt-4 mb-1">Taxable</h3>
+        {taxable.map((item, idx) => (
+          <PositionRow item={item} key={`taxable-${idx}`} />
+        ))}
+        <h3 className="text-neutral-400 text-xs font-semibold mt-4 mb-1">Roth</h3>
+        {roth.map((item, idx) => (
+          <PositionRow item={item} key={`roth-${idx}`} />
+        ))}
+      </div>
+    );
+  }
+
   const data = account === "Taxable" ? taxable : roth;
   return (
     <div>
