@@ -2,13 +2,12 @@
 "use client";
 
 import { useState } from 'react';
-import { Area, AreaChart, Tooltip, YAxis } from 'recharts';
+import { Area, AreaChart, Tooltip } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChevronDown } from 'lucide-react';
 import { AccountSwitcher } from '@/components/account-switcher';
 import { Button } from '@/components/ui/button';
@@ -84,25 +83,6 @@ export default function AccountsPage() {
               <Area dataKey="value" type="monotone" fill="url(#fillValue)" stroke="var(--color-value)" strokeWidth={2} dot={false} />
             </AreaChart>
           </ChartContainer>
-        </section>
-
-        <section className="space-y-4">
-            <Card className="bg-card border-none rounded-xl">
-                <CardHeader>
-                    <CardTitle className="text-base font-semibold">Buying Power</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-lg font-bold">$5,000.00</p>
-                </CardContent>
-            </Card>
-             <Card className="bg-card border-none rounded-xl">
-                <CardHeader>
-                    <CardTitle className="text-base font-semibold">Cash</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-lg font-bold">$1,234.56</p>
-                </CardContent>
-            </Card>
         </section>
 
         <AccountSwitcher
