@@ -31,7 +31,7 @@ export function BottomNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-16 bg-black border-t border-neutral-800 flex justify-around items-center px-2 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 h-16 bg-black flex justify-around items-center px-2 z-50">
       {navItems.map((item) => {
         const isActive = currentPath.startsWith(item.href);
         return (
@@ -39,14 +39,14 @@ export function BottomNav() {
             <Button
               variant="ghost"
               className={cn(
-                "flex-1 flex flex-col h-full w-full justify-center items-center rounded-none text-white",
-                isActive ? 'font-bold' : 'font-normal text-neutral-400'
+                "flex-1 flex flex-col h-full w-full justify-center items-center rounded-none",
+                isActive ? 'text-white' : 'text-neutral-400'
               )}
               aria-label={item.name}
               aria-current={isActive ? 'page' : undefined}
             >
               <item.icon className="h-6 w-6" />
-              <span className="text-xs">{item.name}</span>
+              <span className="text-xs font-bold mt-0">{item.name}</span>
             </Button>
           </Link>
         );
