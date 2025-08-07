@@ -77,16 +77,18 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
-                  <AccordionPrimitive.Header className="flex items-center justify-between py-1.5 px-4 rounded-md">
-                    <span
-                      onClick={() => handleParentSelect(opt.name)}
-                      className={cn("text-base font-semibold cursor-pointer", selected === opt.name || opt.subItems.includes(selected) ? "font-bold" : "font-normal")}
-                    >
-                      {opt.name}
-                    </span>
-                    <AccordionTrigger className="p-0 [&[data-state=open]>svg]:rotate-180">
-                      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                    </AccordionTrigger>
+                  <AccordionPrimitive.Header className="flex">
+                    <div className="flex items-center justify-between py-1.5 px-4 rounded-md w-full">
+                      <span
+                        onClick={() => handleParentSelect(opt.name)}
+                        className={cn("text-base font-semibold cursor-pointer", selected === opt.name || opt.subItems.includes(selected) ? "font-bold" : "font-normal")}
+                      >
+                        {opt.name}
+                      </span>
+                      <AccordionTrigger className="p-0 [&[data-state=open]>svg]:rotate-180">
+                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                      </AccordionTrigger>
+                    </div>
                   </AccordionPrimitive.Header>
                   <AccordionContent className="pb-0 pl-6">
                     <ul className="space-y-0.5">
