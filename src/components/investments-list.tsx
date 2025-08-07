@@ -54,7 +54,7 @@ export function InvestmentsList() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="flex items-center gap-1 p-0 h-auto mb-2 focus-visible:ring-0 focus-visible:ring-offset-0">
-             <h2 className="text-sm font-bold text-white">{selectedFilter === 'All' ? 'Investments' : `Investments · ${selectedFilter}`}</h2>
+             <h2 className="text-sm font-bold text-white">Investments</h2>
              <ChevronDown className="h-4 w-4 text-neutral-400" />
           </Button>
         </DropdownMenuTrigger>
