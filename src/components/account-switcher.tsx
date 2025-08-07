@@ -29,7 +29,7 @@ export function AccountSwitcher({ isOpen, setIsOpen, selectedAccount, setSelecte
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="bottom" className="bg-card text-white border-t-0 rounded-t-2xl h-auto">
+      <SheetContent side="bottom" className="bg-card/80 text-white border-t-0 rounded-t-2xl h-auto backdrop-blur-xl">
         <SheetHeader className="text-left mb-2">
           <SheetTitle className="text-base font-semibold text-center">Select Account</SheetTitle>
           <SheetDescription className="sr-only">
