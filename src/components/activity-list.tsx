@@ -1,9 +1,10 @@
-
 "use client";
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 const activityData = [
   { type: 'Buy', symbol: 'IYW', amount: -200.00, date: '08/06/25' },
@@ -23,9 +24,6 @@ type Activity = {
 
 function ActivityRow({ item }: { item: Activity }) {
   const isOutflow = item.amount < 0;
-  // In the prompt, positive amounts are green (accent) and negative are red (destructive)
-  // But sell and withdrawal are positive amounts but should probably not be green.
-  // For now, sticking to the prompt's logic.
   const amountColor = item.amount > 0 ? "text-accent" : "text-destructive";
 
   return (
@@ -55,27 +53,25 @@ export function ActivityList() {
 
   return (
     <section className="mt-8">
-      <h2 className="text-sm font-bold text-white mb-2">Activity</h2>
-
-      <div className="flex w-full items-center justify-start gap-4 mb-2 -ml-3" role="tablist">
-        {filterOptions.map((filter) => (
-          <Button
-            key={filter}
-            variant="ghost"
-            role="tab"
-            aria-selected={selectedFilter === filter}
-            size="sm"
-            onClick={() => setSelectedFilter(filter)}
-            className={cn(
-              "rounded-none px-3 py-1 text-xs text-white transition-colors h-auto underline-offset-4",
-              selectedFilter === filter ? 'font-bold underline' : 'font-normal'
-            )}
-            data-state={selectedFilter === filter ? 'active' : 'inactive'}
-          >
-            {filter}
+       <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+           <Button variant="ghost" className="flex items-center gap-1 p-0 h-auto mb-2 focus-visible:ring-0 focus-visible:ring-offset-0">
+             <h2 className="text-sm font-bold text-white">{selectedFilter === 'All' ? 'Activity' : `Activity · ${selectedFilter}`}</h2>
+             <ChevronDown className="h-4 w-4 text-neutral-400" />
           </Button>
-        ))}
-      </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-neutral-900 border-neutral-700 text-white w-40">
+          {filterOptions.map((filter) => (
+            <DropdownMenuItem
+              key={filter}
+              onClick={() => setSelectedFilter(filter)}
+              className={cn("focus:bg-neutral-800 focus:text-white", selectedFilter === filter ? 'font-bold' : 'font-normal')}
+            >
+              {filter}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <div>
         {filteredActivity.map((item, idx) => (
