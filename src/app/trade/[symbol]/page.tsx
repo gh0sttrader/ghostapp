@@ -1,42 +1,11 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+
+import React, { useEffect, useRef, useState, use } from "react";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { createChart, LineSeries, IChartApi, ISeriesApi } from "lightweight-charts";
 
-// Dummy data sets
-const seriesesData = new Map<string, { time: string; value: number }[]>([
-  ["1D", [
-    { time: '2025-07-01', value: 212 },
-    { time: '2025-07-02', value: 216 },
-    { time: '2025-07-03', value: 217 },
-    { time: '2025-07-04', value: 218.75 },
-  ]],
-  ["1W", [
-    { time: '2025-07-01', value: 200 },
-    { time: '2025-07-02', value: 205 },
-    { time: '2025-07-03', value: 210 },
-    { time: '2025-07-04', value: 218.75 },
-  ]],
-  ["1M", [
-    { time: '2025-06-01', value: 180 },
-    { time: '2025-06-15', value: 200 },
-    { time: '2025-07-01', value: 218.75 },
-  ]],
-  ["1Y", [
-    { time: '2024-07-01', value: 140 },
-    { time: '2025-01-01', value: 180 },
-    { time: '2025-07-01', value: 218.75 },
-  ]],
-]);
-
-const intervalColors: Record<string, string> = {
-  "1D": "#2962FF",
-  "1W": "#E1575A",
-  "1M": "#F28E2C",
-  "1Y": "#A459D1",
-};
-
+// Dummy symbol data
 const symbols: { [key: string]: { name: string; price: number } } = {
   AAPL: { name: "Apple", price: 218.75 },
   TSLA: { name: "Tesla Inc.", price: 183.01 },
@@ -45,62 +14,122 @@ const symbols: { [key: string]: { name: string; price: number } } = {
   ARKK: { name: "ARK Innovation ETF", price: 43.12 },
 };
 
-export default function SymbolPage({ params }: { params: { symbol: string } }) {
-  const { symbol } = params;
+// Dummy chart data for timeframes
+const seriesesData = new Map([
+  [
+    "1D",
+    [
+      { time: "2024-07-03", value: 210 },
+      { time: "2024-07-02", value: 215 },
+      { time: "2024-07-01", value: 218.75 },
+    ],
+  ],
+  [
+    "1W",
+    [
+      { time: "2024-07-03", value: 218.75 },
+      { time: "2024-07-02", value: 215 },
+      { time: "2024-07-01", value: 210 },
+      { time: "2024-06-28", value: 200 },
+    ],
+  ],
+  [
+    "1M",
+    [
+      { time: "2024-07-03", value: 218.75 },
+      { time: "2024-06-20", value: 210 },
+      { time: "2024-06-10", value: 200 },
+      { time: "2024-06-01", value: 190 },
+    ],
+  ],
+  [
+    "1Y",
+    [
+      { time: "2024-07-03", value: 218.75 },
+      { time: "2024-01-01", value: 200 },
+      { time: "2023-10-01", value: 170 },
+      { time: "2023-07-01", value: 150 },
+    ],
+  ],
+]);
+
+// Colors for each interval
+const intervalColors: Record<string, string> = {
+  "1D": "#ffffff",
+  "1W": "#4ade80",
+  "1M": "#60a5fa",
+  "1Y": "#facc15",
+};
+
+export default function SymbolPage({
+  params,
+}: {
+  params: Promise<{ symbol: string }>;
+}) {
+  const { symbol } = use(params);
   const data = symbols[symbol] || { name: symbol, price: 0.0 };
-  
+
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
-  const [activeInterval, setActiveInterval] = useState("1D");
+
+  const [currentInterval, setCurrentInterval] = useState("1D");
 
   useEffect(() => {
-    if (chartContainerRef.current) {
-      chartRef.current = createChart(chartContainerRef.current, {
-        layout: {
-          textColor: "white",
-          background: { type: "solid", color: "black" },
-        },
-        width: chartContainerRef.current.clientWidth,
-        height: 300,
-        grid: {
-          vertLines: { color: "#222" },
-          horzLines: { color: "#222" },
-        },
-        rightPriceScale: { borderVisible: false },
-        timeScale: { borderVisible: false },
+    if (!chartContainerRef.current) return;
+
+    // Create chart
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: "solid", color: "black" },
+        textColor: "white",
+      },
+      width: chartContainerRef.current.clientWidth,
+      height: 300,
+      grid: {
+        vertLines: { color: "#222" },
+        horzLines: { color: "#222" },
+      },
+      rightPriceScale: { borderVisible: false },
+      timeScale: { borderVisible: false },
+    });
+
+    // Add line series
+    const lineSeries = chart.addSeries(LineSeries, {
+      color: intervalColors[currentInterval],
+      lineWidth: 2,
+    });
+
+    lineSeries.setData(seriesesData.get(currentInterval) || []);
+    chart.timeScale().fitContent();
+
+    chartRef.current = chart;
+    lineSeriesRef.current = lineSeries;
+
+    // Resize on window change
+    const handleResize = () => {
+      chart.applyOptions({
+        width: chartContainerRef.current?.clientWidth || 0,
       });
+    };
+    window.addEventListener("resize", handleResize);
 
-      lineSeriesRef.current = chartRef.current.addSeries(LineSeries, {
-        color: intervalColors[activeInterval],
-        lineWidth: 2,
-      });
-
-      setChartInterval(activeInterval);
-
-      const handleResize = () => {
-        if (chartRef.current && chartContainerRef.current) {
-          chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
-        }
-      };
-
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        chartRef.current?.remove();
-      }
-    }
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
   }, []);
 
-  function setChartInterval(interval: string) {
+  // Update chart when timeframe changes
+  useEffect(() => {
     if (lineSeriesRef.current && chartRef.current) {
-      lineSeriesRef.current.setData(seriesesData.get(interval) || []);
-      lineSeriesRef.current.applyOptions({ color: intervalColors[interval] });
+      lineSeriesRef.current.setData(seriesesData.get(currentInterval) || []);
+      lineSeriesRef.current.applyOptions({
+        color: intervalColors[currentInterval],
+      });
       chartRef.current.timeScale().fitContent();
-      setActiveInterval(interval);
     }
-  }
+  }, [currentInterval]);
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
@@ -111,20 +140,25 @@ export default function SymbolPage({ params }: { params: { symbol: string } }) {
           </Link>
         </header>
 
+        {/* Symbol Name & Price */}
         <div className="flex flex-col mt-2">
           <h1 className="text-white text-2xl font-bold mb-1">{data.name}</h1>
-          <p className="text-white text-4xl font-semibold">${data.price.toFixed(2)}</p>
+          <p className="text-white text-4xl font-semibold">
+            ${data.price.toFixed(2)}
+          </p>
         </div>
-
-        {/* Time Range Buttons */}
+        
+        {/* Timeframe Buttons */}
         <div className="flex justify-center gap-2 mt-4">
           {["1D", "1W", "1M", "1Y"].map((interval) => (
             <button
               key={interval}
-              onClick={() => setChartInterval(interval)}
               className={`px-3 py-1 rounded-full border ${
-                activeInterval === interval ? "bg-white text-black" : "bg-transparent text-white"
+                currentInterval === interval
+                  ? "bg-white text-black border-white"
+                  : "bg-transparent text-white border-neutral-700"
               }`}
+              onClick={() => setCurrentInterval(interval)}
             >
               {interval}
             </button>
@@ -133,6 +167,7 @@ export default function SymbolPage({ params }: { params: { symbol: string } }) {
 
         {/* Chart */}
         <div ref={chartContainerRef} className="mt-4 w-full h-[300px]" />
+
       </div>
     </main>
   );
