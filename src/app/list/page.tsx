@@ -6,7 +6,7 @@ import { ListSidebar } from '@/components/list-sidebar';
 import { ChevronLeft, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PositionsList } from '@/components/positions-list';
-import { Watchlist } from '@/components/watchlist';
+import { Watchlist, watchlistsData } from '@/components/watchlist';
 import { ScreenerList } from '@/components/screener-list';
 import { NewsList } from '@/components/news-list';
 import { AlertsList } from '@/components/alerts-list';
@@ -99,12 +99,12 @@ export default function ListPage() {
           </div>
         )}
 
-        <div className="flex-1">
+        <div className="flex-1 pb-20">
           {renderContent()}
         </div>
 
         {parentKey === 'Watchlists' && (
-          <div className="w-full flex justify-center items-center py-4">
+          <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 w-full flex justify-center">
             <Button
               variant="ghost"
               className="flex items-center gap-2 text-white font-semibold text-base"
