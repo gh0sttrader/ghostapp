@@ -5,6 +5,7 @@ import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import React, { useRef, useEffect } from "react";
 import { createChart } from "lightweight-charts";
+import { useParams } from 'next/navigation';
 
 // Dummy data for demonstration
 const symbols: { [key: string]: { name: string, price: number } } = {
@@ -34,12 +35,14 @@ const chartData: { [key: string]: { time: string, value: number }[] } = {
   // Add more if you want
 };
 
-export default function SymbolPage({ params: { symbol } }: { params: { symbol: string } }) {
+export default function SymbolPage() {
+  const params = useParams();
+  const symbol = (params.symbol || '') as string;
   const data = symbols[symbol.toUpperCase()] || { name: symbol.toUpperCase(), price: 0.00 };
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!chartContainerRef.current) return;
+    if (!chartContainerRef.current || !symbol) return;
 
     // Create the chart
     const chart = createChart(chartContainerRef.current, {
@@ -61,8 +64,11 @@ export default function SymbolPage({ params: { symbol } }: { params: { symbol: s
     });
 
     // Use dummy data for chart (fallback to AAPL)
-    lineSeries.setData(chartData[symbol.toUpperCase() as keyof typeof chartData] || chartData["AAPL"]);
-
+    const seriesData = chartData[symbol.toUpperCase() as keyof typeof chartData] || chartData["AAPL"];
+    if (seriesData) {
+      lineSeries.setData(seriesData);
+    }
+    
     chart.timeScale().fitContent();
 
     // Responsive resize
