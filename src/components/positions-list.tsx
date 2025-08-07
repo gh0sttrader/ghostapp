@@ -24,7 +24,7 @@ type Position = {
 function PositionRow({ item }: { item: Position }) {
   const isUp = item.change >= 0;
   return (
-    <div className="flex flex-row items-center py-3 border-b border-neutral-800">
+    <div className="flex flex-row items-center py-2 border-b border-neutral-800">
       <div className="flex-1">
         <p className="text-white text-base font-semibold">{item.ticker}</p>
         <p className="text-neutral-400 text-xs">{item.name}</p>
