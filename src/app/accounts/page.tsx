@@ -2,11 +2,9 @@
 "use client";
 
 import { useState } from 'react';
-import { Area, AreaChart, Tooltip } from 'recharts';
+import { Line, LineChart } from 'recharts';
 import {
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from '@/components/ui/chart';
 import { ChevronDown } from 'lucide-react';
 import { AccountSwitcher } from '@/components/account-switcher';
@@ -71,7 +69,7 @@ const returnsData = {
 const chartConfig = {
   value: {
     label: 'Balance',
-    color: 'hsl(var(--accent))',
+    color: '#ffffff',
   },
 };
 
@@ -106,28 +104,11 @@ export default function AccountsPage() {
           </div>
         </section>
 
-        <section className="mb-2">
+        <section className="mb-2 bg-black rounded-lg">
           <ChartContainer config={chartConfig} className="aspect-video h-[120px] w-full">
-            <AreaChart accessibilityLayer data={chartData[activeTimeframe as keyof typeof chartData]} margin={{ left: 0, right: 0, top: 10, bottom: 0 }}>
-               <defs>
-                  <linearGradient id="fillValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-value)" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="var(--color-value)" stopOpacity={0.1} />
-                  </linearGradient>
-                </defs>
-              <Tooltip
-                cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: "3 3" }}
-                content={
-                  <ChartTooltipContent
-                    indicator="dot"
-                    className="bg-card border-border"
-                    labelClassName="font-bold"
-                    formatter={(value) => typeof value === 'number' ? `$${value.toLocaleString()}` : ''}
-                  />
-                }
-              />
-              <Area dataKey="value" type="monotone" fill="url(#fillValue)" stroke="var(--color-value)" strokeWidth={2} dot={false} />
-            </AreaChart>
+            <LineChart accessibilityLayer data={chartData[activeTimeframe as keyof typeof chartData]} margin={{ top: 10, bottom: 0, left: 5, right: 5 }}>
+              <Line dataKey="value" type="monotone" stroke="var(--color-value)" strokeWidth={2} dot={false} />
+            </LineChart>
           </ChartContainer>
         </section>
 
