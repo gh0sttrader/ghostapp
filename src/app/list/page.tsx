@@ -6,6 +6,7 @@ import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PositionsList } from '@/components/positions-list';
 import { Watchlist } from '@/components/watchlist';
+import { ScreenerList } from '@/components/screener-list';
 
 export default function ListPage() {
   const [selected, setSelected] = useState('Taxable');
@@ -32,6 +33,8 @@ export default function ListPage() {
           <PositionsList account={selected} />
         ) : (selected === 'Short' || selected === 'Long') ? (
           <Watchlist type={selected} />
+        ) : (selected === 'Top Gainers' || selected === 'Top Losers') ? (
+          <ScreenerList type={selected} />
         ) : (
           <div className="text-center text-muted-foreground py-20">
             <p>Your {selected.toLowerCase()} will appear here.</p>
