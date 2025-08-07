@@ -46,7 +46,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="left" className="bg-[#181818]/80 text-white w-[75%] max-w-sm p-0 border-r-0 rounded-r-3xl flex flex-col backdrop-blur-md">
+      <SheetContent side="left" className="bg-transparent text-white w-[75%] max-w-sm p-0 border-r-0 rounded-r-3xl flex flex-col backdrop-blur-xl">
         <SheetHeader className="p-6 pt-10 text-left">
           <SheetTitle className="text-2xl font-bold mb-6 text-white">My Lists</SheetTitle>
           <SheetDescription className="sr-only">
@@ -54,7 +54,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-2">
-          <Accordion type="multiple" className="w-full">
+          <Accordion type="multiple" className="w-full" defaultValue={['Positions', 'Watchlists', 'Screeners']}>
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
@@ -95,7 +95,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
             ))}
           </Accordion>
         </div>
-        <div className="p-6 mt-auto border-t border-neutral-800">
+        <div className="p-6 mt-auto border-t border-neutral-800/50">
             <div className="flex justify-around items-center">
                  <Button variant="ghost" className="flex flex-col h-auto items-center text-white hover:text-accent">
                     <Settings className="h-6 w-6 mb-1" />
