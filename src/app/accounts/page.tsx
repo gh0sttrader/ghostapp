@@ -56,6 +56,16 @@ const chartData = {
   ],
 };
 
+const returnsData = {
+  '1D':  { amount: 14.22, percent: 0.14, isPositive: true },
+  '1W':  { amount: 52.10, percent: 0.52, isPositive: true },
+  '1M':  { amount: -120.88, percent: -1.20, isPositive: false },
+  '3M':  { amount: 400.32, percent: 4.35, isPositive: true },
+  'YTD': { amount: 550.00, percent: 6.10, isPositive: true },
+  '1Y':  { amount: 982.45, percent: 11.10, isPositive: true },
+  'Max': { amount: 1800.50, percent: 20.01, isPositive: true },
+};
+
 const chartConfig = {
   value: {
     label: 'Balance',
@@ -69,7 +79,7 @@ export default function AccountsPage() {
   const [selectedAccount, setSelectedAccount] = useState('Taxable');
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [activeTimeframe, setActiveTimeframe] = useState('1D');
-  const isPositive = true; // dummy value
+  const currentReturn = returnsData[activeTimeframe as keyof typeof returnsData];
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
@@ -88,11 +98,8 @@ export default function AccountsPage() {
         <section className="mb-2">
           <p className="text-2xl font-bold">$10,182.17</p>
           <div className="flex gap-4 text-xs">
-             <p className={isPositive ? "text-accent" : "text-destructive"}>
-              +$14.22 (+0.14%) Today
-            </p>
-            <p className={isPositive ? "text-accent" : "text-destructive"}>
-              +$2.01 (+0.02%) Overnight
+             <p className={cn("text-xs", currentReturn.isPositive ? "text-accent" : "text-destructive")}>
+              {currentReturn.isPositive ? '+' : ''}${currentReturn.amount.toFixed(2)} ({currentReturn.isPositive ? '+' : ''}{currentReturn.percent.toFixed(2)}%) {activeTimeframe}
             </p>
           </div>
         </section>
