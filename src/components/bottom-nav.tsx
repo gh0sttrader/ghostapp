@@ -1,3 +1,4 @@
+
 "use client";
 
 import { List, User, ArrowRightLeft, LineChart, Menu } from 'lucide-react';
@@ -20,7 +21,7 @@ export function BottomNav() {
     { name: 'List', href: '/list', icon: List },
     { name: 'Accounts', href: '/accounts', icon: User },
     { name: 'Trade', href: '/trade', icon: ArrowRightLeft },
-    { name: 'Performance', href: '/performance', icon: LineChart },
+    { name: 'Stats', href: '/performance', icon: LineChart },
     { name: 'Menu', href: '/menu', icon: Menu },
   ];
 
@@ -39,12 +40,13 @@ export function BottomNav() {
               variant="ghost"
               className={cn(
                 "flex-1 flex flex-col h-full w-full justify-center items-center rounded-none text-white",
-                isActive ? 'font-bold' : 'font-normal'
+                isActive ? 'font-bold' : 'font-normal text-neutral-400'
               )}
               aria-label={item.name}
               aria-current={isActive ? 'page' : undefined}
             >
               <item.icon className="h-6 w-6" />
+              <span className="text-xs mt-1">{item.name}</span>
             </Button>
           </Link>
         );
@@ -52,3 +54,4 @@ export function BottomNav() {
     </nav>
   );
 }
+
