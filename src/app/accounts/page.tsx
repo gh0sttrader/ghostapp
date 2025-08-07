@@ -13,6 +13,7 @@ import { AccountSwitcher } from '@/components/account-switcher';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { InvestmentsList } from '@/components/investments-list';
+import { ActivityList } from '@/components/activity-list';
 
 const chartData = {
   '1D': [
@@ -151,6 +152,7 @@ export default function AccountsPage() {
         </div>
 
         <InvestmentsList />
+        <ActivityList />
 
         <AccountSwitcher
           isOpen={isSheetOpen}
