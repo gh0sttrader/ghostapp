@@ -34,7 +34,8 @@ const chartData: { [key: string]: { time: string, value: number }[] } = {
   // Add more if you want
 };
 
-export default function SymbolPage({ params: { symbol } }: { params: { symbol: string } }) {
+export default function SymbolPage({ params }: { params: { symbol: string } }) {
+  const symbol = params.symbol;
   const data = symbols[symbol.toUpperCase()] || { name: symbol.toUpperCase(), price: 0.00 };
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
 
