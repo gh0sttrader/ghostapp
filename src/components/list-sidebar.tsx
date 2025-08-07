@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -13,7 +14,10 @@ import { Settings, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const mainOptions = [
-  { name: 'Positions' },
+  {
+    name: 'Positions',
+    subItems: ['Account 1', 'Account 2'],
+  },
   {
     name: 'Watchlists',
     subItems: ['Short', 'Long'],
@@ -85,7 +89,6 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
                        selected === opt.name ? "text-accent font-bold" : "text-white"
                     )}
                   >
-                    <div className={cn("h-2 w-2 rounded-full", selected === opt.name ? "bg-accent" : "")} />
                     {opt.name}
                   </button>
               )
