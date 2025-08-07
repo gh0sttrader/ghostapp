@@ -46,7 +46,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent side="left" className="bg-[#181818] text-white w-[75%] max-w-sm p-0 border-r-0 rounded-r-3xl flex flex-col">
+      <SheetContent side="left" className="bg-[#181818]/80 text-white w-[75%] max-w-sm p-0 border-r-0 rounded-r-3xl flex flex-col backdrop-blur-md">
         <SheetHeader className="p-6 pt-10 text-left">
           <SheetTitle className="text-2xl font-bold mb-6 text-white">My Lists</SheetTitle>
           <SheetDescription className="sr-only">
@@ -58,7 +58,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
-                  <AccordionTrigger className="text-lg hover:no-underline py-3 px-4 rounded-md hover:bg-neutral-800">
+                  <AccordionTrigger className="text-lg hover:no-underline py-3 px-4 rounded-md hover:bg-neutral-800/50">
                     {opt.name}
                   </AccordionTrigger>
                   <AccordionContent className="pb-0 pl-6">
@@ -85,7 +85,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
                     key={opt.name}
                     onClick={() => handleSelect(opt.name)}
                     className={cn(
-                      "w-full text-left text-lg hover:no-underline py-3 px-4 rounded-md hover:bg-neutral-800 flex items-center gap-4 transition-colors",
+                      "w-full text-left text-lg hover:no-underline py-3 px-4 rounded-md hover:bg-neutral-800/50 flex items-center gap-4 transition-colors",
                        selected === opt.name ? "text-accent font-bold" : "text-white"
                     )}
                   >
