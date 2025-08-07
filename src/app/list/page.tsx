@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { ListSidebar } from '@/components/list-sidebar';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PositionsList } from '@/components/positions-list';
 import { Watchlist } from '@/components/watchlist';
@@ -30,10 +30,10 @@ const getParentKey = (value: string): keyof typeof listStructure | undefined => 
 };
 
 export default function ListPage() {
-  const [selected, setSelected] = useState('All');
+  const [selected, setSelected] = useState('Short');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const parentKey = getParentKey(selected) || 'Positions';
+  const parentKey = getParentKey(selected) || 'Watchlists';
   const subOptions = listStructure[parentKey] || [];
 
   const renderContent = () => {
@@ -41,7 +41,7 @@ export default function ListPage() {
       case 'Positions':
         return <PositionsList account={selected as 'All' | 'Taxable' | 'Roth'} />;
       case 'Watchlists':
-        return <Watchlist type={selected as 'Short' | 'Long'} />;
+        return <Watchlist type={selected as keyof typeof watchlistsData} />;
       case 'Screeners':
         return <ScreenerList type={selected as 'Top Gainers' | 'Top Losers'} />;
       case 'News':
@@ -65,7 +65,7 @@ export default function ListPage() {
         selected={selected}
         setSelected={setSelected}
       />
-      <div className="w-full max-w-md px-4 py-2 sm:px-6 mx-auto">
+      <div className="w-full max-w-md px-4 py-2 sm:px-6 mx-auto flex flex-col flex-1">
         <header className="flex items-center gap-1 my-2">
           <Button variant="ghost" size="icon" className="-ml-2 h-auto p-2" aria-label="Open list selector" onClick={() => setIsSidebarOpen(true)}>
             <ChevronLeft className="h-6 w-6 text-white" />
@@ -73,7 +73,6 @@ export default function ListPage() {
           <h1 className="text-lg font-bold tracking-tight text-center flex-1">
             {parentKey}
           </h1>
-          {/* Add a spacer to balance the header */}
           <div className="w-8" />
         </header>
 
@@ -100,7 +99,22 @@ export default function ListPage() {
           </div>
         )}
 
-        {renderContent()}
+        <div className="flex-1">
+          {renderContent()}
+        </div>
+
+        {parentKey === 'Watchlists' && (
+          <div className="w-full flex justify-center items-center py-4">
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-white font-semibold text-base"
+              disabled
+            >
+              <Plus size={20} />
+              <span>Add Symbol</span>
+            </Button>
+          </div>
+        )}
       </div>
     </main>
   );

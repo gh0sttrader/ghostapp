@@ -3,7 +3,7 @@
 
 import { cn } from "@/lib/utils";
 
-const watchlistsData = {
+export const watchlistsData = {
   "Short": [
     { ticker: 'RGTI', name: 'Rigetti Computing', price: 1.23, change: -0.09, percent: -6.82 },
     { ticker: 'NVDA', name: 'NVIDIA', price: 120.11, change: -3.15, percent: -2.55 },
