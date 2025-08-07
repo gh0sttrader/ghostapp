@@ -31,7 +31,7 @@ function NewsRow({ item }: { item: NewsItem }) {
   const Icon = sentiment.icon;
 
   return (
-    <div className="flex flex-row items-center py-3 border-b border-neutral-800">
+    <div className="flex flex-row items-center py-2.5 border-b border-neutral-800">
       <div className="w-10 text-xs text-neutral-400">{item.time}</div>
       <div className="mx-1 rounded-full bg-neutral-800 px-3 py-1">
         <p className="text-xs font-bold text-white">{item.symbol}</p>

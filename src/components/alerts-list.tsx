@@ -26,7 +26,7 @@ type Alert = {
 function AlertRow({ alert }: { alert: Alert }) {
   const style = statusStyles[alert.status] || statusStyles.read;
   return (
-    <button className="flex flex-row items-center py-3 border-b border-neutral-800 w-full text-left">
+    <button className="flex flex-row items-center py-2 border-b border-neutral-800 w-full text-left">
       <div className="w-16">
         <div className="bg-neutral-800 rounded-full px-3 py-1 inline-block">
           <p className="text-white text-xs font-bold">{alert.symbol}</p>

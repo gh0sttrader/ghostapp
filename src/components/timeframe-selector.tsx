@@ -18,7 +18,7 @@ export function TimeframeSelector() {
           aria-selected={activeTimeframe === timeframe}
           size="sm"
           onClick={() => setActiveTimeframe(timeframe)}
-          className="rounded-full px-3 py-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-primary/90"
+          className="rounded-full px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-primary/90"
           data-state={activeTimeframe === timeframe ? 'active' : 'inactive'}
         >
           {timeframe}

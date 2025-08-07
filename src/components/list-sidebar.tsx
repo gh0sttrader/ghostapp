@@ -55,8 +55,8 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetContent side="left" className="bg-transparent text-white w-[75%] max-w-sm p-0 border-r-0 rounded-r-3xl flex flex-col backdrop-blur-xl">
-        <SheetHeader className="p-4 pt-8 pb-2 text-left">
-           <SheetTitle className="text-lg font-bold text-white mb-2">My Lists</SheetTitle>
+        <SheetHeader className="p-4 pt-6 pb-2 text-left">
+           <SheetTitle className="text-lg font-bold text-white mb-1">My Lists</SheetTitle>
           <SheetDescription className="sr-only">
             A list of sections to navigate to, including positions, watchlists, screeners, news, and alerts.
           </SheetDescription>
@@ -66,7 +66,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
-                  <AccordionTrigger className="text-base font-semibold hover:no-underline py-2 px-4 rounded-md hover:bg-neutral-800/50">
+                  <AccordionTrigger className="text-base font-semibold hover:no-underline py-1.5 px-4 rounded-md hover:bg-neutral-800/50">
                     {opt.name}
                   </AccordionTrigger>
                   <AccordionContent className="pb-0 pl-6">
@@ -76,7 +76,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
                            <button
                               onClick={() => handleSelect(subItem)}
                               className={cn(
-                                "w-full text-left py-1.5 text-sm hover:opacity-80 transition-opacity flex items-center gap-3",
+                                "w-full text-left py-1 text-sm hover:opacity-80 transition-opacity flex items-center gap-3",
                                 selected === subItem ? "text-accent font-semibold" : "text-neutral-300"
                               )}
                             >
@@ -93,7 +93,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
                     key={opt.name}
                     onClick={() => handleSelect(opt.name)}
                     className={cn(
-                      "w-full text-left text-base font-semibold hover:no-underline py-2 px-4 rounded-md hover:bg-neutral-800/50 flex items-center gap-4 transition-colors",
+                      "w-full text-left text-base font-semibold hover:no-underline py-1.5 px-4 rounded-md hover:bg-neutral-800/50 flex items-center gap-4 transition-colors",
                        selected === opt.name ? "text-accent font-bold" : "text-white"
                     )}
                   >
@@ -106,11 +106,11 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
         <div className="p-4 mt-auto border-t border-neutral-800/50">
             <div className="flex justify-around items-center">
                  <Button variant="ghost" className="flex flex-col h-auto items-center text-white hover:text-accent">
-                    <Settings className="h-6 w-6 mb-1" />
+                    <Settings className="h-5 w-5 mb-1" />
                     <span className="text-xs">Manage Lists</span>
                 </Button>
                 <Button variant="ghost" className="flex flex-col h-auto items-center text-white hover:text-accent">
-                    <Plus className="h-6 w-6 mb-1" />
+                    <Plus className="h-5 w-5 mb-1" />
                     <span className="text-xs">Add List</span>
                 </Button>
             </div>

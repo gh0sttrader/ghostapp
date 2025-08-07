@@ -31,7 +31,7 @@ export function BottomNav() {
               aria-label={item.name}
               aria-current={isActive ? 'page' : undefined}
             >
-              <item.icon className="h-7 w-7" />
+              <item.icon className="h-6 w-6" />
             </Button>
           </Link>
         );

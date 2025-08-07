@@ -23,11 +23,11 @@ export default function ListPage() {
         setSelected={setSelected}
       />
       <div className="w-full max-w-md px-4 py-2 sm:px-6 mx-auto">
-        <header className="flex items-center gap-2 my-2">
+        <header className="flex items-center gap-1 my-2">
           <Button variant="ghost" size="icon" className="-ml-2 h-auto p-2" aria-label="Open list selector" onClick={() => setIsSidebarOpen(true)}>
             <Menu className="h-6 w-6 text-white" />
           </Button>
-          <h1 className="text-lg font-bold tracking-tight">
+          <h1 className="text-base font-bold tracking-tight">
             {selected}
           </h1>
         </header>
