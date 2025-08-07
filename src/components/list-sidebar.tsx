@@ -22,7 +22,7 @@ const mainOptions = [
   },
   {
     name: 'Watchlists',
-    subItems: ['Short', 'Long'],
+    subItems: ['Short', 'Long', 'Growth', 'Dividends', 'Tech', 'Crypto', 'Income'],
   },
   {
     name: 'Screeners',
@@ -40,13 +40,15 @@ type ListSidebarProps = {
 };
 
 export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSidebarProps) {
-  const [openSections, setOpenSections] = useState<string[]>(['Positions']);
+  const [openSections, setOpenSections] = useState<string[]>(['Positions', 'Watchlists']);
 
   useEffect(() => {
-    if (isOpen) {
-    } else {
+    // Find which parent section is currently active to ensure it is open
+    const parentSection = mainOptions.find(opt => opt.subItems?.includes(selected))?.name;
+    if (parentSection && !openSections.includes(parentSection)) {
+      setOpenSections(prev => [...prev, parentSection]);
     }
-  }, [isOpen]);
+  }, [selected, openSections]);
 
   const handleSelect = (optionName: string) => {
     setSelected(optionName);
@@ -56,7 +58,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
   const handleParentSelect = (optionName: string) => {
     const parent = mainOptions.find(opt => opt.name === optionName);
     if (parent && parent.subItems) {
-      setSelected(parent.subItems[0]); // Select 'All'
+      setSelected(parent.subItems[0]); // Select 'All' for positions, 'Short' for watchlists etc.
     } else {
       setSelected(optionName);
     }
@@ -77,11 +79,14 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
-                  <AccordionPrimitive.Header className="flex">
+                  <AccordionPrimitive.Header>
                     <div className="flex items-center justify-between py-1.5 px-4 rounded-md w-full">
-                      <span
+                       <span
                         onClick={() => handleParentSelect(opt.name)}
-                        className={cn("text-base font-semibold cursor-pointer", selected === opt.name || opt.subItems.includes(selected) ? "font-bold" : "font-normal")}
+                        className={cn(
+                          "text-base font-semibold cursor-pointer",
+                          opt.subItems.includes(selected) ? "text-white font-bold" : "text-white font-normal"
+                        )}
                       >
                         {opt.name}
                       </span>

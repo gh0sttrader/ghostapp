@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 const listStructure = {
   Positions: ['All', 'Taxable', 'Roth'],
-  Watchlists: ['Short', 'Long'],
+  Watchlists: ['Short', 'Long', 'Growth', 'Dividends', 'Tech', 'Crypto', 'Income'],
   Screeners: ['Top Gainers', 'Top Losers'],
   News: [],
   Alerts: [],

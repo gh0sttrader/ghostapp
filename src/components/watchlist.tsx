@@ -1,18 +1,39 @@
+
 "use client";
 
 import { cn } from "@/lib/utils";
 
-const watchlistShort = [
-  { ticker: 'RGTI', name: 'Rigetti Computing', price: 1.23, change: -0.09, percent: -6.82 },
-  { ticker: 'NVDA', name: 'NVIDIA', price: 120.11, change: -3.15, percent: -2.55 },
-  { ticker: 'TQQQ', name: 'ProShares UltraPro QQQ', price: 46.30, change: -0.91, percent: -1.93 },
-];
-
-const watchlistLong = [
-  { ticker: 'QQQ', name: 'Invesco QQQ Trust', price: 445.20, change: 6.81, percent: 1.55 },
-  { ticker: 'VTI', name: 'Vanguard Total Stock Market', price: 267.04, change: 2.03, percent: 0.77 },
-  { ticker: 'SCHD', name: 'Schwab US Dividend Equity', price: 80.33, change: 0.52, percent: 0.65 },
-];
+const watchlistsData = {
+  "Short": [
+    { ticker: 'RGTI', name: 'Rigetti Computing', price: 1.23, change: -0.09, percent: -6.82 },
+    { ticker: 'NVDA', name: 'NVIDIA', price: 120.11, change: -3.15, percent: -2.55 },
+    { ticker: 'TQQQ', name: 'ProShares UltraPro QQQ', price: 46.30, change: -0.91, percent: -1.93 },
+  ],
+  "Long": [
+    { ticker: 'QQQ', name: 'Invesco QQQ Trust', price: 445.20, change: 6.81, percent: 1.55 },
+    { ticker: 'VTI', name: 'Vanguard Total Stock Market', price: 267.04, change: 2.03, percent: 0.77 },
+    { ticker: 'SCHD', name: 'Schwab US Dividend Equity', price: 80.33, change: 0.52, percent: 0.65 },
+  ],
+  "Growth": [
+    { ticker: 'TSLA', name: 'Tesla Inc.', price: 801.16, change: 8.92, percent: 1.13 },
+    { ticker: 'GOOG', name: 'Alphabet Inc.', price: 137.52, change: 1.19, percent: 0.87 },
+  ],
+  "Dividends": [
+    { ticker: 'VYM', name: 'Vanguard High Dividend', price: 112.19, change: 0.22, percent: 0.20 },
+    { ticker: 'SCHD', name: 'Schwab US Dividend', price: 78.44, change: -0.19, percent: -0.24 },
+  ],
+  "Tech": [
+    { ticker: 'CRM', name: 'Salesforce Inc.', price: 199.85, change: 3.15, percent: 1.60 },
+    { ticker: 'ORCL', name: 'Oracle Corp.', price: 110.60, change: 1.25, percent: 1.14 },
+  ],
+  "Crypto": [
+    { ticker: 'BTC-USD', name: 'Bitcoin', price: 28750.00, change: 750, percent: 2.68 },
+    { ticker: 'ETH-USD', name: 'Ethereum', price: 1650.20, change: -12.4, percent: -0.75 },
+  ],
+  "Income": [
+    { ticker: 'BND', name: 'Vanguard Total Bond', price: 75.31, change: 0.07, percent: 0.09 },
+  ],
+};
 
 
 type Position = {
@@ -41,8 +62,8 @@ function PositionRow({ item }: { item: Position }) {
   );
 }
 
-export function Watchlist({ type }: { type: "Short" | "Long" }) {
-  const data = type === "Short" ? watchlistShort : watchlistLong;
+export function Watchlist({ type }: { type: keyof typeof watchlistsData }) {
+  const data = watchlistsData[type] || [];
   return (
     <div>
       {data.map((item, idx) => (
