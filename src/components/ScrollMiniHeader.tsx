@@ -1,3 +1,4 @@
+
 "use client";
 import { useCondensed } from "@/lib/useCondensed";
 
@@ -20,7 +21,8 @@ export default function ScrollMiniHeader({ symbol, price, sentinelId }: Props) {
       ].join(" ")}
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
-      <div className="mx-auto h-12 bg-black/90 backdrop-blur supports-[backdrop-filter]:bg-black/70">
+      {/* solid black, no transparency, no blur */}
+      <div className="mx-auto h-12 bg-black backdrop-blur-0 shadow-none">
         <div className="flex h-full flex-col items-center justify-center leading-tight">
           <span className="tabular-nums text-[14px] font-semibold">${price.toFixed(2)}</span>
           <span className="text-[14px] font-semibold">{symbol}</span>
