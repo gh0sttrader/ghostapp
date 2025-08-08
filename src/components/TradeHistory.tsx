@@ -12,11 +12,7 @@ export type TradeEvent = {
 const dot = (t: EventType) =>
   t === "BUY" ? "#45ECCB" : t === "SELL" ? "#4F0F99" : t === "DIVIDEND" ? "#39BED9" : "#2E74C6";
 const money = (n?: number) => (typeof n === "number" ? `$${n.toFixed(2)}` : "—");
-const dedupe = (arr: TradeEvent[]) => {
-  const m = new Map<string, TradeEvent>();
-  for (const e of arr) m.set(e.id, e);
-  return [...m.values()];
-};
+const dedupe = (arr: TradeEvent[]) => Array.from(new Map(arr.map(e => [e.id, e])).values());
 
 function Row({ e }: { e: TradeEvent }) {
   const title =
@@ -70,7 +66,19 @@ export default function TradeHistory({
   const [expanded, setExpanded] = useState(false);
   const [loadedMore, setLoadedMore] = useState(false);
 
+  // keep in sync with parent updates
   useEffect(() => setAll(sorted), [sorted]);
+
+  // scroll AFTER collapsing render
+  useEffect(() => {
+    if (!expanded) {
+      // Small delay to allow the DOM to update before scrolling
+      const timer = setTimeout(() => {
+        rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [expanded]);
 
   const handleToggle = async () => {
     if (!expanded && hasMore && onLoadMore && !loadedMore) {
@@ -80,15 +88,7 @@ export default function TradeHistory({
       );
       setLoadedMore(true);
     }
-    // if collapsing, scroll back to section top after DOM shrinks
-    if (expanded) {
-      setExpanded(false);
-      requestAnimationFrame(() => {
-        rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    } else {
-      setExpanded(true);
-    }
+    setExpanded(v => !v);
   };
 
   const visible = expanded ? all : all.slice(0, initialCount);
