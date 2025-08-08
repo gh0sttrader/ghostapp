@@ -3,7 +3,7 @@
 import { ChevronLeft, Maximize2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState, use } from 'react';
-import { createChart, IChartApi, ISeriesApi, ColorType, LineStyle } from 'lightweight-charts';
+import { createChart, IChartApi, ISeriesApi, ColorType, LineSeries } from 'lightweight-charts';
 
 const symbols: { [key: string]: { name: string; price: number } } = {
   AAPL: { name: 'Apple Inc.', price: 218.75 },
@@ -56,7 +56,7 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
       },
     });
 
-    const lineSeries = chart.addLineSeries({
+    const lineSeries = chart.addSeries(LineSeries, {
       color: "#00FF00",
       lineWidth: 2,
       priceLineVisible: true,
