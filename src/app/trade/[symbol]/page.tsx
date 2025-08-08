@@ -43,8 +43,8 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
         textColor: "#fff",
       },
       grid: {
-        vertLines: { color: "rgba(255,255,255,0.05)" },
-        horzLines: { color: "rgba(255,255,255,0.05)" },
+        vertLines: { color: "rgba(0, 0, 0, 0)" },
+        horzLines: { color: "rgba(0, 0, 0, 0)" },
       },
       width: chartContainerRef.current.clientWidth,
       height: Math.floor(window.innerHeight * 0.48), // ~48% screen height
