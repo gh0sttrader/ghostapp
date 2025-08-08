@@ -1,6 +1,7 @@
 
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronDown } from "lucide-react";
 import { useCondensed } from "@/lib/useCondensed";
 
@@ -27,6 +28,19 @@ export default function TradeHeaderCompact({
 }: Props) {
   const [open, setOpen] = useState(false);
   const condensed = useCondensed(sentinelId);
+  const router = useRouter();
+
+  const handleBack = () => {
+    const prev = sessionStorage.getItem("prevPath");
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+    } else if (prev) {
+      router.push(prev);
+    } else {
+      router.push("/list");
+    }
+  };
+
 
   const up = change > 0 || (change === 0 && changePct > 0);
   const dn = change < 0 || (change === 0 && changePct < 0);
@@ -59,7 +73,7 @@ export default function TradeHeaderCompact({
       <header className="sticky top-0 z-40 bg-black">
         {/* Row 1: back + title (unchanged) */}
         <div className="flex items-center px-3 pt-3">
-          <button aria-label="Back" onClick={() => history.back()} className="mr-[0.1875rem] inline-flex h-7 w-7 items-center justify-center">
+          <button aria-label="Back" onClick={handleBack} className="mr-[0.1875rem] inline-flex h-7 w-7 items-center justify-center">
             <ChevronLeft className="h-5 w-5" />
           </button>
 
