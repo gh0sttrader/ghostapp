@@ -64,9 +64,9 @@ export default function TradeHeaderCompact({
           </div>
         </div>
 
-        <div className="text-right text-[12px] leading-5">
+        <div className="text-right text-[12px] leading-4">
           {/* much tighter label/value spacing + fixed narrow value column */}
-          <div className="grid grid-cols-[max-content_6.5ch] gap-x-1 gap-y-0.5 items-baseline">
+          <div className="grid grid-cols-[max-content_6.5ch] gap-x-1 gap-y-0 items-baseline">
             <span className="text-white/70">High</span>
             <span className="tabular-nums whitespace-nowrap text-right">{money(high)}</span>
 
