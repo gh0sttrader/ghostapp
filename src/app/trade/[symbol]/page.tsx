@@ -57,14 +57,19 @@ export default function SymbolPage() {
       rightPriceScale: { borderVisible: false },
       timeScale: {
         borderVisible: false,
-        fixLeftEdge: true,
-        fixRightEdge: true,
-        timeVisible: false,
-        secondsVisible: false,
-        tickMarkFormatter: () => "",
+        visible: false,
       },
+      handleScroll: false,
+      handleScale: false,
       width: el.clientWidth,
-      height: 300,
+      height: 330,
+    });
+    
+    chart.priceScale("right").applyOptions({
+      scaleMargins: {
+        top: 0.05,
+        bottom: 0,
+      },
     });
 
     const line = chart.addSeries(LineSeries, { color: "#00FF00", lineWidth: 2, priceLineVisible: true });
