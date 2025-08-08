@@ -158,9 +158,9 @@ export default function SymbolPage() {
           </div>
           {currentAboutData && <AboutSection security={currentAboutData} />}
           {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
-          {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
+          {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} />}
           
-          {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
+          {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} />}
           
           <TradeHistory
             events={MOCK_VOO_HISTORY}

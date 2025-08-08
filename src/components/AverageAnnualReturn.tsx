@@ -10,8 +10,7 @@ type Row = {
 
 export default function AverageAnnualReturn({
   rows,
-  asOf, // e.g., "Jul 31, 2025"
-}: { rows: Row[]; asOf?: string }) {
+}: { rows: Row[]}) {
   const fmt = (n?: number | null) =>
     typeof n === "number" ? n.toFixed(2) + "%" : "—";
 
@@ -50,9 +49,6 @@ export default function AverageAnnualReturn({
         </table>
       </div>
 
-      {asOf && (
-        <div className="mt-2 text-right text-xs text-white/60">As of {asOf}</div>
-      )}
     </section>
   );
 }

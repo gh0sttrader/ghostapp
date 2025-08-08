@@ -6,10 +6,8 @@ type Holding = { name: string; weight: number };
 
 export default function TopHoldingsSection({
   data,
-  asOf, // e.g., "Jun 30, 2025"
 }: {
   data: Holding[]; // pass exactly 10 (sorted desc)
-  asOf?: string;
 }) {
   const top10 = data.slice(0, 10);
   const total = top10.reduce((s, h) => s + h.weight, 0);
@@ -33,7 +31,7 @@ export default function TopHoldingsSection({
     <section className="mt-6 border-t border-white/10 pt-4">
       <h3 className="text-base font-semibold">Top 10 Holdings</h3>
       <div className="mt-1 text-sm text-white/70">
-        {total.toFixed(2)}% of total assets{asOf ? <span className="ml-2">• As of {asOf}</span> : null}
+        {total.toFixed(2)}% of total assets
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-5">
