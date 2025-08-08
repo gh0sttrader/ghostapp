@@ -1,56 +1,41 @@
 
 "use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { List, User, ArrowRightLeft, LineChart, Menu } from "lucide-react";
 
-import { List, User, ArrowRightLeft, LineChart, Menu } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+const TABS = [
+  { href: "/list", label: "List", icon: List },
+  { href: "/accounts", label: "Accounts", icon: User },
+  { href: "/trade", label: "Trade", icon: ArrowRightLeft },
+  { href: "/stats", label: "Stats", icon: LineChart },
+  { href: "/menu", label: "Menu", icon: Menu },
+];
 
 export function BottomNav() {
-  const pathname = usePathname();
-  const [currentPath, setCurrentPath] = useState('');
-
-  useEffect(() => {
-    setCurrentPath(pathname);
-  }, [pathname]);
-
-
-  const navItems = [
-    { name: 'List', href: '/list', icon: List },
-    { name: 'Accounts', href: '/accounts', icon: User },
-    { name: 'Trade', href: '/trade', icon: ArrowRightLeft },
-    { name: 'Stats', href: '/performance', icon: LineChart },
-    { name: 'Menu', href: '/menu', icon: Menu },
-  ];
-
-  if (!currentPath) {
-    // Render a placeholder or null on the server and initial client render
-    return null; 
-  }
-
+  const path = usePathname();
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-16 bg-black flex justify-around items-center px-2 z-50">
-      {navItems.map((item) => {
-        const isActive = currentPath.startsWith(item.href);
-        return (
-          <Link href={item.href} key={item.name} className="flex-1">
-            <Button
-              variant="ghost"
-              className={cn(
-                "flex-1 flex flex-col h-full w-full justify-center items-center rounded-none",
-                isActive ? 'text-white' : 'text-neutral-400'
-              )}
-              aria-label={item.name}
-              aria-current={isActive ? 'page' : undefined}
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-black/90 backdrop-blur">
+      <div className="grid h-14 grid-cols-5 place-items-center">
+        {TABS.map(({ href, label, icon: Icon }) => {
+          const active = path?.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-label={label}
+              className="group inline-flex h-12 w-12 items-center justify-center"
+              data-active={active}
             >
-              <item.icon className="h-6 w-6" />
-              <span className="text-xs font-bold mt-0">{item.name}</span>
-            </Button>
-          </Link>
-        );
-      })}
+              <Icon
+                className="h-6 w-6 text-white/70 group-data-[active=true]:text-white"
+                strokeWidth={2}
+              />
+              <span className="sr-only">{label}</span>
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }
