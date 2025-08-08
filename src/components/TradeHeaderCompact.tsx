@@ -47,7 +47,8 @@ export default function TradeHeaderCompact({
             {name}{exchange ? ` ${exchange}` : ""}
           </div>
         </div>
-        
+
+        {/* right corner reserved */}
         <div className="w-6" />
       </div>
 
@@ -64,17 +65,16 @@ export default function TradeHeaderCompact({
         </div>
 
         <div className="text-right">
-          <div className="flex items-baseline gap-3">
+          {/* grid with fixed value column so all numbers end at the same right edge */}
+          <div className="grid grid-cols-[auto_8ch] gap-x-4 gap-y-1">
             <span className="text-[10px] text-white/70">High</span>
-            <span className="text-[12px] tabular-nums">{money(high)}</span>
-          </div>
-          <div className="mt-0.5 flex items-baseline gap-3">
+            <span className="text-[12px] tabular-nums whitespace-nowrap text-right">{money(high)}</span>
+
             <span className="text-[10px] text-white/70">Low</span>
-            <span className="text-[12px] tabular-nums">{money(low)}</span>
-          </div>
-          <div className="mt-0.5 flex items-baseline gap-3">
+            <span className="text-[12px] tabular-nums whitespace-nowrap text-right">{money(low)}</span>
+
             <span className="text-[10px] text-white/70">Volume</span>
-            <span className="text-[12px] tabular-nums">{vol(volume)}</span>
+            <span className="text-[12px] tabular-nums whitespace-nowrap text-right">{vol(volume)}</span>
           </div>
         </div>
       </div>
@@ -83,3 +83,4 @@ export default function TradeHeaderCompact({
     </header>
   );
 }
+
