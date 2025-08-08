@@ -18,7 +18,7 @@ import TradeHistory from "@/components/TradeHistory";
 import { MOCK_VOO_HISTORY } from "@/mock/history";
 import TradeHeaderCompact from "@/components/TradeHeaderCompact";
 import ScrollMiniHeader from "@/components/ScrollMiniHeader";
-import { Bar, rangeLabel } from "@/lib/range";
+import { Bar, rangeLabel, sliceByRange } from "@/lib/range";
 import TopRangeStrip from "@/components/TopRangeStrip";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
@@ -65,10 +65,12 @@ export default function SymbolPage() {
 
   const [range, setRange] = useState<RangeKey>("1D");
 
-  const barsForSummary: Bar[] = useMemo(() => {
-    const data = seriesesData.get(range) || [];
-    return data.map(d => ({ time: d.time * 1000, close: d.value }));
-  }, [range]);
+  const allBars: Bar[] = useMemo(() => {
+    const maxData = seriesesData.get("Max") || [];
+    return maxData.map(d => ({ time: d.time * 1000, close: d.value }));
+  }, []);
+
+  const barsForRange = useMemo(() => sliceByRange(allBars, range), [allBars, range]);
   
   useEffect(() => {
     if (!chartWrapRef.current) return;
@@ -159,8 +161,9 @@ export default function SymbolPage() {
         price={data.price}
         sentinelId="trade-header-sentinel"
       />
-      
-      <TopRangeStrip bars={barsForSummary} label={rangeLabel(range)} />
+
+      <TopRangeStrip bars={barsForRange} label={rangeLabel(range)} />
+      <div className="h-px w-full bg-white/10" />
 
       <div className="mx-4 mt-2">
           <div ref={chartWrapRef} className="h-[330px] w-full mb-1" />

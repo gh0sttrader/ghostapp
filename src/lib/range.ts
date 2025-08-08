@@ -18,11 +18,13 @@ export function sliceByRange(all: Bar[], range: string): Bar[] {
 }
 
 export function delta(bars: Bar[]) {
-  const first = bars[0]?.close, last = bars.at(-1)?.close;
-  if (typeof first !== 'number' || typeof last !== 'number' || bars.length < 2) return { abs: 0, pct: 0 };
+  if (bars.length < 2) return { abs: 0, pct: 0 };
+  const first = bars[0]?.close;
+  const last = bars[bars.length - 1]?.close;
+  if (typeof first !== 'number' || typeof last !== 'number') return { abs: 0, pct: 0 };
   const abs = +(last - first).toFixed(2);
   const pct = +(((last - first) / first) * 100).toFixed(2);
   return { abs, pct };
 }
 
-export const rangeLabel = (r: string) => (r === "1Y" ? "Last 1Y" : r === "YTD" ? "YTD" : `Last ${r}`);
+export const rangeLabel = (r: string) => (r === "1Y" ? "1Y" : r);
