@@ -1,64 +1,74 @@
 // components/AnalystRating.tsx
 "use client";
-type Props = { data?: { buy: number; neutral: number; sell: number } };
 
-const COLORS = [
-  "#4F0F99","#3E179F","#2C1FA7","#2632AF","#2B52BA",
-  "#2E74C6","#3199D2","#39BED9","#40E2E0","#45ECCB",
-];
+type RatingLabel = "Strong sell" | "Sell" | "Neutral" | "Buy" | "Strong buy";
 
-function labelFor(pct: number) {
-  if (pct <= 0.2) return "Strong sell";
-  if (pct <  0.4) return "Sell";
-  if (pct <= 0.6) return "Neutral";
-  if (pct <  0.8) return "Buy";
-  return "Strong buy";
-}
+export default function AnalystRating({
+  label,
+  score, // 0..1, optional if label provided
+}: {
+  label?: RatingLabel;
+  score?: number;
+}) {
+  const COLORS = ["#4F0F99","#3E179F","#2C1FA7","#2632AF","#2B52BA","#2E74C6","#3199D2","#39BED9","#40E2E0","#45ECCB"];
 
-export default function AnalystRating({ data }: Props) {
-  const d = data ?? { buy: 15, neutral: 10, sell: 3 }; // dummy defaults
-  const total = Math.max(1, d.buy + d.neutral + d.sell);
-  const pct = Math.min(1, Math.max(0, 0.5 + (d.buy - d.sell) / (2 * total)));
-  const label = labelFor(pct);
+  const pctFromLabel = (l: RatingLabel) =>
+    l === "Strong sell" ? 0.05 :
+    l === "Sell"       ? 0.25 :
+    l === "Neutral"    ? 0.50 :
+    l === "Buy"        ? 0.75 : 0.95;
+
+  const pct = Math.max(0, Math.min(1, score ?? (label ? pctFromLabel(label) : 0.75)));
+  const display = label ?? (pct <= .1 ? "Strong sell" : pct < .4 ? "Sell" : pct <= .6 ? "Neutral" : pct < .9 ? "Buy" : "Strong buy");
+
+  // gauge geometry
+  const w = 280, h = 160, cx = 140, cy = 140, r = 105, sw = 14;
+  const C = 2 * Math.PI * r, half = C / 2, off = C / 4;
+  const ang = -90 + pct * 180, rad = (Math.PI/180) * ang;
+  const nx = cx + Math.cos(rad) * 82, ny = cy + Math.sin(rad) * 82;
 
   return (
-    <section className="mt-6 border-t border-white/10 pt-4">
+    <section className="mt-6">
       <h3 className="text-base font-semibold">Analyst rating</h3>
 
-      {/* Bar */}
-      <div className="mt-3">
-        <svg className="w-full" viewBox="0 0 640 48" preserveAspectRatio="none" aria-label="Analyst rating">
+      <div className="mt-2 flex flex-col items-center">
+        <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
           <defs>
-            <linearGradient id="ar-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              {COLORS.map((c, i) => (
-                <stop key={i} offset={`${(i / (COLORS.length - 1)) * 100}%`} stopColor={c} />
+            <linearGradient id="ar-arc" x1="0%" y1="0%" x2="100%" y2="0%">
+              {COLORS.map((c,i)=>(
+                <stop key={i} offset={`${(i/(COLORS.length-1))*100}%`} stopColor={c}/>
               ))}
             </linearGradient>
           </defs>
-          {/* track */}
-          <rect x="0" y="16" width="640" height="16" rx="8" fill="url(#ar-grad)" opacity="0.9" />
-          {/* needle */}
-          <line
-            x1={640 * pct}
-            x2={640 * pct}
-            y1="8"
-            y2="40"
-            stroke="white"
-            strokeWidth="2"
-          />
-          <circle cx={640 * pct} cy="8" r="3" fill="white" />
-        </svg>
-      </div>
 
-      {/* Label + counts */}
-      <div className="mt-2 flex flex-col items-center gap-1">
-        <div className="text-lg font-semibold">{label}</div>
-        <div className="text-sm">
-          <span className="tabular-nums">{d.sell}</span> Sell&nbsp;&nbsp;|&nbsp;&nbsp;
-          <span className="tabular-nums">{d.neutral}</span> Neutral&nbsp;&nbsp;|&nbsp;&nbsp;
-          <span className="tabular-nums">{d.buy}</span> Buy
+          {/* track */}
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,.08)" strokeWidth={sw}
+                  strokeDasharray={`${half} ${C}`} strokeDashoffset={off}
+                  transform={`rotate(180 ${cx} ${cy})`} />
+          {/* value arc */}
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke="url(#ar-arc)" strokeWidth={sw}
+                  strokeDasharray={`${half * pct} ${C}`} strokeDashoffset={off}
+                  transform={`rotate(180 ${cx} ${cy})`} />
+          {/* needle */}
+          <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="white" strokeWidth={2} />
+        </svg>
+
+        {/* ends */}
+        <div className="flex w-full max-w-xs justify-between text-xs text-white/70">
+          <span>Strong sell</span>
+          <span>Strong buy</span>
         </div>
-        <div className="text-xs text-white/50">Dummy data</div>
+
+        {/* big label */}
+        <div
+          className="mt-1 text-2xl font-semibold bg-clip-text text-transparent"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg,#4F0F99 0%,#3E179F 12%,#2C1FA7 24%,#2632AF 36%,#2B52BA 48%,#2E74C6 60%,#3199D2 72%,#39BED9 84%,#40E2E0 92%,#45ECCB 100%)",
+          }}
+        >
+          {display}
+        </div>
       </div>
     </section>
   );
