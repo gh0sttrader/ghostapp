@@ -1,13 +1,13 @@
 
 "use client";
 
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Maximize2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState, use } from 'react';
-import { createChart, IChartApi, ISeriesApi, LineSeries, ColorType, LineStyle } from 'lightweight-charts';
+import { createChart, IChartApi, ISeriesApi, ColorType, LineStyle } from 'lightweight-charts';
 
 const symbols: { [key: string]: { name: string; price: number } } = {
-  AAPL: { name: 'Apple', price: 218.75 },
+  AAPL: { name: 'Apple Inc.', price: 218.75 },
   TSLA: { name: 'Tesla Inc.', price: 183.01 },
   VOO: { name: 'Vanguard S&P 500 ETF', price: 504.23 },
   QQQ: { name: 'Invesco QQQ Trust', price: 445.2 },
@@ -30,10 +30,10 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<{ chart: IChartApi, lineSeries: ISeriesApi<"Line"> } | null>(null);
   const [currentInterval, setCurrentInterval] = useState("1D");
-  const [chartHeight, setChartHeight] = useState(300); // Default height
+  const [chartHeight, setChartHeight] = useState(0);
 
   useEffect(() => {
-    // Set chart height on client mount
+    // Set chart height on client mount to avoid SSR issues with window
     setChartHeight(Math.floor(window.innerHeight * 0.48));
 
     if (!chartContainerRef.current) return;
@@ -58,7 +58,7 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
     });
 
     const lineSeries = chart.addSeries(LineSeries, {
-      color: "#fff",
+      color: "#00FF00",
       lineWidth: 2,
       priceLineVisible: true,
       crossHairMarkerVisible: true,
@@ -90,22 +90,40 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
   }, [currentInterval]);
 
   const intervals = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
-  const currentPrice = seriesesData.get(currentInterval)?.slice(-1)[0]?.value ?? data.price;
+  const currentData = seriesesData.get(currentInterval) || [];
+  const currentPrice = currentData.length > 0 ? currentData[currentData.length - 1].value : data.price;
+  const firstPrice = currentData.length > 0 ? currentData[0].value : 0;
+  const priceChange = currentPrice - firstPrice;
+  const percentChange = firstPrice > 0 ? (priceChange / firstPrice) * 100 : 0;
 
 
   return (
     <div className="bg-black text-white h-screen flex flex-col">
-      {/* Header */}
-      <div
-        className="flex items-center px-4 pt-4 pb-2 animate-slideDownFade"
-        style={{ paddingTop: "12px" }}
-      >
-        <Link href="/trade" className="text-white text-2xl mr-3">←</Link>
-        <div>
-          <h1 className="text-xl font-bold">{data.name}</h1>
-          <p className="text-3xl font-bold">${currentPrice.toFixed(2)}</p>
+       {/* HEADER */}
+      <div className="px-4 pt-4 animate-slideDownFade">
+        {/* Top row: back + expand */}
+        <div className="flex justify-between items-center mb-2">
+           <Link href="/trade">
+            <ChevronLeft className="text-white text-2xl" />
+          </Link>
+          <Maximize2 className="text-white text-xl" />
+        </div>
+
+        {/* Ticker */}
+        <p className="text-gray-400 text-sm uppercase tracking-wide">{symbol}</p>
+
+        {/* Name */}
+        <h1 className="text-2xl font-bold">{data.name}</h1>
+
+        {/* Price + change */}
+        <div className="flex items-end space-x-2">
+          <p className="text-4xl font-bold">${currentPrice.toFixed(2)}</p>
+          <p className="text-green-500 text-sm font-semibold">
+            ▲ ${priceChange.toFixed(2)} ({percentChange.toFixed(2)}%) {currentInterval}
+          </p>
         </div>
       </div>
+
 
       {/* Chart */}
       <div
