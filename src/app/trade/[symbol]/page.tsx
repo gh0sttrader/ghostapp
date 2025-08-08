@@ -71,6 +71,19 @@ export default function SymbolPage() {
   }, []);
 
   const barsForRange = useMemo(() => sliceByRange(allBars, range), [allBars, range]);
+
+  const aarRows = useMemo(() => {
+    return MOCK_VOO_AAR.map(r => ({
+      label: r.period,
+      price: `${r.price?.toFixed(2) ?? '—'}%`,
+      nav: `${r.nav?.toFixed(2) ?? '—'}%`,
+    }));
+  }, []);
+
+  const inceptionDate = useMemo(() => {
+    const sinceRow = MOCK_VOO_AAR.find(r => r.period === "Since");
+    return sinceRow?.sinceDate ? new Date(sinceRow.sinceDate).toISOString() : new Date().toISOString();
+  }, []);
   
   useEffect(() => {
     if (!chartWrapRef.current) return;
@@ -183,7 +196,9 @@ export default function SymbolPage() {
           {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
           {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} />}
           
-          {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} />}
+          {currentAboutData && currentAboutData.type === 'etf' && (
+            <AverageAnnualReturn rows={aarRows} inceptionDate={inceptionDate} />
+          )}
           
           <TradeHistory
             events={MOCK_VOO_HISTORY}
