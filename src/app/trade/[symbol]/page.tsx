@@ -13,6 +13,8 @@ import SectorsSection from "@/components/SectorsSection";
 import { MOCK_VOO_SECTORS } from "@/mock/etfSectors";
 import TopHoldingsSection from "@/components/TopHoldingsSection";
 import { MOCK_VOO_TOP10 } from "@/mock/top10_voo";
+import AverageAnnualReturn from "@/components/AverageAnnualReturn";
+import { MOCK_VOO_AAR } from "@/mock/avgAnnualReturn_voo";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -139,7 +141,7 @@ export default function SymbolPage() {
         <header className="px-4 pt-2">
             {/* top row: back + star */}
             <div className="flex items-center justify-between">
-                <Link href="/trade" aria-label="Back" className="-ml-2 p-2">
+                <Link href="/list" aria-label="Back" className="-ml-2 p-2">
                 <ChevronLeft className="h-6 w-6 text-white" />
                 </Link>
 
@@ -181,6 +183,7 @@ export default function SymbolPage() {
             {currentAboutData && <AboutSection security={currentAboutData} />}
             {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
             {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
+            {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
         </div>
 
       <WatchlistModal

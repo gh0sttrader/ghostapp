@@ -1,0 +1,53 @@
+// components/AverageAnnualReturn.tsx
+"use client";
+
+type Row = {
+  period: "1Y" | "3Y" | "5Y" | "10Y" | "Since";
+  price?: number | null;
+  nav?: number | null;
+  sinceDate?: string; // only for "Since"
+};
+
+export default function AverageAnnualReturn({
+  rows,
+  asOf, // e.g., "Jul 31, 2025"
+}: { rows: Row[]; asOf?: string }) {
+  const fmt = (n?: number | null) =>
+    typeof n === "number" ? n.toFixed(2) + "%" : "—";
+
+  return (
+    <section className="mt-6 border-t border-white/10 pt-4">
+      <h3 className="text-base font-semibold">Average annual return</h3>
+
+      <div className="mt-3 overflow-hidden rounded-xl border border-white/10">
+        <table className="w-full text-sm">
+          <thead className="text-white/60">
+            <tr className="border-b border-white/10">
+              <th className="px-4 py-3 text-left font-medium"> </th>
+              <th className="px-4 py-3 text-right font-medium">% price return</th>
+              <th className="px-4 py-3 text-right font-medium">% NAV return</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.period} className="border-b border-white/10 last:border-b-0">
+                <td className="px-4 py-3 align-top">
+                  <div className="leading-5">{r.period}</div>
+                  {r.period === "Since" && r.sinceDate && (
+                    <div className="text-xs text-white/50">{r.sinceDate}</div>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-right tabular-nums">{fmt(r.price)}</td>
+                <td className="px-4 py-3 text-right tabular-nums">{fmt(r.nav)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {asOf && (
+        <div className="mt-2 text-right text-xs text-white/60">As of {asOf}</div>
+      )}
+    </section>
+  );
+}
