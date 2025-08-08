@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -24,7 +25,7 @@ type Activity = {
 
 function ActivityRow({ item }: { item: Activity }) {
   const isOutflow = item.amount < 0;
-  const amountColor = item.amount > 0 ? "text-accent" : "text-destructive";
+  const amountColor = item.amount > 0 ? "text-up" : "text-down";
 
   return (
     <div className="flex flex-row items-center py-2">

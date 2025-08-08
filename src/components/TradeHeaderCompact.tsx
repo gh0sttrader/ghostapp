@@ -26,7 +26,7 @@ export default function TradeHeaderCompact({
 }: Props) {
   const up = change > 0 || (change === 0 && changePct > 0);
   const dn = change < 0 || (change === 0 && changePct < 0);
-  const deltaColor = up ? "text-emerald-400" : dn ? "text-red-400" : "text-white/60";
+  const deltaClass = up ? "text-up" : dn ? "text-down" : "text-white/70";
   const deltaIcon = up ? "▲" : dn ? "▼" : "◆";
 
   return (
@@ -58,7 +58,7 @@ export default function TradeHeaderCompact({
           <div className="tabular-nums text-[22px] font-extrabold leading-[1.05] tracking-tight">
             {money(price)}
           </div>
-          <div className={`mt-0.5 text-[10px] tabular-nums ${deltaColor}`}>
+          <div className={`mt-0.5 text-[10px] tabular-nums ${deltaClass}`}>
             <span className="mr-1">{deltaIcon}</span>
             {money(change)} {pct(changePct)}
           </div>

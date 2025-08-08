@@ -1,3 +1,4 @@
+
 // components/TradeHistory.tsx
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -31,9 +32,9 @@ function Row({ e }: { e: TradeEvent }) {
       : e.amount;
 
   const rightColor =
-    (e.type === "BUY" && "text-red-400") ||
-    (e.type === "SELL" && "text-emerald-400") ||
-    "text-white/80";
+    e.type === "BUY" ? "text-down"
+    : e.type === "SELL" ? "text-up"
+    : "text-white/80";
 
   return (
     <li className="flex items-start justify-between py-3">

@@ -102,7 +102,7 @@ export default function AccountsClient() {
         <section className="mb-2">
           <p className="text-2xl font-bold">$10,182.17</p>
           <div className="flex gap-4 text-xs">
-             <p className={cn("text-xs", currentReturn.isPositive ? "text-accent" : "text-destructive")}>
+             <p className={cn("text-xs", currentReturn.isPositive ? "text-up" : "text-down")}>
               {currentReturn.isPositive ? '+' : ''}${currentReturn.amount.toFixed(2)} ({currentReturn.isPositive ? '+' : ''}{currentReturn.percent.toFixed(2)}%) {activeTimeframe}
             </p>
           </div>

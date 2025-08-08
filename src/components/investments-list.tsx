@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -34,7 +35,7 @@ function InvestmentRow({ item }: { item: Investment }) {
       </div>
       <div className="items-end text-right">
         <p className="text-white text-sm font-semibold">{item.price.toFixed(2)}</p>
-        <p className={cn("text-xs", isUp ? "text-accent" : "text-destructive")}>
+        <p className={cn("text-xs", isUp ? "text-up" : "text-down")}>
           {isUp ? "+" : ""}{item.percent.toFixed(2)}%
         </p>
       </div>
