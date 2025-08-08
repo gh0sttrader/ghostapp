@@ -74,11 +74,13 @@ export default function SymbolPage() {
 
   const aarRows = useMemo(() => {
     return MOCK_VOO_AAR.map(r => ({
-      label: r.period,
+      label: r.period === "Since" ? "Inception" : r.period,
       price: `${r.price?.toFixed(2) ?? '—'}%`,
       nav: `${r.nav?.toFixed(2) ?? '—'}%`,
+      subLabel: r.period === "Since" ? r.sinceDate : undefined,
     }));
   }, []);
+  
 
   const inceptionDate = useMemo(() => {
     const sinceRow = MOCK_VOO_AAR.find(r => r.period === "Since");
@@ -153,6 +155,17 @@ export default function SymbolPage() {
     chartRef.current.timeScale().fitContent();
   };
 
+  const attrs = {
+    level2: true,
+    shortable: true,
+    marginable: true,
+    hardToBorrow: false,
+    options: true,
+    fractional: true,
+    extendedHours: true,
+    "24h": false, // e.g., crypto → true
+  } as const;
+
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
       <TradeHeaderCompact
@@ -176,7 +189,7 @@ export default function SymbolPage() {
         sentinelId="trade-header-sentinel"
       />
 
-      <TopRangeStrip bars={barsForRange} label={rangeLabel(range)} />
+      <TopRangeStrip bars={barsForRange} label={rangeLabel(range)} attrs={attrs} />
       <div className="h-px w-full bg-white/10" />
 
       <div className="mx-4 mt-1">
