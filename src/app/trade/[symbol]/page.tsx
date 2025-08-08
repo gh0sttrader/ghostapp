@@ -57,7 +57,14 @@ export default function SymbolPage() {
       layout: { background: { type: "solid", color: "#000" }, textColor: "#fff" },
       grid: { vertLines: { visible: false }, horzLines: { visible: false } },
       rightPriceScale: { borderVisible: false },
-      timeScale: { borderVisible: false, fixLeftEdge: true, fixRightEdge: true },
+      timeScale: {
+        borderVisible: false,
+        fixLeftEdge: true,
+        fixRightEdge: true,
+        timeVisible: false,
+        secondsVisible: false,
+        tickMarkFormatter: () => "", // hides bottom time labels
+      },
       width: el.clientWidth,
       height: 300, // tighter like before
     });
@@ -89,6 +96,11 @@ export default function SymbolPage() {
     if (!lineRef.current || !chartRef.current) return;
     const d = seriesesData.get(range) || seriesesData.get("1D") || [];
     lineRef.current.setData(d);
+    
+    // Re-apply options to ensure labels stay hidden on range change
+    chartRef.current.applyOptions({
+      timeScale: { tickMarkFormatter: () => "" },
+    });
     chartRef.current.timeScale().fitContent();
   }, [range]);
 
