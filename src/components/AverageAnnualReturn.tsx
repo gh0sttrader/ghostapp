@@ -19,9 +19,9 @@ export default function AverageAnnualReturn({
     <section className="mt-6 border-t border-white/10 pt-4">
       <h3 className="text-base font-semibold">Average annual return</h3>
 
-      {/* outer outline only; no inner borders */}
-      <div className="mt-3 overflow-hidden rounded-2xl ring-1 ring-white/10 bg-white/5">
-        <table className="w-full text-sm border-collapse">
+      {/* main surface only */}
+      <div className="mt-3">
+        <table className="w-full text-sm border-collapse bg-transparent">
           <thead className="text-white/60">
             <tr>
               <th className="px-4 py-3 text-left font-medium"> </th>
@@ -31,17 +31,17 @@ export default function AverageAnnualReturn({
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.period}>
-                <td className="px-4 py-3 align-top">
+              <tr key={r.period} className="bg-transparent">
+                <td className="px-4 py-3 align-top bg-transparent">
                   <div className="leading-5">{r.period}</div>
                   {r.period === "Since" && r.sinceDate && (
                     <div className="text-xs text-white/50">{r.sinceDate}</div>
                   )}
                 </td>
-                <td className="px-4 py-3 text-right tabular-nums">
+                <td className="px-4 py-3 text-right tabular-nums bg-transparent">
                   {fmt(r.price)}
                 </td>
-                <td className="px-4 py-3 text-right tabular-nums">
+                <td className="px-4 py-3 text-right tabular-nums bg-transparent">
                   {fmt(r.nav)}
                 </td>
               </tr>
