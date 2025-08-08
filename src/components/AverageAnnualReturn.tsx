@@ -32,7 +32,7 @@ export default function AverageAnnualReturn({
             {rows.map((r) => (
               <tr key={r.period} className="bg-transparent">
                 <td className="px-4 py-3 align-top bg-transparent">
-                  <div className="leading-5">{r.period}</div>
+                  <div className="leading-5">{r.period === "Since" ? "Creation" : r.period}</div>
                   {r.period === "Since" && r.sinceDate && (
                     <div className="text-xs text-white/50">{r.sinceDate}</div>
                   )}
