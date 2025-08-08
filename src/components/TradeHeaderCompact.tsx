@@ -36,14 +36,14 @@ export default function TradeHeaderCompact({
         <button
           aria-label="Back"
           onClick={() => history.back()}
-          className="mr-1 inline-flex h-7 w-7 items-center justify-center"
+          className="mr-[0.1875rem] inline-flex h-7 w-7 items-center justify-center"
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
 
         <div className="min-w-0 flex-1 leading-tight">
-          <div className="text-[18px] font-semibold">{symbol}</div>
-          <div className="truncate text-[13px] text-white/70">
+          <div className="text-[16px] font-semibold">{symbol}</div>
+          <div className="truncate text-[12px] text-white/70">
             {name}{exchange ? ` ${exchange}` : ""}
           </div>
         </div>
@@ -83,4 +83,3 @@ export default function TradeHeaderCompact({
     </header>
   );
 }
-
