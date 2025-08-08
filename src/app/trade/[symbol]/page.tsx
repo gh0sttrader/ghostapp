@@ -1,9 +1,10 @@
+
 "use client";
 
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState, use } from 'react';
-import { createChart, IChartApi, ISeriesApi, LineSeries, ColorType } from 'lightweight-charts';
+import { createChart, IChartApi, ISeriesApi, LineSeries, ColorType, LineStyle } from 'lightweight-charts';
 
 const symbols: { [key: string]: { name: string; price: number } } = {
   AAPL: { name: 'Apple', price: 218.75 },
@@ -14,48 +15,70 @@ const symbols: { [key: string]: { name: string; price: number } } = {
 };
 
 const seriesesData = new Map([
-  ["1D", [{ time: "2024-07-01", value: 210 }, { time: "2024-07-02", value: 215 }, { time: "2024-07-03", value: 218.75 }]],
-  ["1W", [{ time: "2024-06-27", value: 200 }, { time: "2024-07-03", value: 218.75 }]],
-  ["1M", [{ time: "2024-06-01", value: 190 }, { time: "2024-07-03", value: 218.75 }]],
-  ["3M", [{ time: "2024-04-01", value: 180 }, { time: "2024-07-03", value: 218.75 }]],
-  ["YTD", [{ time: "2024-01-02", value: 170 }, { time: "2024-07-03", value: 218.75 }]],
-  ["1Y", [{ time: "2023-07-01", value: 150 }, { time: "2024-07-03", value: 218.75 }]],
-  ["Max", [{ time: "2020-01-01", value: 100 }, { time: "2024-07-03", value: 218.75 }]],
+  ["1D", [{ time: "2024-07-01", value: 210.0 }, { time: "2024-07-02", value: 215.0 }, { time: "2024-07-03", value: 218.75 }]],
+  ["1W", [{ time: "2024-06-28", value: 208.0 }, { time: "2024-07-05", value: 218.75 }]],
+  ["1M", [{ time: "2024-06-01", value: 200.0 }, { time: "2024-07-01", value: 218.75 }]],
+  ["3M", [{ time: "2024-04-01", value: 180.0 }, { time: "2024-07-01", value: 218.75 }]],
+  ["YTD", [{ time: "2024-01-01", value: 150.0 }, { time: "2024-07-01", value: 218.75 }]],
+  ["1Y", [{ time: "2023-07-01", value: 140.0 }, { time: "2024-07-01", value: 218.75 }]],
+  ["Max", [{ time: "2020-01-01", value: 80.0 }, { time: "2024-07-01", value: 218.75 }]]
 ]);
 
 export default function SymbolPage({ params }: { params: Promise<{ symbol: string }> }) {
   const { symbol } = use(params);
   const data = symbols[symbol.toUpperCase()] || { name: symbol.toUpperCase(), price: 0.0 };
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
-  const chartRef = useRef<{chart: IChartApi, lineSeries: ISeriesApi<"Line">} | null>(null);
+  const chartRef = useRef<{ chart: IChartApi, lineSeries: ISeriesApi<"Line"> } | null>(null);
   const [currentInterval, setCurrentInterval] = useState("1D");
+  const [chartHeight, setChartHeight] = useState(300); // Default height
 
   useEffect(() => {
+    // Set chart height on client mount
+    setChartHeight(Math.floor(window.innerHeight * 0.48));
+
     if (!chartContainerRef.current) return;
 
     const chart = createChart(chartContainerRef.current, {
-      layout: { background: { type: ColorType.Solid, color: "black" }, textColor: "white" },
+      layout: {
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor: "#fff",
+      },
+      grid: {
+        vertLines: { color: "rgba(255,255,255,0.05)" },
+        horzLines: { color: "rgba(255,255,255,0.05)" },
+      },
       width: chartContainerRef.current.clientWidth,
-      height: 260,
-      grid: { vertLines: { color: "rgba(255,255,255,0.1)" }, horzLines: { color: "rgba(255,255,255,0.1)" } },
-      rightPriceScale: { borderVisible: false },
-      timeScale: { borderVisible: false },
+      height: Math.floor(window.innerHeight * 0.48), // ~48% screen height
+      rightPriceScale: {
+        borderVisible: false,
+      },
+      timeScale: {
+        borderVisible: false,
+      },
     });
 
-    const lineSeries = chart.addSeries(LineSeries, { color: "#ffffff", lineWidth: 2 });
+    const lineSeries = chart.addSeries(LineSeries, {
+      color: "#fff",
+      lineWidth: 2,
+      priceLineVisible: true,
+      crossHairMarkerVisible: true,
+    });
+
     lineSeries.setData(seriesesData.get(currentInterval) || []);
     chart.timeScale().fitContent();
     chartRef.current = { chart, lineSeries };
-
-    const handleResize = () => {
-      chart.applyOptions({ width: chartContainerRef.current!.clientWidth });
-    };
     
+    const handleResize = () => {
+        const newHeight = Math.floor(window.innerHeight * 0.48);
+        chart.applyOptions({ width: chartContainerRef.current!.clientWidth, height: newHeight });
+        setChartHeight(newHeight);
+    };
+
     window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      chart.remove();
+        window.removeEventListener('resize', handleResize);
+        chart.remove();
     };
   }, []);
 
@@ -67,41 +90,80 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
   }, [currentInterval]);
 
   const intervals = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
-
   const currentPrice = seriesesData.get(currentInterval)?.slice(-1)[0]?.value ?? data.price;
 
-  return (
-    <main className="flex min-h-screen w-full flex-col bg-black text-white">
-      {/* Header */}
-      <header className="flex items-center px-2 pt-4 pb-1">
-        <Link href="/trade" className="p-1 -ml-2">
-          <ChevronLeft className="h-6 w-6 text-white" />
-        </Link>
-      </header>
 
-      {/* Title & Price */}
-      <div className="px-4">
-        <h1 className="text-white text-xl sm:text-2xl font-bold">{data.name}</h1>
-        <p className="text-white text-3xl sm:text-4xl font-semibold">${currentPrice.toFixed(2)}</p>
+  return (
+    <div className="bg-black text-white h-screen flex flex-col">
+      {/* Header */}
+      <div
+        className="flex items-center px-4 pt-4 pb-2 animate-slideDownFade"
+        style={{ paddingTop: "12px" }}
+      >
+        <Link href="/trade" className="text-white text-2xl mr-3">←</Link>
+        <div>
+          <h1 className="text-xl font-bold">{data.name}</h1>
+          <p className="text-3xl font-bold">${currentPrice.toFixed(2)}</p>
+        </div>
       </div>
 
       {/* Chart */}
-      <div className="w-full h-[260px] px-2 mt-2" ref={chartContainerRef} />
+      <div
+        ref={chartContainerRef}
+        className="w-full animate-slideUpFade"
+        style={{
+          flexShrink: 0,
+          height: chartHeight > 0 ? `${chartHeight}px` : '48vh',
+        }}
+      />
 
-      {/* Range Selector */}
-      <div className="flex justify-around mt-2 pb-2 px-2">
+      {/* Time Range Selector */}
+      <div
+        className="flex justify-around items-center px-2 mt-2 animate-slideUpFade"
+        style={{ minHeight: "40px" }}
+      >
         {intervals.map((interval) => (
           <button
             key={interval}
             onClick={() => setCurrentInterval(interval)}
-            className={`text-sm transition-colors duration-200 px-2 py-1 rounded-md ${
-              currentInterval === interval ? "text-white font-semibold" : "text-gray-400 hover:text-white"
+            className={`px-2 text-sm ${
+              currentInterval === interval ? "font-bold text-white" : "text-gray-400"
             }`}
           >
             {interval}
           </button>
         ))}
       </div>
-    </main>
+
+      {/* Animations */}
+      <style jsx>{`
+        @keyframes slideUpFade {
+          from {
+            transform: translateY(20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes slideDownFade {
+          from {
+            transform: translateY(-20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        .animate-slideUpFade {
+          animation: slideUpFade 0.6s ease forwards;
+        }
+        .animate-slideDownFade {
+          animation: slideDownFade 0.6s ease forwards;
+        }
+      `}</style>
+    </div>
   );
 }
