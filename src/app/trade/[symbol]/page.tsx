@@ -102,44 +102,49 @@ export default function SymbolPage() {
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
-      <div className="w-full max-w-md px-4 pt-1 sm:px-6 mx-auto">
-        <header className="relative pb-1">
-          <div className="flex items-start gap-2">
-            <Link href="/trade" className="p-2 -ml-2 active:opacity-70">
-              <ChevronLeft className="h-6 w-6" />
-            </Link>
-            <div className="mt-0.5">
-              <div className="text-xs text-gray-300">{symbol}</div>
-              <h1 className="text-[22px] font-semibold leading-6">{data.name}</h1>
-              <p className="text-[40px] font-extrabold leading-9">${data.price.toFixed(2)}</p>
+        <header className="px-4 pt-2">
+            {/* top row: back + star */}
+            <div className="flex items-center justify-between">
+                <Link href="/trade" aria-label="Back" className="-ml-2 p-2">
+                <ChevronLeft className="h-6 w-6 text-white" />
+                </Link>
+
+                <button
+                type="button"
+                aria-label="Add to Watchlist"
+                className="p-2"
+                onClick={() => setShowWatchlist(true)} 
+                >
+                <Star className="h-6 w-6 text-white/90" strokeWidth={1.5} fill="transparent" />
+                </button>
             </div>
-          </div>
-          <button
-            onClick={() => setShowWatchlist(true)}
-            aria-label="Add to Watchlist"
-            className="absolute right-1 top-1 p-2 rounded-full active:scale-95"
-          >
-            <Star className="h-6 w-6 stroke-white" fill="none" />
-          </button>
+
+            {/* info block: sits right under the back arrow */}
+            <div className="mt-1">
+                <p className="text-xs text-gray-400">{symbol}</p>
+                <h1 className="text-[20px] leading-tight font-semibold text-white">
+                {data.name}
+                </h1>
+                <p className="text-[42px] leading-none font-semibold text-white">
+                ${data.price.toFixed(2)}
+                </p>
+            </div>
         </header>
 
-        <div className="mt-1">
+        <div className="mx-4 mt-2">
             <div ref={chartWrapRef} className="h-[330px] w-full mb-1" />
-            <div className="-mt-8 flex items-center justify-between px-1">
+            <div className="-mt-1 flex items-center justify-between px-1">
                 {RANGES.map((r) => (
                 <button
                     key={r}
                     onClick={() => handleSetRange(r)}
-                    className={`text-[14px] px-1 py-0.5 ${
-                    range === r ? "text-white font-semibold underline underline-offset-4" : "text-gray-300 hover:text-white"
-                    }`}
+                    className={`text-[14px] ${range === r ? "text-white font-semibold underline underline-offset-4" : "text-gray-300"}`}
                 >
                     {r}
                 </button>
                 ))}
             </div>
         </div>
-      </div>
 
       {showWatchlist && (
         <div className="fixed inset-0 z-50 bg-transparent backdrop-blur-xl" onClick={() => setShowWatchlist(false)}>
