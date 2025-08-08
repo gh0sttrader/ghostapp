@@ -189,7 +189,18 @@ export default function SymbolPage() {
             {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
             {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
             
-            <TradeHistory events={MOCK_VOO_HISTORY} />
+            <TradeHistory
+              events={MOCK_VOO_HISTORY}
+              initialCount={10}
+              hasMore={true}
+              onLoadMore={async () => {
+                // replace with Firestore/broker fetch later
+                return [
+                  { id: "old-1", type: "BUY", date: "2024-12-10", qty: 3, price: 210.4 },
+                  { id: "old-2", type: "DIVIDEND", date: "2024-12-01", amount: 8.12 },
+                ];
+              }}
+            />
 
             {currentAboutData && <AnalystRating label="Strong buy" />}
         </div>

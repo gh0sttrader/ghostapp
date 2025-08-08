@@ -1,16 +1,16 @@
 // components/TradeHistory.tsx
 "use client";
-import * as Collapsible from "@radix-ui/react-collapsible";
+import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 type EventType = "BUY" | "SELL" | "DIVIDEND" | "SPLIT";
-type Event = {
+export type TradeEvent = {
   id: string;
   type: EventType;
-  date: string;           // ISO
+  date: string;         // ISO
   qty?: number;
-  price?: number;         // per-share
-  amount?: number;        // cash impact
+  price?: number;       // per-share
+  amount?: number;      // cash impact
   note?: string;
 };
 
@@ -18,22 +18,17 @@ const dot = (t: EventType) =>
   t === "BUY" ? "#45ECCB" : t === "SELL" ? "#4F0F99" : t === "DIVIDEND" ? "#39BED9" : "#2E74C6";
 const money = (n?: number) => (typeof n === "number" ? `$${n.toFixed(2)}` : "—");
 
-function Row({ e }: { e: Event }) {
+function Row({ e }: { e: TradeEvent }) {
   const title =
-    e.type === "BUY"
-      ? `Buy ${e.qty ?? "—"} @ ${money(e.price)}`
-      : e.type === "SELL"
-      ? `Sell ${e.qty ?? "—"} @ ${money(e.price)}`
-      : e.type === "DIVIDEND"
-      ? "Dividend"
-      : "Split / Corporate action";
+    e.type === "BUY" ? `Buy ${e.qty ?? "—"} @ ${money(e.price)}`
+    : e.type === "SELL" ? `Sell ${e.qty ?? "—"} @ ${money(e.price)}`
+    : e.type === "DIVIDEND" ? "Dividend"
+    : "Split / Corporate action";
 
   const right =
-    e.type === "BUY"
-      ? money(-(e.qty ?? 0) * (e.price ?? 0))
-      : e.type === "SELL"
-      ? money((e.qty ?? 0) * (e.price ?? 0))
-      : money(e.amount);
+    e.type === "BUY" ? money(-(e.qty ?? 0) * (e.price ?? 0))
+    : e.type === "SELL" ? money((e.qty ?? 0) * (e.price ?? 0))
+    : money(e.amount);
 
   const rightColor =
     e.type === "BUY" ? "text-red-400" : e.type === "SELL" ? "text-emerald-400" : "text-white/80";
@@ -58,13 +53,40 @@ function Row({ e }: { e: Event }) {
 export default function TradeHistory({
   events,
   initialCount = 10,
+  hasMore = false,
+  onLoadMore, // async: fetch older events
 }: {
-  events: Event[];
+  events: TradeEvent[];
   initialCount?: number;
+  hasMore?: boolean;
+  onLoadMore?: () => Promise<TradeEvent[]>;
 }) {
-  const sorted = [...events].sort((a, b) => +new Date(b.date) - +new Date(a.date));
-  const top = sorted.slice(0, initialCount);
-  const extra = sorted.slice(initialCount);
+  const base = useMemo(
+    () => [...events].sort((a, b) => +new Date(b.date) - +new Date(a.date)),
+    [events]
+  );
+  const [all, setAll] = useState<TradeEvent[]>(base);
+  const [expanded, setExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const top = all.slice(0, initialCount);
+  const extra = all.slice(initialCount);
+  const showToggle = hasMore || all.length > initialCount;
+
+  const toggle = async () => {
+    if (!expanded && hasMore && onLoadMore) {
+      setLoading(true);
+      try {
+        const older = await onLoadMore();
+        setAll((prev) =>
+          [...prev, ...older].sort((a, b) => +new Date(b.date) - +new Date(a.date))
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    setExpanded((v) => !v);
+  };
 
   return (
     <section className="mt-8">
@@ -75,23 +97,23 @@ export default function TradeHistory({
         {top.length === 0 && <li className="py-3 text-sm text-white/60">No history yet.</li>}
       </ul>
 
-      {extra.length > 0 && (
-        <Collapsible.Root>
-          <Collapsible.Trigger
-            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm hover:border-white/20"
+      {showToggle && (
+        <>
+          <button
+            onClick={toggle}
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm hover:border-white/20 disabled:opacity-50"
+            disabled={loading}
+            aria-expanded={expanded}
           >
-            <span className="data-[state=open]:hidden">Show more history</span>
-            <span className="hidden data-[state=open]:inline">Hide history</span>
-            <ChevronDown className="h-4 w-4 data-[state=open]:hidden" />
-            <ChevronUp className="hidden h-4 w-4 data-[state=open]:block" />
-          </Collapsible.Trigger>
+            {expanded ? <>Hide history <ChevronUp className="h-4 w-4" /></> : <>Show more history <ChevronDown className="h-4 w-4" /></>}
+          </button>
 
-          <Collapsible.Content className="mt-2">
-            <ul className="divide-y divide-white/10">
+          {expanded && (
+            <ul className="mt-2 divide-y divide-white/10">
               {extra.map((e) => <Row key={e.id} e={e} />)}
             </ul>
-          </Collapsible.Content>
-        </Collapsible.Root>
+          )}
+        </>
       )}
     </section>
   );
