@@ -82,7 +82,7 @@ export default function TradeHeaderCompact({
           </div>
 
           {/* RIGHT: stats grid + absolute chevron */}
-          <div className="relative row-span-3 text-right text-[12px] leading-4 pr-2">
+          <div className="relative row-span-3 text-right text-[12px] leading-4 pr-9">
             <div className="grid grid-cols-[max-content_6.5ch] gap-x-2 gap-y-0 items-baseline">
               <span className="text-white/70">High</span>
               <span className="tabular-nums whitespace-nowrap text-right">{high.toFixed(2)}</span>
