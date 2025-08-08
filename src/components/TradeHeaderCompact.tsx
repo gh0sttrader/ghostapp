@@ -31,55 +31,56 @@ export default function TradeHeaderCompact({
 
   return (
     <header className="sticky top-0 z-40 bg-black">
-      <div className="px-3 pt-1">
-        {/* Row 1: symbol+name (left), stats (right) */}
-        <div className="flex items-start">
-          <button
-            aria-label="Back"
-            onClick={() => history.back()}
-            className="mr-1 inline-flex h-6 w-6 items-center justify-center"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-          </button>
+      {/* Row 1 */}
+      <div className="flex items-center px-3 pt-3">
+        <button
+          aria-label="Back"
+          onClick={() => history.back()}
+          className="mr-1 inline-flex h-7 w-7 items-center justify-center"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
 
-          <div className="min-w-0 flex-1 leading-none">
-            <div className="text-[12px] font-semibold tracking-tight">{symbol}</div>
-            <div className="truncate text-[10px] text-white/70">
-              {name}{exchange ? ` ${exchange}` : ""}
-            </div>
+        <div className="min-w-0 flex-1 leading-tight">
+          <div className="text-[18px] font-semibold">{symbol}</div>
+          <div className="truncate text-[13px] text-white/70">
+            {name}{exchange ? ` ${exchange}` : ""}
           </div>
+        </div>
+        
+        <div className="w-6" />
+      </div>
 
-          <div className="ml-2 text-right leading-tight">
-            <div className="flex items-baseline justify-end gap-3">
-              <span className="text-[10px] text-white/60">High</span>
-              <span className="text-[12px] tabular-nums">{money(high)}</span>
-            </div>
-            <div className="mt-0.5 flex items-baseline justify-end gap-3">
-              <span className="text-[10px] text-white/60">Low</span>
-              <span className="text-[12px] tabular-nums">{money(low)}</span>
-            </div>
-            <div className="mt-0.5 flex items-baseline justify-end gap-3">
-              <span className="text-[10px] text-white/60">Vol</span>
-              <span className="text-[12px] tabular-nums">{vol(volume)}</span>
-            </div>
+      {/* Row 2 */}
+      <div className="flex items-end justify-between px-3 pb-1">
+        <div>
+          <div className="tabular-nums text-[22px] font-extrabold leading-[1.05] tracking-tight">
+            {money(price)}
+          </div>
+          <div className={`mt-0.5 text-[10px] tabular-nums ${deltaColor}`}>
+            <span className="mr-1">{deltaIcon}</span>
+            {money(change)} {pct(changePct)}
           </div>
         </div>
 
-        {/* Row 2: price + delta (left only) */}
-        <div className="mt-1 flex items-end justify-between">
-          <div>
-            <div className="tabular-nums text-[20px] font-extrabold leading-none tracking-tight">
-              {money(price)}
-            </div>
-            <div className={`mt-0.5 text-[10px] tabular-nums ${deltaColor}`}>
-              <span className="mr-1">{deltaIcon}</span>
-              {money(change)} {pct(changePct)}
-            </div>
+        <div className="text-right">
+          <div className="flex items-baseline gap-3">
+            <span className="text-[10px] text-white/70">High</span>
+            <span className="text-[12px] tabular-nums">{money(high)}</span>
+          </div>
+          <div className="mt-0.5 flex items-baseline gap-3">
+            <span className="text-[10px] text-white/70">Low</span>
+            <span className="text-[12px] tabular-nums">{money(low)}</span>
+          </div>
+          <div className="mt-0.5 flex items-baseline gap-3">
+            <span className="text-[10px] text-white/70">Volume</span>
+            <span className="text-[12px] tabular-nums">{vol(volume)}</span>
           </div>
         </div>
       </div>
 
-      <div className="mt-1 h-px w-full bg-white/10" />
+      <div className="h-px w-full bg-white/10" />
     </header>
   );
 }
+
