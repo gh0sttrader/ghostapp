@@ -1,4 +1,4 @@
-// components/TradeHeaderCompact.tsx
+
 "use client";
 import { useState } from "react";
 import { ChevronLeft, ChevronDown } from "lucide-react";
@@ -86,19 +86,15 @@ export default function TradeHeaderCompact({
             <div className="grid grid-cols-[max-content_6.5ch] gap-x-2 gap-y-0 items-baseline">
               <span className="text-white/70">High</span>
               <span className="tabular-nums whitespace-nowrap text-right">{high.toFixed(2)}</span>
-
               <span className="text-white/70">Low</span>
               <span className="tabular-nums whitespace-nowrap text-right">{low.toFixed(2)}</span>
-
               <span className="text-white/70">Volume</span>
               <span className="tabular-nums whitespace-nowrap text-right">{vol(volume)}</span>
             </div>
-
-            {/* Chevron: no background, absolute, tiny, doesn't push layout */}
             <button
               aria-label={open ? "Hide details" : "Show details"}
               onClick={() => setOpen(v => !v)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-5 w-5 items-center justify-center"
+              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-5 w-5 items-center justify-center z-10"
             >
               <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
