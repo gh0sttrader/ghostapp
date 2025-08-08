@@ -11,6 +11,8 @@ import AboutSection, { Security } from "@/components/AboutSection";
 import { MOCK_AAPL, MOCK_VOO } from "@/mock/aboutData";
 import SectorsSection from "@/components/SectorsSection";
 import { MOCK_VOO_SECTORS } from "@/mock/etfSectors";
+import TopHoldingsSection from "@/components/TopHoldingsSection";
+import { MOCK_VOO_TOP10 } from "@/mock/top10_voo";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -178,6 +180,7 @@ export default function SymbolPage() {
             </div>
             {currentAboutData && <AboutSection security={currentAboutData} />}
             {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
+            {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
         </div>
 
       <WatchlistModal
