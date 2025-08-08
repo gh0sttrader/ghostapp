@@ -84,28 +84,26 @@ export default function TradeHeaderCompact({
             </div>
           </div>
 
-          <div className="flex items-center">
-            {/* right stats grid */}
-            <div className="text-right text-[12px] leading-4">
+          <div className="relative flex items-center">
+            {/* stats grid sits flush right; reserve a tiny space for the absolute chevron */}
+            <div className="text-right text-[12px] leading-4 pr-5">
               <div className="grid grid-cols-[max-content_6.5ch] gap-x-1 gap-y-0 items-baseline">
                 <span className="text-white/70">High</span>
                 <span className="tabular-nums whitespace-nowrap text-right">{high.toFixed(2)}</span>
-
                 <span className="text-white/70">Low</span>
                 <span className="tabular-nums whitespace-nowrap text-right">{low.toFixed(2)}</span>
-
                 <span className="text-white/70">Volume</span>
                 <span className="tabular-nums whitespace-nowrap text-right">{vol(volume)}</span>
               </div>
             </div>
 
-            {/* tiny chevron button */}
+            {/* small chevron, absolutely positioned so it doesn't push layout */}
             <button
               aria-label={open ? "Hide details" : "Show details"}
               onClick={() => setOpen((v) => !v)}
-              className="ml-2 inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/5 hover:bg-white/10"
+              className="absolute right-0 top-1/2 -translate-y-1/2 inline-flex h-5 w-5 items-center justify-center rounded bg-white/5 hover:bg-white/10"
             >
-              <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
           </div>
         </div>
