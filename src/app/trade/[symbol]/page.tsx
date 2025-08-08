@@ -17,6 +17,8 @@ import AverageAnnualReturn from "@/components/AverageAnnualReturn";
 import { MOCK_VOO_AAR } from "@/mock/avgAnnualReturn_voo";
 import AnalystRating from "@/components/AnalystRating";
 import { WHITE_LINE } from "@/lib/chartTheme";
+import TradeHistory from "@/components/TradeHistory";
+import { MOCK_VOO_HISTORY } from "@/mock/history";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -186,6 +188,9 @@ export default function SymbolPage() {
             {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
             {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
             {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
+            
+            <TradeHistory events={MOCK_VOO_HISTORY} />
+
             {currentAboutData && <AnalystRating label="Strong buy" />}
         </div>
 
