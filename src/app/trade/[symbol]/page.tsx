@@ -16,15 +16,15 @@ import AnalystRating from "@/components/AnalystRating";
 import { WHITE_LINE } from "@/lib/chartTheme";
 import TradeHistory from "@/components/TradeHistory";
 import { MOCK_VOO_HISTORY } from "@/mock/history";
-import SymbolTopBar from "@/components/SymbolTopBar";
+import TradeTopHeader from "@/components/TradeTopHeader";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
 
-const symbols: Record<string, { name: string; price: number, type: 'stock' | 'etf', changePct: number }> = {
-  AAPL: { name: "Apple Inc.", price: 218.75, type: 'stock', changePct: 1.18 },
-  TSLA: { name: "Tesla Inc.", price: 183.01, type: 'stock', changePct: -2.55 },
-  VOO: { name: "Vanguard S&P 500 ETF", price: 504.23, type: 'etf', changePct: 1.42 },
+const symbols: Record<string, { name: string; price: number, type: 'stock' | 'etf', change: number, changePct: number, exchange: string, high: number, low: number, volume: number }> = {
+  AAPL: { name: "Apple Inc.", price: 218.75, type: 'stock', change: 2.50, changePct: 1.18, exchange: 'NASDAQ', high: 220.15, low: 217.45, volume: 45_123_456 },
+  TSLA: { name: "Tesla Inc.", price: 183.01, type: 'stock', change: -4.88, changePct: -2.55, exchange: 'NASDAQ', high: 188.50, low: 182.10, volume: 87_654_321 },
+  VOO: { name: "Vanguard S&P 500 ETF", price: 504.23, type: 'etf', change: 7.12, changePct: 1.42, exchange: 'NYSEARCA', high: 505.00, low: 502.50, volume: 3_210_987 },
 };
 
 const aboutData: Record<string, Security> = {
@@ -51,7 +51,7 @@ const seriesesData = new Map<RangeKey, { time: number; value: number }[]>([
 export default function SymbolPage() {
   const params = useParams();
   const symbol = params.symbol as string;
-  const data = symbols[symbol] || { name: symbol, price: 0, type: 'stock', changePct: 0 };
+  const data = symbols[symbol] || { name: symbol, price: 0, type: 'stock', change: 0, changePct: 0, exchange: '', high: 0, low: 0, volume: 0 };
   const currentAboutData = aboutData[symbol];
 
 
@@ -131,7 +131,17 @@ export default function SymbolPage() {
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
-      <SymbolTopBar symbol={symbol} name={data.name} price={data.price} changePct={data.changePct} />
+      <TradeTopHeader
+        symbol={symbol}
+        name={data.name}
+        exchange={data.exchange}
+        price={data.price}
+        change={data.change}
+        changePct={data.changePct}
+        high={data.high}
+        low={data.low}
+        volume={data.volume}
+      />
 
       <div className="mx-4 mt-2">
           <div ref={chartWrapRef} className="h-[330px] w-full mb-1" />
