@@ -5,6 +5,7 @@ import { createChart, LineSeries } from "lightweight-charts";
 import { ChevronLeft, Star, X } from "lucide-react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
+import WatchlistModal from "@/components/watchlist-modal";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -43,9 +44,14 @@ export default function SymbolPage() {
 
   const [range, setRange] = useState<RangeKey>("1D");
 
-  const [showWatchlist, setShowWatchlist] = useState(false);
-  const [selectedWatchlist, setSelectedWatchlist] = useState<string | null>(null);
-  const watchlists = ["Short", "Long", "Growth", "Dividends", "Tech"];
+  const [isWatchlistOpen, setIsWatchlistOpen] = useState(false);
+  
+  // Dummy data for the modal - will be replaced with Firestore data
+  const dummyWatchlists = [
+    { id: "1", name: "Short" },
+    { id: "2", name: "Long" },
+    { id: "3", name: "Growth" },
+  ];
 
   useEffect(() => {
     if (!chartWrapRef.current) return;
@@ -127,7 +133,7 @@ export default function SymbolPage() {
                 type="button"
                 aria-label="Add to Watchlist"
                 className="p-2"
-                onClick={() => setShowWatchlist(true)} 
+                onClick={() => setIsWatchlistOpen(true)}
                 >
                 <Star className="h-6 w-6 text-white/90" strokeWidth={1.5} fill="transparent" />
                 </button>
@@ -160,47 +166,13 @@ export default function SymbolPage() {
             </div>
         </div>
 
-      {showWatchlist && (
-        <div className="fixed inset-0 z-50 bg-transparent backdrop-blur-xl" onClick={() => setShowWatchlist(false)}>
-          <div
-            className="absolute left-1/2 top-1/2 w-[92%] max-w-sm -translate-x-1/2 -translate-y-1/2
-                       bg-transparent backdrop-blur-xl rounded-2xl ring-1 ring-white/10 p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-base font-semibold">Add to Watchlist</h2>
-              <button onClick={() => setShowWatchlist(false)} aria-label="Close" className="p-1">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="space-y-1">
-              {watchlists.map((wl) => (
-                <button
-                  key={wl}
-                  onClick={() => setSelectedWatchlist(wl)}
-                  className={`w-full text-left px-3 py-2 rounded-lg ring-1 ring-white/10 ${
-                    selectedWatchlist === wl ? "bg-white/10" : "bg-transparent"
-                  }`}
-                >
-                  {wl}
-                </button>
-              ))}
-            </div>
-            <div className="mt-3 flex gap-2">
-              <button onClick={() => setShowWatchlist(false)} className="flex-1 py-2 rounded-lg ring-1 ring-white/15">
-                Cancel
-              </button>
-              <button
-                onClick={() => setShowWatchlist(false)}
-                disabled={!selectedWatchlist}
-                className="flex-1 py-2 rounded-lg bg-white text-black disabled:opacity-40"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <WatchlistModal
+        open={isWatchlistOpen}
+        onClose={() => setIsWatchlistOpen(false)}
+        userId="dummy-user-id" // Placeholder
+        symbol={symbol}
+        watchlists={dummyWatchlists} // Placeholder
+      />
     </main>
   );
 }
