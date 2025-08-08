@@ -3,8 +3,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { createChart, LineSeries } from "lightweight-charts";
-import { ChevronLeft, X } from "lucide-react";
-import Link from "next/link";
 import { useParams } from 'next/navigation';
 import AboutSection, { Security } from "@/components/AboutSection";
 import { MOCK_AAPL, MOCK_VOO } from "@/mock/aboutData";
@@ -18,14 +16,15 @@ import AnalystRating from "@/components/AnalystRating";
 import { WHITE_LINE } from "@/lib/chartTheme";
 import TradeHistory from "@/components/TradeHistory";
 import { MOCK_VOO_HISTORY } from "@/mock/history";
+import SymbolTopBar from "@/components/SymbolTopBar";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
 
-const symbols: Record<string, { name: string; price: number, type: 'stock' | 'etf' }> = {
-  AAPL: { name: "Apple Inc.", price: 218.75, type: 'stock' },
-  TSLA: { name: "Tesla Inc.", price: 183.01, type: 'stock' },
-  VOO: { name: "Vanguard S&P 500 ETF", price: 504.23, type: 'etf' },
+const symbols: Record<string, { name: string; price: number, type: 'stock' | 'etf', changePct: number }> = {
+  AAPL: { name: "Apple Inc.", price: 218.75, type: 'stock', changePct: 1.18 },
+  TSLA: { name: "Tesla Inc.", price: 183.01, type: 'stock', changePct: -2.55 },
+  VOO: { name: "Vanguard S&P 500 ETF", price: 504.23, type: 'etf', changePct: 1.42 },
 };
 
 const aboutData: Record<string, Security> = {
@@ -52,7 +51,7 @@ const seriesesData = new Map<RangeKey, { time: number; value: number }[]>([
 export default function SymbolPage() {
   const params = useParams();
   const symbol = params.symbol as string;
-  const data = symbols[symbol] || { name: symbol, price: 0, type: 'stock' };
+  const data = symbols[symbol] || { name: symbol, price: 0, type: 'stock', changePct: 0 };
   const currentAboutData = aboutData[symbol];
 
 
@@ -132,59 +131,41 @@ export default function SymbolPage() {
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
-        <header className="px-4 pt-2">
-            {/* top row: back */}
-            <div className="flex items-center justify-between">
-                <Link href="/list" aria-label="Back" className="-ml-2 p-2">
-                  <ChevronLeft className="h-6 w-6 text-white" />
-                </Link>
-            </div>
+      <SymbolTopBar symbol={symbol} name={data.name} price={data.price} changePct={data.changePct} />
 
-            {/* info block: sits right under the back arrow */}
-            <div className="mt-1">
-                <p className="text-xs text-gray-400">{symbol}</p>
-                <h1 className="text-[20px] leading-tight font-semibold text-white">
-                {data.name}
-                </h1>
-                <p className="text-[42px] leading-none font-semibold text-white">
-                ${data.price.toFixed(2)}
-                </p>
-            </div>
-        </header>
+      <div className="mx-4 mt-2">
+          <div ref={chartWrapRef} className="h-[330px] w-full mb-1" />
+          <div className="-mt-1 flex items-center justify-between px-1">
+              {RANGES.map((r) => (
+              <button
+                  key={r}
+                  onClick={() => handleSetRange(r)}
+                  className={`text-[14px] ${range === r ? "text-white font-semibold underline underline-offset-4" : "text-gray-300"}`}
+              >
+                  {r}
+              </button>
+              ))}
+          </div>
+          {currentAboutData && <AboutSection security={currentAboutData} />}
+          {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
+          {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
+          {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
+          
+          <TradeHistory
+            events={MOCK_VOO_HISTORY}
+            initialCount={10}
+            hasMore={true}
+            onLoadMore={async () => {
+              // replace with Firestore/broker fetch later
+              return [
+                { id: "old-1", type: "BUY", date: "2024-12-10", qty: 3, price: 210.4 },
+                { id: "old-2", type: "DIVIDEND", date: "2024-11-30", amount: 8.12 },
+              ];
+            }}
+          />
 
-        <div className="mx-4 mt-2">
-            <div ref={chartWrapRef} className="h-[330px] w-full mb-1" />
-            <div className="-mt-1 flex items-center justify-between px-1">
-                {RANGES.map((r) => (
-                <button
-                    key={r}
-                    onClick={() => handleSetRange(r)}
-                    className={`text-[14px] ${range === r ? "text-white font-semibold underline underline-offset-4" : "text-gray-300"}`}
-                >
-                    {r}
-                </button>
-                ))}
-            </div>
-            {currentAboutData && <AboutSection security={currentAboutData} />}
-            {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
-            {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
-            {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
-            
-            <TradeHistory
-              events={MOCK_VOO_HISTORY}
-              initialCount={10}
-              hasMore={true}
-              onLoadMore={async () => {
-                // replace with Firestore/broker fetch later
-                return [
-                  { id: "old-1", type: "BUY", date: "2024-12-10", qty: 3, price: 210.4 },
-                  { id: "old-2", type: "DIVIDEND", date: "2024-11-30", amount: 8.12 },
-                ];
-              }}
-            />
-
-            {currentAboutData && <AnalystRating label="Strong buy" />}
-        </div>
+          {currentAboutData && <AnalystRating label="Strong buy" />}
+      </div>
     </main>
   );
 }
