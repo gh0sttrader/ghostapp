@@ -9,6 +9,8 @@ import { useParams } from 'next/navigation';
 import WatchlistModal from "@/components/watchlist-modal";
 import AboutSection, { Security } from "@/components/AboutSection";
 import { MOCK_AAPL, MOCK_VOO } from "@/mock/aboutData";
+import SectorsSection from "@/components/SectorsSection";
+import { MOCK_VOO_SECTORS } from "@/mock/etfSectors";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -175,6 +177,7 @@ export default function SymbolPage() {
                 ))}
             </div>
             {currentAboutData && <AboutSection security={currentAboutData} />}
+            {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
         </div>
 
       <WatchlistModal
