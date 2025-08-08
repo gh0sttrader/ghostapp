@@ -6,13 +6,16 @@ import { ChevronLeft, Star, X } from "lucide-react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 
+type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
+const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
+
 const symbols: Record<string, { name: string; price: number }> = {
   AAPL: { name: "Apple Inc.", price: 218.75 },
   TSLA: { name: "Tesla Inc.", price: 183.01 },
   VOO: { name: "Vanguard S&P 500 ETF", price: 504.23 },
 };
 
-// ASC timestamps
+// ASC timestamps for 1D/1W (others disabled for now)
 const seriesesData = new Map<string, { time: number; value: number }[]>([
   ["1D", [
     { time: 1719878400, value: 210 },
@@ -38,8 +41,10 @@ export default function SymbolPage() {
   const chartRef = useRef<ReturnType<typeof createChart> | null>(null);
   const lineRef = useRef<any>(null);
   const roRef = useRef<ResizeObserver | null>(null);
-  const [range, setRange] = useState<"1D" | "1W">("1D");
 
+  const [range, setRange] = useState<RangeKey>("1D");
+
+  // watchlist modal state (unchanged)
   const [showWatchlist, setShowWatchlist] = useState(false);
   const [selectedWatchlist, setSelectedWatchlist] = useState<string | null>(null);
   const watchlists = ["Short", "Long", "Growth", "Dividends", "Tech"];
@@ -47,29 +52,29 @@ export default function SymbolPage() {
   useEffect(() => {
     if (!chartWrapRef.current) return;
 
-    const container = chartWrapRef.current;
-    const chart = createChart(container, {
+    const el = chartWrapRef.current;
+    const chart = createChart(el, {
       layout: { background: { type: "solid", color: "#000" }, textColor: "#fff" },
       grid: { vertLines: { visible: false }, horzLines: { visible: false } },
       rightPriceScale: { borderVisible: false },
       timeScale: { borderVisible: false, fixLeftEdge: true, fixRightEdge: true },
-      width: container.clientWidth,
-      height: 360,                   // <- back to taller header/graph feel
+      width: el.clientWidth,
+      height: 300, // tighter like before
     });
 
-    const lineSeries = chart.addSeries(LineSeries, { color: "#00FF00", lineWidth: 2, priceLineVisible: true });
-    lineSeries.setData(seriesesData.get(range) || []);
+    const line = chart.addSeries(LineSeries, { color: "#00FF00", lineWidth: 2, priceLineVisible: true });
+    line.setData(seriesesData.get("1D") || []);
     chart.timeScale().fitContent();
 
-    // keep it responsive without shifting layout
+    // responsive without changing layout
     const ro = new ResizeObserver(() => {
       if (!chartWrapRef.current) return;
       chart.applyOptions({ width: chartWrapRef.current.clientWidth });
     });
-    ro.observe(container);
+    ro.observe(el);
 
     chartRef.current = chart;
-    lineRef.current = lineSeries;
+    lineRef.current = line;
     roRef.current = ro;
 
     return () => {
@@ -82,15 +87,16 @@ export default function SymbolPage() {
 
   useEffect(() => {
     if (!lineRef.current || !chartRef.current) return;
-    lineRef.current.setData(seriesesData.get(range) || []);
+    const d = seriesesData.get(range) || seriesesData.get("1D") || [];
+    lineRef.current.setData(d);
     chartRef.current.timeScale().fitContent();
   }, [range]);
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
       <div className="relative w-full max-w-md px-4 pt-1 sm:px-6 mx-auto">
-        {/* header restored: big name + big white price on left; star does not shift layout */}
-        <header className="relative pb-2">
+        {/* HEADER — matches old look */}
+        <header className="relative pb-1">
           <div className="flex items-start gap-2">
             <Link href="/trade" className="p-2 -ml-2 active:opacity-70">
               <ChevronLeft className="h-6 w-6" />
@@ -98,11 +104,10 @@ export default function SymbolPage() {
             <div className="mt-0.5">
               <div className="text-xs text-gray-300">{symbol}</div>
               <h1 className="text-[22px] font-semibold leading-6">{data.name}</h1>
-              <p className="text-[34px] font-bold leading-8 text-white">${data.price.toFixed(2)}</p>
+              <p className="text-[40px] font-extrabold leading-9">${data.price.toFixed(2)}</p>
             </div>
           </div>
-
-          {/* star: absolute top-right so it doesn’t affect header/chart layout */}
+          {/* Star (absolute so it doesn't push header/chart) */}
           <button
             onClick={() => setShowWatchlist(true)}
             aria-label="Add to Watchlist"
@@ -112,26 +117,30 @@ export default function SymbolPage() {
           </button>
         </header>
 
-        {/* chart (restored spacing) */}
+        {/* CHART — restored spacing */}
         <div ref={chartWrapRef} className="mt-1 rounded-lg overflow-hidden" />
 
-        {/* ranges below chart (unchanged behavior) */}
-        <div className="flex justify-between mt-2 px-1 text-gray-300">
-          {(["1D", "1W"] as const).map((r) => (
-            <button
-              key={r}
-              onClick={() => setRange(r)}
-              className={`text-sm px-2 py-1 rounded ${
-                range === r ? "bg-green-600 text-black" : "hover:text-white"
-              }`}
-            >
-              {r}
-            </button>
-          ))}
+        {/* RANGE ROW — small text, centered, no green pill */}
+        <div className="mt-2 flex items-center justify-between text-[13px] text-gray-300">
+          {RANGES.map((r) => {
+            const enabled = !!seriesesData.get(r);
+            return (
+              <button
+                key={r}
+                disabled={!enabled}
+                onClick={() => enabled && setRange(r)}
+                className={`px-1 py-0.5 ${range === r ? "text-white font-semibold underline underline-offset-4" : "hover:text-white"} ${
+                  enabled ? "" : "opacity-30 cursor-default"
+                }`}
+              >
+                {r}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* frosted modal (unchanged) */}
+      {/* WATCHLIST MODAL (unchanged) */}
       {showWatchlist && (
         <div className="fixed inset-0 z-50 bg-transparent backdrop-blur-xl" onClick={() => setShowWatchlist(false)}>
           <div
@@ -145,7 +154,6 @@ export default function SymbolPage() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-
             <div className="space-y-1">
               {watchlists.map((wl) => (
                 <button
@@ -159,7 +167,6 @@ export default function SymbolPage() {
                 </button>
               ))}
             </div>
-
             <div className="mt-3 flex gap-2">
               <button onClick={() => setShowWatchlist(false)} className="flex-1 py-2 rounded-lg ring-1 ring-white/15">
                 Cancel
