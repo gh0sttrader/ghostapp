@@ -142,6 +142,7 @@ export default function SymbolPage() {
         high={data.high}
         low={data.low}
         volume={data.volume}
+        sentinelId="trade-header-sentinel"
       />
 
       <div id="trade-header-sentinel" className="h-1" />
