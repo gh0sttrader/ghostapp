@@ -197,7 +197,7 @@ export default function SymbolPage() {
                 // replace with Firestore/broker fetch later
                 return [
                   { id: "old-1", type: "BUY", date: "2024-12-10", qty: 3, price: 210.4 },
-                  { id: "old-2", type: "DIVIDEND", date: "2024-12-01", amount: 8.12 },
+                  { id: "old-2", type: "DIVIDEND", date: "2024-11-30", amount: 8.12 },
                 ];
               }}
             />
