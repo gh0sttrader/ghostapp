@@ -66,7 +66,7 @@ export default function TradeHeaderCompact({
 
         <div className="text-right">
           {/* grid with fixed value column so all numbers end at the same right edge */}
-          <div className="grid grid-cols-[auto_8ch] gap-x-4 gap-y-1">
+          <div className="grid grid-cols-[auto_7ch] gap-x-2 gap-y-1">
             <span className="text-[10px] text-white/70">High</span>
             <span className="text-[12px] tabular-nums whitespace-nowrap text-right">{money(high)}</span>
 
@@ -83,4 +83,3 @@ export default function TradeHeaderCompact({
     </header>
   );
 }
-
