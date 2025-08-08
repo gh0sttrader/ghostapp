@@ -18,8 +18,8 @@ import TradeHistory from "@/components/TradeHistory";
 import { MOCK_VOO_HISTORY } from "@/mock/history";
 import TradeHeaderCompact from "@/components/TradeHeaderCompact";
 import ScrollMiniHeader from "@/components/ScrollMiniHeader";
-import RangeSummary from "@/components/RangeSummary";
 import { Bar, rangeLabel } from "@/lib/range";
+import TopRangeStrip from "@/components/TopRangeStrip";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -159,6 +159,8 @@ export default function SymbolPage() {
         price={data.price}
         sentinelId="trade-header-sentinel"
       />
+      
+      <TopRangeStrip bars={barsForSummary} label={rangeLabel(range)} />
 
       <div className="mx-4 mt-2">
           <div ref={chartWrapRef} className="h-[330px] w-full mb-1" />
@@ -173,7 +175,6 @@ export default function SymbolPage() {
               </button>
               ))}
           </div>
-          <RangeSummary bars={barsForSummary} label={rangeLabel(range)} />
           {currentAboutData && <AboutSection security={currentAboutData} />}
           {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
           {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} />}
