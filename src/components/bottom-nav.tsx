@@ -1,4 +1,3 @@
-
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +14,7 @@ const TABS = [
 export function BottomNav() {
   const path = usePathname();
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-black/90 backdrop-blur">
+    <nav className="fixed inset-x-0 bottom-0 z-40 bg-black/90 backdrop-blur border-t-0 shadow-none">
       <div className="grid h-14 grid-cols-5 place-items-center">
         {TABS.map(({ href, label, icon: Icon }) => {
           const active = path?.startsWith(href);
@@ -28,7 +27,7 @@ export function BottomNav() {
               data-active={active}
             >
               <Icon
-                className="h-6 w-6 text-white/70 group-data-[active=true]:text-white"
+                className="h-5 w-5 text-white/70 group-data-[active=true]:text-white"
                 strokeWidth={2}
               />
               <span className="sr-only">{label}</span>
