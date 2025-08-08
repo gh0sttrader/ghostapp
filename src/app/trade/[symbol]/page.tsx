@@ -15,6 +15,7 @@ import TopHoldingsSection from "@/components/TopHoldingsSection";
 import { MOCK_VOO_TOP10 } from "@/mock/top10_voo";
 import AverageAnnualReturn from "@/components/AverageAnnualReturn";
 import { MOCK_VOO_AAR } from "@/mock/avgAnnualReturn_voo";
+import AnalystRating from "@/components/AnalystRating";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -184,6 +185,17 @@ export default function SymbolPage() {
             {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
             {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
             {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
+            {currentAboutData && (
+              <AnalystRating
+                symbol={symbol}
+                type={currentAboutData.type}
+                holdings={
+                  currentAboutData.type === 'etf'
+                    ? MOCK_VOO_TOP10.map((h) => ({ symbol: h.name, weight: h.weight }))
+                    : undefined
+                }
+              />
+            )}
         </div>
 
       <WatchlistModal
