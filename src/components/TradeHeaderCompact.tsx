@@ -64,7 +64,7 @@ export default function TradeHeaderCompact({
           </div>
         </div>
 
-        <div className="text-right text-base">
+        <div className="text-right text-[12px] leading-5">
           {/* much tighter label/value spacing + fixed narrow value column */}
           <div className="grid grid-cols-[max-content_6.5ch] gap-x-1 gap-y-0.5 items-baseline">
             <span className="text-white/70">High</span>
