@@ -7,15 +7,22 @@ import { ChevronLeft, Star, X } from "lucide-react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 import WatchlistModal from "@/components/watchlist-modal";
+import AboutSection, { Security } from "@/components/AboutSection";
+import { MOCK_AAPL, MOCK_VOO } from "@/mock/aboutData";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
 
-const symbols: Record<string, { name: string; price: number }> = {
-  AAPL: { name: "Apple Inc.", price: 218.75 },
-  TSLA: { name: "Tesla Inc.", price: 183.01 },
-  VOO: { name: "Vanguard S&P 500 ETF", price: 504.23 },
+const symbols: Record<string, { name: string; price: number, type: 'stock' | 'etf' }> = {
+  AAPL: { name: "Apple Inc.", price: 218.75, type: 'stock' },
+  TSLA: { name: "Tesla Inc.", price: 183.01, type: 'stock' },
+  VOO: { name: "Vanguard S&P 500 ETF", price: 504.23, type: 'etf' },
 };
+
+const aboutData: Record<string, Security> = {
+  AAPL: MOCK_AAPL,
+  VOO: MOCK_VOO,
+}
 
 const buildSeries = (count: number, start = 210) =>
   Array.from({ length: count }, (_, i) => ({
@@ -36,7 +43,9 @@ const seriesesData = new Map<RangeKey, { time: number; value: number }[]>([
 export default function SymbolPage() {
   const params = useParams();
   const symbol = params.symbol as string;
-  const data = symbols[symbol] || { name: symbol, price: 0 };
+  const data = symbols[symbol] || { name: symbol, price: 0, type: 'stock' };
+  const currentAboutData = aboutData[symbol];
+
 
   const chartWrapRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<ReturnType<typeof createChart> | null>(null);
@@ -165,6 +174,7 @@ export default function SymbolPage() {
                 </button>
                 ))}
             </div>
+            {currentAboutData && <AboutSection security={currentAboutData} />}
         </div>
 
       <WatchlistModal
