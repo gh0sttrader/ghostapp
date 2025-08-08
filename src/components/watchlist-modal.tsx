@@ -1,7 +1,8 @@
 // WatchlistModal.tsx
 "use client";
 import { useState } from "react";
-import { getFirestore, addDoc, collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 type Watchlist = { id: string; name: string };
 
@@ -24,8 +25,6 @@ export default function WatchlistModal({
   const [busy, setBusy] = useState(false);
 
   if (!open) return null;
-
-  const db = getFirestore();
 
   const addToWatchlist = async (listId: string) => {
     await setDoc(
