@@ -59,8 +59,8 @@ const seriesesData = new Map([
   ]]
 ]);
 
-export default function SymbolPage({ params }: { params: { symbol: string } }) {
-  const { symbol } = params;
+export default function SymbolPage({ params }: { params: Promise<{ symbol: string }> }) {
+  const { symbol } = use(params);
   const data = symbols[symbol.toUpperCase()] || { name: symbol.toUpperCase(), price: 0.00 };
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<{chart: IChartApi, series: ISeriesApi<"Line">} | null>(null);
