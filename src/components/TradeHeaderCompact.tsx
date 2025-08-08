@@ -41,7 +41,7 @@ export default function TradeHeaderCompact({
     "52 Week Low": 441.44,
     Expenses: "0.03%",
     "Div Yield": "1.18%",
-    "Inception Date": "09/07/2010",
+    Inception: "09/07/2010",
     "Total Assets": "1.24T",
     Turnover: "--",
     "1Y Return (cum.)": "23.53%",
@@ -110,9 +110,9 @@ export default function TradeHeaderCompact({
         style={{ maxHeight: open ? 900 : 0, opacity: open ? 1 : 0 }}
       >
         <div className="px-3 py-3">
-          <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-[13px] md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-[12px] md:grid-cols-3">
             {Object.entries(details).filter(([k]) => k !== "Morningstar Rating").map(([k, v]) => (
-              <div key={k} className="flex items-baseline justify-between gap-4">
+              <div key={k} className="flex items-baseline justify-between gap-3 leading-5">
                 <span className="text-white/70">{k}</span>
                 <span className="tabular-nums">{typeof v === "number" ? v.toString() : v}</span>
               </div>
