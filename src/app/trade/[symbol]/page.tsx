@@ -59,8 +59,17 @@ export default function SymbolPage() {
         borderVisible: false,
         visible: false,
       },
-      handleScroll: false,
-      handleScale: false,
+      handleScroll: {
+        mouseWheel: true,
+        pressedMouseMove: true,
+        horzTouchDrag: true,
+        vertTouchDrag: true,
+      },
+      handleScale: {
+        axisPressedMouseMove: true,
+        mouseWheel: true,
+        pinch: true,
+      },
       width: el.clientWidth,
       height: 330,
     });
