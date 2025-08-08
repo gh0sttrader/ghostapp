@@ -72,38 +72,34 @@ export default function TradeHeaderCompact({
           <div className="w-8" />
         </div>
 
-        {/* Row 2: price left + stats right + chevron */}
-        <div className="flex items-end justify-between px-3 pb-2 pt-1">
-          <div>
-            <div className="tabular-nums font-extrabold leading-tight text-[40px] md:text-[44px]">
+        <div className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto_auto] items-stretch px-3 pb-2 pt-1">
+          {/* LEFT: price + delta must fit between top(row1) and bottom(row3) */}
+          <div className="row-span-3 flex flex-col justify-between self-stretch">
+            <div className="tabular-nums font-extrabold leading-none text-[32px]">
               {price.toFixed(2)}
             </div>
-            <div className={`mt-1 tabular-nums ${deltaClass} text-[12px]`}>
+            <div className={`tabular-nums ${deltaClass} text-[12px]`}>
               <span className="mr-1 align-middle">{deltaIcon}</span>
               {change.toFixed(2)} {`${changePct > 0 ? "+" : ""}${changePct.toFixed(2)}%`}
             </div>
           </div>
 
-          <div className="relative flex items-center">
-            {/* stats grid sits flush right; reserve a tiny space for the absolute chevron */}
-            <div className="text-right text-[12px] leading-4 pr-5">
-              <div className="grid grid-cols-[max-content_6.5ch] gap-x-1 gap-y-0 items-baseline">
-                <span className="text-white/70">High</span>
-                <span className="tabular-nums whitespace-nowrap text-right">{high.toFixed(2)}</span>
-                <span className="text-white/70">Low</span>
-                <span className="tabular-nums whitespace-nowrap text-right">{low.toFixed(2)}</span>
-                <span className="text-white/70">Volume</span>
-                <span className="tabular-nums whitespace-nowrap text-right">{vol(volume)}</span>
-              </div>
+          {/* RIGHT: stats grid + absolute chevron */}
+          <div className="relative row-span-3 text-right text-[12px] leading-4 pr-5">
+            <div className="grid grid-cols-[max-content_6.5ch] grid-rows-[auto_auto_auto] gap-x-1 gap-y-0 items-baseline">
+              <span className="text-white/70 row-start-1 col-start-1">High</span>
+              <span className="tabular-nums whitespace-nowrap text-right row-start-1 col-start-2">{high.toFixed(2)}</span>
+              <span className="text-white/70 row-start-2 col-start-1">Low</span>
+              <span className="tabular-nums whitespace-nowrap text-right row-start-2 col-start-2">{low.toFixed(2)}</span>
+              <span className="text-white/70 row-start-3 col-start-1">Volume</span>
+              <span className="tabular-nums whitespace-nowrap text-right row-start-3 col-start-2">{vol(volume)}</span>
             </div>
-
-            {/* small chevron, absolutely positioned so it doesn't push layout */}
             <button
               aria-label={open ? "Hide details" : "Show details"}
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => setOpen(v => !v)}
               className="absolute right-0 top-1/2 -translate-y-1/2 inline-flex h-5 w-5 items-center justify-center rounded bg-white/5 hover:bg-white/10"
             >
-              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
           </div>
         </div>
