@@ -1,10 +1,8 @@
 // components/TopHoldingsSection.tsx
 "use client";
+import { GRADIENT_10 } from "@/constants/palette";
 
 type Holding = { name: string; weight: number };
-
-const PALETTE = ["#7cc3ff","#a59bff","#ff9bd4","#ffd27a","#4de0a3",
-                 "#ffd166","#8bd3ff","#c3b9ff","#ffb2e1","#ffe09e"];
 
 export default function TopHoldingsSection({
   data,
@@ -20,7 +18,10 @@ export default function TopHoldingsSection({
 
   const Cell = ({ h, i }: { h: Holding; i: number }) => (
     <div className="flex items-start gap-2">
-      <span className="mt-1 h-3 w-3 rounded-[4px]" style={{ backgroundColor: PALETTE[i % PALETTE.length] }} />
+      <span
+        className="mt-1 h-3 w-3 rounded-[4px]"
+        style={{ backgroundColor: GRADIENT_10[i % GRADIENT_10.length] }}
+      />
       <div className="flex-1">
         <div className="text-[15px] leading-5">{h.name}</div>
         <div className="tabular-nums text-sm text-white/70">{h.weight.toFixed(2)}%</div>
