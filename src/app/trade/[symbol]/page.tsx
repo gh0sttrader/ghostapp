@@ -17,6 +17,7 @@ import { WHITE_LINE } from "@/lib/chartTheme";
 import TradeHistory from "@/components/TradeHistory";
 import { MOCK_VOO_HISTORY } from "@/mock/history";
 import TradeHeaderCompact from "@/components/TradeHeaderCompact";
+import ScrollMiniHeader from "@/components/ScrollMiniHeader";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -131,7 +132,7 @@ export default function SymbolPage() {
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
-       <TradeHeaderCompact
+      <TradeHeaderCompact
         symbol={symbol}
         name={data.name}
         exchange={data.exchange}
@@ -141,6 +142,14 @@ export default function SymbolPage() {
         high={data.high}
         low={data.low}
         volume={data.volume}
+      />
+
+      <div id="trade-header-sentinel" className="h-1" />
+
+      <ScrollMiniHeader
+        symbol={symbol}
+        price={data.price}
+        sentinelId="trade-header-sentinel"
       />
 
       <div className="mx-4 mt-2">
