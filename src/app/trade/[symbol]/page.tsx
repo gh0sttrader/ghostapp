@@ -53,6 +53,7 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
       },
       timeScale: {
         borderVisible: false,
+        visible: false, // Hides the entire time axis
       },
     });
 
@@ -136,7 +137,7 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
 
       {/* Time Range Selector */}
       <div
-        className="flex justify-around items-center px-2 mt-2 animate-slideUpFade"
+        className="flex justify-around items-center px-2 mt-[-10px] animate-slideUpFade"
         style={{ minHeight: "40px" }}
       >
         {intervals.map((interval) => (
