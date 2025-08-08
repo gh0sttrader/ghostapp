@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, Maximize2 } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState, use } from 'react';
 import { createChart, IChartApi, ISeriesApi, ColorType, LineSeries } from 'lightweight-charts';
@@ -101,12 +101,11 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
     <div className="bg-black text-white h-screen flex flex-col">
        {/* HEADER */}
       <div className="px-4 pt-4 animate-slideDownFade">
-        {/* Top row: back + expand */}
+        {/* Top row: back button */}
         <div className="flex justify-between items-center mb-2">
            <Link href="/trade">
             <ChevronLeft className="text-white text-2xl" />
           </Link>
-          <Maximize2 className="text-white text-xl" />
         </div>
 
         {/* Ticker */}
