@@ -16,13 +16,13 @@ import AnalystRating from "@/components/AnalystRating";
 import { WHITE_LINE } from "@/lib/chartTheme";
 import TradeHistory from "@/components/TradeHistory";
 import { MOCK_VOO_HISTORY } from "@/mock/history";
-import TradeTopHeader from "@/components/TradeTopHeader";
+import TradeHeaderCompact from "@/components/TradeHeaderCompact";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
 
 const symbols: Record<string, { name: string; price: number, type: 'stock' | 'etf', change: number, changePct: number, exchange: string, high: number, low: number, volume: number }> = {
-  AAPL: { name: "Apple Inc.", price: 218.75, type: 'stock', change: 2.50, changePct: 1.18, exchange: 'NASDAQ', high: 220.15, low: 217.45, volume: 45_123_456 },
+  AAPL: { name: "Apple Inc.", price: 218.75, type: 'stock', change: 2.50, changePct: 1.18, exchange: 'NASDAQ', high: 220.15, low: 217.45, volume: 45_120_000 },
   TSLA: { name: "Tesla Inc.", price: 183.01, type: 'stock', change: -4.88, changePct: -2.55, exchange: 'NASDAQ', high: 188.50, low: 182.10, volume: 87_654_321 },
   VOO: { name: "Vanguard S&P 500 ETF", price: 504.23, type: 'etf', change: 7.12, changePct: 1.42, exchange: 'NYSEARCA', high: 505.00, low: 502.50, volume: 3_210_987 },
 };
@@ -131,7 +131,7 @@ export default function SymbolPage() {
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
-      <TradeTopHeader
+       <TradeHeaderCompact
         symbol={symbol}
         name={data.name}
         exchange={data.exchange}
@@ -159,6 +159,7 @@ export default function SymbolPage() {
           {currentAboutData && <AboutSection security={currentAboutData} />}
           {currentAboutData && currentAboutData.type === 'etf' && <SectorsSection data={MOCK_VOO_SECTORS} />}
           {currentAboutData && currentAboutData.type === 'etf' && <TopHoldingsSection data={MOCK_VOO_TOP10} asOf="Jun 30, 2025" />}
+          
           {currentAboutData && currentAboutData.type === 'etf' && <AverageAnnualReturn rows={MOCK_VOO_AAR} asOf="Jul 31, 2025" />}
           
           <TradeHistory
