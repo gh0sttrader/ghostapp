@@ -3,10 +3,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { createChart, LineSeries } from "lightweight-charts";
-import { ChevronLeft, Star, X } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
-import WatchlistModal from "@/components/watchlist-modal";
 import AboutSection, { Security } from "@/components/AboutSection";
 import { MOCK_AAPL, MOCK_VOO } from "@/mock/aboutData";
 import SectorsSection from "@/components/SectorsSection";
@@ -63,16 +62,7 @@ export default function SymbolPage() {
   const roRef = useRef<ResizeObserver | null>(null);
 
   const [range, setRange] = useState<RangeKey>("1D");
-
-  const [isWatchlistOpen, setIsWatchlistOpen] = useState(false);
   
-  // Dummy data for the modal - will be replaced with Firestore data
-  const dummyWatchlists = [
-    { id: "1", name: "Short" },
-    { id: "2", name: "Long" },
-    { id: "3", name: "Growth" },
-  ];
-
   useEffect(() => {
     if (!chartWrapRef.current) return;
 
@@ -143,20 +133,11 @@ export default function SymbolPage() {
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white">
         <header className="px-4 pt-2">
-            {/* top row: back + star */}
+            {/* top row: back */}
             <div className="flex items-center justify-between">
                 <Link href="/list" aria-label="Back" className="-ml-2 p-2">
-                <ChevronLeft className="h-6 w-6 text-white" />
+                  <ChevronLeft className="h-6 w-6 text-white" />
                 </Link>
-
-                <button
-                type="button"
-                aria-label="Add to Watchlist"
-                className="p-2"
-                onClick={() => setIsWatchlistOpen(true)}
-                >
-                <Star className="h-6 w-6 text-white/90" strokeWidth={1.5} fill="transparent" />
-                </button>
             </div>
 
             {/* info block: sits right under the back arrow */}
@@ -204,14 +185,6 @@ export default function SymbolPage() {
 
             {currentAboutData && <AnalystRating label="Strong buy" />}
         </div>
-
-      <WatchlistModal
-        open={isWatchlistOpen}
-        onClose={() => setIsWatchlistOpen(false)}
-        userId="dummy-user-id" // Placeholder
-        symbol={symbol}
-        watchlists={dummyWatchlists} // Placeholder
-      />
     </main>
   );
 }
