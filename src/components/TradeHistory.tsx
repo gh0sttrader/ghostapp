@@ -1,4 +1,3 @@
-
 // components/TradeHistory.tsx
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -13,28 +12,24 @@ export type TradeEvent = {
 const dedupe = (arr: TradeEvent[]) => Array.from(new Map(arr.map(e => [e.id, e])).values());
 
 function Row({ e }: { e: TradeEvent }) {
-  const money = (n?: number) => (typeof n === "number" ? `$${n.toFixed(2)}` : "—");
+  const money = (n?: number) =>
+    typeof n === "number" ? `$${n.toFixed(2)}` : "—";
 
   const title =
-    e.type === "BUY"
-      ? `Buy ${e.qty ?? "—"} @ ${money(e.price)}`
-      : e.type === "SELL"
-      ? `Sell ${e.qty ?? "—"} @ ${money(e.price)}`
-      : e.type === "DIVIDEND"
-      ? "Dividend"
-      : "Split / Corporate action";
+    e.type === "BUY" ? `Buy ${e.qty ?? "—"} @ ${money(e.price)}`
+    : e.type === "SELL" ? `Sell ${e.qty ?? "—"} @ ${money(e.price)}`
+    : e.type === "DIVIDEND" ? "Dividend"
+    : "Split / Corporate action";
 
   const amount =
-    e.type === "BUY"
-      ? -(e.qty ?? 0) * (e.price ?? 0)
-      : e.type === "SELL"
-      ? (e.qty ?? 0) * (e.price ?? 0)
-      : e.amount;
+    e.type === "BUY" ? -(e.qty ?? 0) * (e.price ?? 0)
+    : e.type === "SELL" ? (e.qty ?? 0) * (e.price ?? 0)
+    : e.amount;
 
-  const rightColor =
-    e.type === "BUY" ? "text-down"
-    : e.type === "SELL" ? "text-up"
-    : "text-white/80";
+  // NEW: color by cash flow, not type
+  // outflow (<= 0) → neutral off-white; inflow (>0) → green
+  const amountClass =
+    typeof amount === "number" && amount > 0 ? "text-up" : "text-white/80";
 
   return (
     <li className="flex items-start justify-between py-3">
@@ -42,14 +37,13 @@ function Row({ e }: { e: TradeEvent }) {
         <p className="truncate text-sm">{title}</p>
         <p className="mt-0.5 text-xs text-white/60">
           {new Date(e.date).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
+            month: "short", day: "numeric", year: "numeric",
           })}
           {e.note ? ` • ${e.note}` : ""}
         </p>
       </div>
-      <p className={`shrink-0 tabular-nums text-sm ${rightColor}`}>
+
+      <p className={`shrink-0 tabular-nums text-sm ${amountClass}`}>
         {typeof amount === "number" ? money(amount) : "—"}
       </p>
     </li>
