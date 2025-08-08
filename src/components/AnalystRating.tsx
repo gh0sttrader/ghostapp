@@ -1,98 +1,64 @@
 // components/AnalystRating.tsx
 "use client";
-import { useEffect, useState } from "react";
-import { httpsCallable, getFunctions } from "firebase/functions";
-import { app } from "@/lib/firebase";
+type Props = { data?: { buy: number; neutral: number; sell: number } };
 
-type Data = {
-  strongBuy: number; buy: number; hold: number; sell: number; strongSell: number;
-  asOf?: string | null;
-};
+const COLORS = [
+  "#4F0F99","#3E179F","#2C1FA7","#2632AF","#2B52BA",
+  "#2E74C6","#3199D2","#39BED9","#40E2E0","#45ECCB",
+];
 
-const COLORS = ["#4F0F99","#3E179F","#2C1FA7","#2632AF","#2B52BA",
-                "#2E74C6","#3199D2","#39BED9","#40E2E0","#45ECCB"];
-
-function labelFrom(score: number) {
-  if (score <= -4) return "Strong sell";
-  if (score <  -1) return "Sell";
-  if (score <=  1) return "Neutral";
-  if (score <   4) return "Buy";
+function labelFor(pct: number) {
+  if (pct <= 0.2) return "Strong sell";
+  if (pct <  0.4) return "Sell";
+  if (pct <= 0.6) return "Neutral";
+  if (pct <  0.8) return "Buy";
   return "Strong buy";
 }
 
-function Gauge({ pct }: { pct: number }) {
-  const w = 280, h = 150, cx = 140, cy = 140, r = 105, sw = 14;
-  const C = 2 * Math.PI * r, half = C / 2, off = C / 4;
-  const ang = -90 + pct * 180, rad = (Math.PI / 180) * ang;
-  const nx = cx + Math.cos(rad) * 82, ny = cy + Math.sin(rad) * 82;
-
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
-      <defs>
-        <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
-          {COLORS.map((c, i) => (
-            <stop key={i} offset={`${(i/(COLORS.length-1))*100}%`} stopColor={c} />
-          ))}
-        </linearGradient>
-      </defs>
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,.08)" strokeWidth={sw}
-        strokeDasharray={`${half} ${C}`} strokeDashoffset={off} transform={`rotate(180 ${cx} ${cy})`} />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="url(#arc)" strokeWidth={sw}
-        strokeDasharray={`${half * pct} ${C}`} strokeDashoffset={off} transform={`rotate(180 ${cx} ${cy})`} />
-      <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="white" strokeWidth={2} />
-    </svg>
-  );
-}
-
-export default function AnalystRating({
-  symbol, type, holdings, // holdings only if ETF (optional)
-}: {
-  symbol: string;
-  type: "stock" | "etf";
-  holdings?: { symbol: string; weight: number }[];
-}) {
-  const [data, setData] = useState<Data | null>(null);
-
-  useEffect(() => {
-    // This is a placeholder for fetching data. In a real app, you would
-    // want to handle loading and error states. This example will not
-    // show anything until data is "fetched" and will not handle errors.
-    const functions = getFunctions(app);
-    const fn = httpsCallable(functions, "getAnalystRating");
-    fn({ symbol, type, holdings }).then((r: any) => setData(r.data ?? r)).catch(console.error);
-  }, [symbol, type, holdings]);
-
-  if (!data) return null; // Or return a loading skeleton
-
-  const buy = (data.strongBuy || 0) + (data.buy || 0);
-  const neutral = data.hold || 0;
-  const sell = (data.strongSell || 0) + (data.sell || 0);
-
-  const score =
-    2 * (data.strongBuy || 0) +
-    (data.buy || 0) -
-    (data.hold || 0) -
-    (data.sell || 0) -
-    2 * (data.strongSell || 0);
-
-  const pct = Math.max(0, Math.min(1, (score + 8) / 16));
-  const text = labelFrom(score);
+export default function AnalystRating({ data }: Props) {
+  const d = data ?? { buy: 15, neutral: 10, sell: 3 }; // dummy defaults
+  const total = Math.max(1, d.buy + d.neutral + d.sell);
+  const pct = Math.min(1, Math.max(0, 0.5 + (d.buy - d.sell) / (2 * total)));
+  const label = labelFor(pct);
 
   return (
     <section className="mt-6 border-t border-white/10 pt-4">
       <h3 className="text-base font-semibold">Analyst rating</h3>
 
-      <div className="mt-2 flex flex-col items-center">
-        <Gauge pct={pct} />
-        <div className="mt-1 text-lg font-semibold">{text}</div>
-        <div className="mt-1 text-sm">
-          <span className="tabular-nums">{buy}</span> Buy&nbsp;&nbsp;|&nbsp;&nbsp;
-          <span className="tabular-nums">{neutral}</span> Neutral&nbsp;&nbsp;|&nbsp;&nbsp;
-          <span className="tabular-nums">{sell}</span> Sell
+      {/* Bar */}
+      <div className="mt-3">
+        <svg className="w-full" viewBox="0 0 640 48" preserveAspectRatio="none" aria-label="Analyst rating">
+          <defs>
+            <linearGradient id="ar-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              {COLORS.map((c, i) => (
+                <stop key={i} offset={`${(i / (COLORS.length - 1)) * 100}%`} stopColor={c} />
+              ))}
+            </linearGradient>
+          </defs>
+          {/* track */}
+          <rect x="0" y="16" width="640" height="16" rx="8" fill="url(#ar-grad)" opacity="0.9" />
+          {/* needle */}
+          <line
+            x1={640 * pct}
+            x2={640 * pct}
+            y1="8"
+            y2="40"
+            stroke="white"
+            strokeWidth="2"
+          />
+          <circle cx={640 * pct} cy="8" r="3" fill="white" />
+        </svg>
+      </div>
+
+      {/* Label + counts */}
+      <div className="mt-2 flex flex-col items-center gap-1">
+        <div className="text-lg font-semibold">{label}</div>
+        <div className="text-sm">
+          <span className="tabular-nums">{d.sell}</span> Sell&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span className="tabular-nums">{d.neutral}</span> Neutral&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span className="tabular-nums">{d.buy}</span> Buy
         </div>
-        {data.asOf && (
-          <div className="mt-2 text-xs text-white/60">As of {data.asOf}</div>
-        )}
+        <div className="text-xs text-white/50">Dummy data</div>
       </div>
     </section>
   );
