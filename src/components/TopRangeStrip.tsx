@@ -8,11 +8,13 @@ export default function TopRangeStrip({ bars, label }: { bars: Bar[]; label: str
   const cls = flat ? "text-white/80" : up ? "text-up" : "text-down";
 
   return (
-    <div className="bg-black px-4 py-2">
-      <span className={`tabular-nums text-[14px] ${cls}`}>
-        {sign}{abs.toFixed(2)} ({sign}{pct.toFixed(2)}%)
-      </span>
-      <span className="ml-2 text-[14px] text-white/80">Last {label}</span>
+    <div className="bg-black px-3 py-1">
+      <div className="flex items-baseline gap-2 text-[12px] leading-4">
+        <span className={`tabular-nums ${cls}`}>
+          {sign}{abs.toFixed(2)} ({sign}{pct.toFixed(2)}%)
+        </span>
+        <span className="text-white/80">Last {label}</span>
+      </div>
     </div>
   );
 }

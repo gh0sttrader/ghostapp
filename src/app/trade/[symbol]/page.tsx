@@ -107,7 +107,8 @@ export default function SymbolPage() {
     });
 
     const line = chart.addSeries(LineSeries, WHITE_LINE);
-    line.setData(seriesesData.get("1D") || []);
+    const initialData = (seriesesData.get("1D") || []).map(d => ({ ...d, time: d.time as any }));
+    line.setData(initialData);
     chart.timeScale().fitContent();
 
     const ro = new ResizeObserver(() => {
@@ -131,7 +132,7 @@ export default function SymbolPage() {
   const handleSetRange = (r: RangeKey) => {
     setRange(r);
     if (!lineRef.current || !chartRef.current) return;
-    const data = seriesesData.get(r) || [];
+    const data = (seriesesData.get(r) || []).map(d => ({...d, time: d.time as any}));
     lineRef.current.setData(data);
     chartRef.current.applyOptions({
       timeScale: { tickMarkFormatter: () => "" },
@@ -165,7 +166,7 @@ export default function SymbolPage() {
       <TopRangeStrip bars={barsForRange} label={rangeLabel(range)} />
       <div className="h-px w-full bg-white/10" />
 
-      <div className="mx-4 mt-2">
+      <div className="mx-4 mt-1">
           <div ref={chartWrapRef} className="h-[330px] w-full mb-1" />
           <div className="-mt-1 flex items-center justify-between px-1">
               {RANGES.map((r) => (
