@@ -48,7 +48,6 @@ export default function TradeHeaderCompact({
     "Ex-Date": "06/30/2025",
     Beta: "--",
     "Lot Size": 1,
-    "Morningstar Rating": "★★★★★",
   };
   // -------------------------------------------------------
 
@@ -73,7 +72,7 @@ export default function TradeHeaderCompact({
         <div className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto_auto] items-stretch px-3 pb-2 pt-1">
           {/* LEFT: price + delta must fit between top(row1) and bottom(row3) */}
           <div className="row-span-3 flex flex-col justify-between self-stretch">
-            <div className="tabular-nums font-extrabold leading-tight text-[32px]">
+            <div className="tabular-nums font-extrabold leading-none text-[32px]">
               {price.toFixed(2)}
             </div>
             <div className={`tabular-nums ${deltaClass} text-[12px]`}>
@@ -116,7 +115,7 @@ export default function TradeHeaderCompact({
       >
         <div className="px-3 py-3">
           <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-[13px] md:grid-cols-3">
-            {Object.entries(details).map(([k, v]) => (
+            {Object.entries(details).filter(([k]) => k !== "Morningstar Rating").map(([k, v]) => (
               <div key={k} className="flex items-baseline justify-between gap-4">
                 <span className="text-white/70">{k}</span>
                 <span className="tabular-nums">{typeof v === "number" ? v.toString() : v}</span>
