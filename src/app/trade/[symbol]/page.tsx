@@ -1,4 +1,3 @@
-
 "use client";
 
 import { ChevronLeft, Maximize2 } from 'lucide-react';
@@ -57,7 +56,7 @@ export default function SymbolPage({ params }: { params: Promise<{ symbol: strin
       },
     });
 
-    const lineSeries = chart.addSeries(LineSeries, {
+    const lineSeries = chart.addLineSeries({
       color: "#00FF00",
       lineWidth: 2,
       priceLineVisible: true,
