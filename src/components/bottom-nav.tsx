@@ -14,7 +14,7 @@ const TABS = [
 export function BottomNav() {
   const path = usePathname();
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 bg-black/90 backdrop-blur border-t-0 shadow-none">
+    <nav className="fixed inset-x-0 bottom-0 z-40 bg-black border-t-0 shadow-none backdrop-blur-0 supports-[backdrop-filter]:bg-black">
       <div className="grid h-14 grid-cols-5 place-items-center">
         {TABS.map(({ href, label, icon: Icon }) => {
           const active = path?.startsWith(href);
