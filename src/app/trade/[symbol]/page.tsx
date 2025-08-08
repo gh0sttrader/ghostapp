@@ -1,9 +1,12 @@
+
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, use } from "react";
 import { createChart } from "lightweight-charts";
 import { ChevronLeft, Star, X } from "lucide-react";
 import Link from "next/link";
+import { useParams } from 'next/navigation';
+
 
 // --- dummy symbol + chart (unchanged content) ---
 const symbols: Record<string, { name: string; price: number }> = {
@@ -28,8 +31,9 @@ const seriesesData = new Map([
   ]],
 ]);
 
-export default function SymbolPage({ params }: { params: { symbol: string } }) {
-  const { symbol } = params;
+export default function SymbolPage() {
+  const params = useParams();
+  const symbol = params.symbol as string;
   const data = symbols[symbol] || { name: symbol, price: 0 };
 
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
