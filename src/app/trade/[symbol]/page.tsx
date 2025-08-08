@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { createChart } from "lightweight-charts";
+import { createChart, LineSeries } from "lightweight-charts";
 import { ChevronLeft, Star, X } from "lucide-react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
@@ -57,7 +57,7 @@ export default function SymbolPage() {
       height: 360,                   // <- back to taller header/graph feel
     });
 
-    const lineSeries = chart.addLineSeries({ color: "#00FF00", lineWidth: 2, priceLineVisible: true });
+    const lineSeries = chart.addSeries(LineSeries, { color: "#00FF00", lineWidth: 2, priceLineVisible: true });
     lineSeries.setData(seriesesData.get(range) || []);
     chart.timeScale().fitContent();
 
