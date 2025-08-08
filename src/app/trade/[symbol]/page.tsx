@@ -16,6 +16,7 @@ import { MOCK_VOO_TOP10 } from "@/mock/top10_voo";
 import AverageAnnualReturn from "@/components/AverageAnnualReturn";
 import { MOCK_VOO_AAR } from "@/mock/avgAnnualReturn_voo";
 import AnalystRating from "@/components/AnalystRating";
+import { WHITE_LINE } from "@/lib/chartTheme";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -104,7 +105,7 @@ export default function SymbolPage() {
       },
     });
 
-    const line = chart.addSeries(LineSeries, { color: "#00FF00", lineWidth: 2, priceLineVisible: true });
+    const line = chart.addSeries(LineSeries, WHITE_LINE);
     line.setData(seriesesData.get("1D") || []);
     chart.timeScale().fitContent();
 
