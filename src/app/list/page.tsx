@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from 'react';
@@ -6,11 +7,23 @@ import { ListSidebar } from '@/components/list-sidebar';
 import { ChevronLeft, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PositionsList } from '@/components/positions-list';
-import { Watchlist, watchlistsData } from '@/components/watchlist';
+import { Watchlist } from '@/components/watchlist';
 import { ScreenerList } from '@/components/screener-list';
 import { NewsList } from '@/components/news-list';
 import { AlertsList } from '@/components/alerts-list';
 import { cn } from '@/lib/utils';
+
+// This maps the display name to a Firestore-safe ID.
+// In a real app, this would come from Firestore.
+const watchlistNameToId: Record<string, string> = {
+  'Short': 'short_id',
+  'Long': 'long_id',
+  'Growth': 'growth_id',
+  'Dividends': 'dividends_id',
+  'Tech': 'tech_id',
+  'Crypto': 'crypto_id',
+  'Income': 'income_id',
+}
 
 const listStructure = {
   Positions: ['All', 'Taxable', 'Roth'],
@@ -32,6 +45,7 @@ const getParentKey = (value: string): keyof typeof listStructure | undefined => 
 export default function ListPage() {
   const [selected, setSelected] = useState('Short');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const userId = "dummy-user-id"; // Placeholder for actual user ID
 
   const parentKey = getParentKey(selected) || 'Watchlists';
   const subOptions = listStructure[parentKey] || [];
@@ -41,7 +55,8 @@ export default function ListPage() {
       case 'Positions':
         return <PositionsList account={selected as 'All' | 'Taxable' | 'Roth'} />;
       case 'Watchlists':
-        return <Watchlist type={selected as keyof typeof watchlistsData} />;
+        const watchlistId = watchlistNameToId[selected];
+        return <Watchlist userId={userId} watchlistId={watchlistId} />;
       case 'Screeners':
         return <ScreenerList type={selected as 'Top Gainers' | 'Top Losers'} />;
       case 'News':
