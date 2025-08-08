@@ -1,3 +1,4 @@
+// components/TradeHeaderCompact.tsx
 "use client";
 import { useState } from "react";
 import { ChevronLeft, ChevronDown } from "lucide-react";
@@ -74,9 +75,11 @@ export default function TradeHeaderCompact({
         {/* Row 2: price left + stats right + chevron */}
         <div className="flex items-end justify-between px-3 pb-2 pt-1">
           <div>
-            <div className="tabular-nums text-5xl font-extrabold leading-[1.1]">{price.toFixed(2)}</div>
-            <div className={`mt-1 text-sm tabular-nums ${deltaClass}`}>
-              <span className="mr-1">{deltaIcon}</span>
+            <div className="tabular-nums font-extrabold leading-tight text-[40px] md:text-[44px]">
+              {price.toFixed(2)}
+            </div>
+            <div className={`mt-1 tabular-nums ${deltaClass} text-[12px]`}>
+              <span className="mr-1 align-middle">{deltaIcon}</span>
               {change.toFixed(2)} {`${changePct > 0 ? "+" : ""}${changePct.toFixed(2)}%`}
             </div>
           </div>
