@@ -2,6 +2,7 @@
 "use client";
 import { useState } from "react";
 import { ChevronLeft, ChevronDown } from "lucide-react";
+import { useCondensed } from "@/lib/useCondensed";
 
 type Props = {
   symbol: string;
@@ -13,6 +14,7 @@ type Props = {
   high: number;
   low: number;
   volume: number;
+  sentinelId?: string;
 };
 
 const vol = (n: number) =>
@@ -21,9 +23,10 @@ const vol = (n: number) =>
   n >= 1e3 ? `${(n / 1e3).toFixed(2)}K` : `${n}`;
 
 export default function TradeHeaderCompact({
-  symbol, name, exchange, price, change, changePct, high, low, volume,
+  symbol, name, exchange, price, change, changePct, high, low, volume, sentinelId = "trade-header-sentinel"
 }: Props) {
   const [open, setOpen] = useState(false);
+  const condensed = useCondensed(sentinelId);
 
   const up = change > 0 || (change === 0 && changePct > 0);
   const dn = change < 0 || (change === 0 && changePct < 0);
@@ -68,40 +71,46 @@ export default function TradeHeaderCompact({
           {/* keep right corner free for future dropdown */}
           <div className="w-8" />
         </div>
+        
+        <div
+          className={[
+            "overflow-hidden transition-[max-height,opacity,transform] duration-200",
+            condensed ? "max-h-0 opacity-0 -translate-y-1" : "max-h-28 opacity-100 translate-y-0",
+          ].join(" ")}
+        >
+            <div className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto_auto] items-stretch px-3 pb-2 pt-1">
+              {/* LEFT: price + delta must fit between top(row1) and bottom(row3) */}
+              <div className="row-span-3 flex flex-col justify-between self-stretch">
+                <div className="tabular-nums font-extrabold leading-none text-[32px]">
+                  {price.toFixed(2)}
+                </div>
+                <div className={`tabular-nums ${deltaClass} text-[12px]`}>
+                  <span className="mr-1 align-middle">{deltaIcon}</span>
+                  {change.toFixed(2)} {`${changePct > 0 ? "+" : ""}${changePct.toFixed(2)}%`}
+                </div>
+              </div>
 
-        <div className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto_auto] items-stretch px-3 pb-2 pt-1">
-          {/* LEFT: price + delta must fit between top(row1) and bottom(row3) */}
-          <div className="row-span-3 flex flex-col justify-between self-stretch">
-            <div className="tabular-nums font-extrabold leading-none text-[32px]">
-              {price.toFixed(2)}
+              {/* RIGHT: stats grid + absolute chevron */}
+              <div className="relative row-span-3 text-right text-[12px] leading-4 pr-9">
+                <div className="grid grid-cols-[max-content_6.5ch] gap-x-2 gap-y-0 items-baseline">
+                  <span className="text-white/70">High</span>
+                  <span className="tabular-nums whitespace-nowrap text-right">{high.toFixed(2)}</span>
+                  <span className="text-white/70">Low</span>
+                  <span className="tabular-nums whitespace-nowrap text-right">{low.toFixed(2)}</span>
+                  <span className="text-white/70">Volume</span>
+                  <span className="tabular-nums whitespace-nowrap text-right">{vol(volume)}</span>
+                </div>
+                <button
+                  aria-label={open ? "Hide details" : "Show details"}
+                  onClick={() => setOpen(v => !v)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-5 w-5 items-center justify-center z-10"
+                >
+                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+                </button>
+              </div>
             </div>
-            <div className={`tabular-nums ${deltaClass} text-[12px]`}>
-              <span className="mr-1 align-middle">{deltaIcon}</span>
-              {change.toFixed(2)} {`${changePct > 0 ? "+" : ""}${changePct.toFixed(2)}%`}
-            </div>
-          </div>
-
-          {/* RIGHT: stats grid + absolute chevron */}
-          <div className="relative row-span-3 text-right text-[12px] leading-4 pr-9">
-            <div className="grid grid-cols-[max-content_6.5ch] gap-x-2 gap-y-0 items-baseline">
-              <span className="text-white/70">High</span>
-              <span className="tabular-nums whitespace-nowrap text-right">{high.toFixed(2)}</span>
-              <span className="text-white/70">Low</span>
-              <span className="tabular-nums whitespace-nowrap text-right">{low.toFixed(2)}</span>
-              <span className="text-white/70">Volume</span>
-              <span className="tabular-nums whitespace-nowrap text-right">{vol(volume)}</span>
-            </div>
-            <button
-              aria-label={open ? "Hide details" : "Show details"}
-              onClick={() => setOpen(v => !v)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-5 w-5 items-center justify-center z-10"
-            >
-              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
-            </button>
-          </div>
+          <div className="h-px w-full bg-white/10" />
         </div>
-
-        <div className="h-px w-full bg-white/10" />
       </header>
 
       {/* Sliding details panel */}
@@ -109,10 +118,15 @@ export default function TradeHeaderCompact({
         className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out`}
         style={{ maxHeight: open ? 900 : 0, opacity: open ? 1 : 0 }}
       >
-        <div className="px-3 py-3">
-          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-[12px] md:grid-cols-3">
-            {Object.entries(details).filter(([k]) => k !== "Morningstar Rating").map(([k, v]) => (
-              <div key={k} className="flex items-baseline justify-between gap-3 leading-5">
+        <div className="px-3 py-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-1 text-[12px]">
+            {Object.entries(details)
+              .filter(([k]) => k !== "Morningstar Rating")
+              .map(([k, v]) => (
+              <div
+                key={k}
+                className="flex items-center justify-between gap-3 leading-4 py-0.5"
+              >
                 <span className="text-white/70">{k}</span>
                 <span className="tabular-nums">{typeof v === "number" ? v.toString() : v}</span>
               </div>
