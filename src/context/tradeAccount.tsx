@@ -2,11 +2,11 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type Account = { id: string; name: string; buyingPower: string };
+export type Account = { id: string; name: string; buyingPower: number };
 
 const DUMMY: Account[] = [
-  { id: "individual", name: "Individual", buyingPower: "$4,250.00" },
-  { id: "roth",       name: "Roth IRA",   buyingPower: "$0.00" },
+  { id: "individual", name: "Individual", buyingPower: 4250.00 },
+  { id: "roth",       name: "Roth IRA",   buyingPower: 0.00 },
 ];
 
 type Ctx = { accounts: Account[]; selectedId: string; setSelectedId: (id: string) => void };
