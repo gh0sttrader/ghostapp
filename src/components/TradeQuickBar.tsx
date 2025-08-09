@@ -1,18 +1,18 @@
+// src/components/TradeQuickBar.tsx
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 export default function TradeQuickBar({
-  symbol,
+  symbol,                       // unused for now
   accountName = "Individual",
-  onToggle,
+  onToggle,                     // stub for later
 }: {
   symbol: string;
   accountName?: string;
   onToggle?: () => void;
 }) {
-  const r = useRouter();
   useEffect(() => {
     document.body.classList.add("has-trade-quick");
     return () => document.body.classList.remove("has-trade-quick");
@@ -24,13 +24,13 @@ export default function TradeQuickBar({
       className="fixed inset-x-0 z-40 bg-black"
       style={{ bottom: "var(--nav-h)", height: "var(--overlay-h)" }}
     >
-      <div className="h-full w-full px-4 flex items-center gap-3">
-        {/* LEFT 50% — centered account selector (text only) */}
+      <div className="h-full w-full px-4 flex items-center">
+        {/* LEFT 50% — account selector */}
         <div className="basis-1/2 flex items-center justify-center">
           <button
             onClick={onToggle}
             className="h-11 px-2 bg-transparent text-white/90 text-[15px] font-semibold
-                       flex items-center gap-1 focus:outline-none"
+                       flex items-center gap-1.5 focus:outline-none"
             aria-label="Switch account"
           >
             <span>{accountName}</span>
@@ -38,15 +38,16 @@ export default function TradeQuickBar({
           </button>
         </div>
 
-        {/* RIGHT 50% — Trade CTA fills this half */}
-        <div className="basis-1/2">
-          <button
-            onClick={() => r.push(`/order?symbol=${encodeURIComponent(symbol)}`)}
-            className="h-11 w-full rounded-full bg-[#04cf7a] text-black font-bold text-[18px]
-                       active:opacity-90"
+        {/* RIGHT 50% — Trade label (UI only, no action) */}
+        <div className="basis-1/2 flex items-center justify-center">
+          <div
+            className="h-11 px-2 text-white/90 text-[15px] font-semibold
+                       flex items-center gap-1.5 select-none cursor-default"
+            aria-disabled="true"
           >
-            Trade
-          </button>
+            <span>Trade</span>
+            <ChevronDown className="h-4 w-4 text-white/60" />
+          </div>
         </div>
       </div>
     </div>
