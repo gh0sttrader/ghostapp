@@ -1,26 +1,18 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, ChevronDown } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  accountName: string;                 // e.g., "Individual"
-  onOpenAccountPicker: () => void;     // open your existing account modal
   className?: string;
 };
 
-export default function TradeActionSheet({
-  open,
-  onClose,
-  accountName,
-  onOpenAccountPicker,
-  className,
-}: Props) {
-  // ESC to close
+export default function TradeActionSheet({ open, onClose, className }: Props) {
+  // ESC closes
   useEffect(() => {
     if (!open) return;
     const h = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -32,7 +24,7 @@ export default function TradeActionSheet({
     <AnimatePresence>
       {open && (
         <>
-          {/* Dim + subtle blur. Keep bottom nav visible & tappable */}
+          {/* Dim + blur overlay, but DO NOT block clicks (so account toggle/nav remain usable) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -40,22 +32,24 @@ export default function TradeActionSheet({
             className="pointer-events-none fixed inset-0 z-[48] bg-black/45 backdrop-blur-[2px]"
           />
 
-          {/* Floating card */}
+          {/* Centered floating card, never off-screen */}
           <motion.div
             initial={{ y: 24, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 24, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 280, damping: 22 }}
             className={cn(
-              'fixed left-1/2 z-[49] -translate-x-1/2',
+              'fixed inset-x-0 z-[49] mx-auto',
               className
             )}
             style={{
+              // sits just above the bottom nav
               bottom:
                 'calc(var(--nav-height,56px) + env(safe-area-inset-bottom) + 10px)',
+              width: 'min(92vw, 320px)',
             }}
           >
-            <div className="mx-4 w-[92vw] max-w-[360px] rounded-2xl border border-white/10 bg-black/85 p-3 shadow-2xl backdrop-blur">
+            <div className="relative rounded-2xl border border-white/10 bg-black/85 p-3 shadow-2xl backdrop-blur">
               {/* X close (top-right) */}
               <button
                 aria-label="Close"
@@ -65,19 +59,8 @@ export default function TradeActionSheet({
                 <X className="h-4 w-4" />
               </button>
 
-              {/* Account selector row */}
-              <div className="mb-3 mt-1 flex justify-center">
-                <button
-                  onClick={onOpenAccountPicker}
-                  className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-sm text-white/90"
-                >
-                  <span className="truncate max-w-[200px]">{accountName}</span>
-                  <ChevronDown className="h-4 w-4 opacity-80" />
-                </button>
-              </div>
-
               {/* Actions – condensed */}
-              <div className="flex flex-col gap-3 pt-1 pb-2">
+              <div className="flex flex-col gap-3 pt-4 pb-2">
                 <button
                   onClick={onClose}
                   className="h-9 w-full rounded-full bg-white text-sm font-semibold text-black"

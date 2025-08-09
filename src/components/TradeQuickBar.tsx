@@ -1,4 +1,3 @@
-
 // src/components/TradeQuickBar.tsx
 "use client";
 import { useEffect, useState } from "react";
@@ -69,11 +68,6 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
       <TradeActionSheet
         open={tradeSheetOpen}
         onClose={() => setTradeSheetOpen(false)}
-        accountName={selectedAccount.name}
-        onOpenAccountPicker={() => {
-          setTradeSheetOpen(false);
-          setAccountSheetOpen(true);
-        }}
       />
     </>
   );
