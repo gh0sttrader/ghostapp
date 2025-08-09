@@ -29,28 +29,36 @@ const ICONS: { key: keyof Attrs; label: string; Icon: any }[] = [
   { key: "24h",           label: "24H trading",       Icon: Clock3 },
 ];
 
-export default function TradeAttributes({ attrs }: { attrs: Attrs }) {
+export default function TradeAttributes({
+  attrs,
+  size = 20, // px (old default)
+}: { attrs: Attrs; size?: number }) {
   const active = ICONS.filter(({ key }) => attrs[key]);
   if (!active.length) return null;
 
+  const iconSize = Math.round(size * 0.7);
+
   return (
     <Tooltip.Provider delayDuration={100}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center" style={{ gap: Math.max(4, Math.round(size * 0.3)) }}>
         {active.map(({ key, label, Icon }, i) => (
           <Tooltip.Root key={String(key)}>
             <Tooltip.Trigger asChild>
               <div
-                className="h-5 w-5 shrink-0 rounded-md grid place-items-center"
-                style={{ background: ATTR_COLORS[Math.min(i, ATTR_COLORS.length - 1)] }}
                 aria-label={label}
+                className="grid place-items-center"
+                style={{
+                  width: size,
+                  height: size,
+                  borderRadius: size / 2, // circles
+                  background: ATTR_COLORS[Math.min(i, ATTR_COLORS.length - 1)],
+                }}
               >
-                <Icon className="h-3.5 w-3.5 text-black/90" strokeWidth={2.5} />
+                <Icon style={{ width: iconSize, height: iconSize }} className="text-black/90" strokeWidth={2.4} />
               </div>
             </Tooltip.Trigger>
-            <Tooltip.Content
-              side="bottom" sideOffset={6}
-              className="rounded-md bg-white/95 px-2 py-1 text-[11px] font-medium text-black shadow"
-            >
+            <Tooltip.Content side="bottom" sideOffset={6}
+              className="rounded-md bg-white/95 px-2 py-1 text-[11px] font-medium text-black shadow">
               {label}
             </Tooltip.Content>
           </Tooltip.Root>

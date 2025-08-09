@@ -21,7 +21,7 @@ export default function TopRangeStrip({
           <span className="text-white/80">Last {label}</span>
         </div>
 
-        <TradeAttributes attrs={attrs} />
+        <TradeAttributes attrs={attrs} size={16} />
       </div>
     </div>
   );
