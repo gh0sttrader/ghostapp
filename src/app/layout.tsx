@@ -1,9 +1,9 @@
 
 import type {Metadata} from 'next';
 import './globals.css';
-import { BottomNav } from '@/components/bottom-nav';
 import RouteMemory from "@/components/RouteMemory";
 import EdgeSwipeBack from '@/components/EdgeSwipeBack';
+import ClientShell from '@/components/ClientShell';
 
 export const metadata: Metadata = {
   title: 'Firebase Studio App',
@@ -25,8 +25,9 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <RouteMemory />
         <EdgeSwipeBack />
-        <div className="pb-16">{children}</div>
-        <BottomNav />
+        <ClientShell>
+            <div className="pb-16">{children}</div>
+        </ClientShell>
       </body>
     </html>
   );

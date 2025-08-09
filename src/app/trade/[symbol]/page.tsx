@@ -20,6 +20,7 @@ import TradeHeaderCompact from "@/components/TradeHeaderCompact";
 import ScrollMiniHeader from "@/components/ScrollMiniHeader";
 import { Bar, rangeLabel, sliceByRange } from "@/lib/range";
 import TopRangeStrip from "@/components/TopRangeStrip";
+import TradeAttributes from "@/components/TradeAttributes";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
