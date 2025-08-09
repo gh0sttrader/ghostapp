@@ -44,6 +44,7 @@ body {
     --sidebar-ring: 120 100% 70%;
     --color-up: #04cf7a;
     --color-down: #ce0d0c;
+    --nav-h: 56px;
   }
   .dark {
     --background: 0 0% 0%;
@@ -88,6 +89,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  [data-bottom-nav] { height: var(--nav-h); }
 }
 
 @layer utilities {
@@ -99,4 +101,4 @@ body {
   .bg-down-10 { background-color: color-mix(in srgb, var(--color-down) 10%, transparent); }
 }
 
-.has-trade-bar { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+.has-trade-bar { padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
