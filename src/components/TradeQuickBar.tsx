@@ -2,7 +2,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LineChart, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 export default function TradeQuickBar({
   symbol,
@@ -28,11 +28,10 @@ export default function TradeQuickBar({
         {/* Account toggle (placeholder only) */}
         <button
           onClick={onToggle}
-          className="h-11 px-3 rounded-xl border border-white/12 bg-black text-white/90
-                     flex items-center gap-2"
+          className="h-11 px-1 bg-transparent text-white/90 text-[15px] font-semibold flex items-center gap-1 focus:outline-none focus-visible:ring-0"
+          aria-label="Switch account"
         >
-          <LineChart className="h-5 w-5 text-white/80" />
-          <span className="text-[15px] font-semibold">{accountName}</span>
+          <span>{accountName}</span>
           <ChevronDown className="h-4 w-4 text-white/60" />
         </button>
 
