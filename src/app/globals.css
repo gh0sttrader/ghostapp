@@ -46,6 +46,7 @@ body {
     --color-down: #ce0d0c;
     --nav-h: 56px;
     --overlay-h: 56px;
+    --nav-height: 56px;
   }
   .dark {
     --background: 0 0% 0%;

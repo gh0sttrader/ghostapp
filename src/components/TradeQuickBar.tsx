@@ -9,7 +9,8 @@ import TradeActionSheet from "./trade/TradeActionSheet";
 
 export default function TradeQuickBar({ symbol }: { symbol: string }) {
   const { accounts, selectedId, setSelectedId } = useTradeAccount();
-  const selected = accounts.find(a => a.id === selectedId);
+  const selectedAccount = accounts.find(a => a.id === selectedId);
+
   const [accountSheetOpen, setAccountSheetOpen] = useState(false);
   const [tradeSheetOpen, setTradeSheetOpen] = useState(false);
 
@@ -18,7 +19,7 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
     return () => document.body.classList.remove("has-trade-quick");
   }, []);
 
-  if (!selected) return null; // Don't render if selected account not found yet
+  if (!selectedAccount) return null; // Don't render if selected account not found yet
 
   return (
     <>
@@ -35,7 +36,7 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
               className="h-11 px-2 text-white/90 text-[15px] font-semibold
                        flex items-center gap-1.5"
             >
-              <span>{selected.name}</span>
+              <span>{selectedAccount.name}</span>
               <ChevronDown className="h-4 w-4 text-white/60" />
             </button>
           </div>
@@ -59,13 +60,21 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
         onOpenChange={setAccountSheetOpen}
         accounts={accounts}
         selectedId={selectedId}
-        onSelect={(id) => {
-          setSelectedId(id);
+        onSelect={(acc) => {
+          setSelectedId(acc.id);
           setAccountSheetOpen(false);
         }}
       />
 
-      <TradeActionSheet open={tradeSheetOpen} onClose={() => setTradeSheetOpen(false)} />
+      <TradeActionSheet
+        open={tradeSheetOpen}
+        onClose={() => setTradeSheetOpen(false)}
+        accountName={selectedAccount.name}
+        onOpenAccountPicker={() => {
+          setTradeSheetOpen(false);
+          setAccountSheetOpen(true);
+        }}
+      />
     </>
   );
 }
