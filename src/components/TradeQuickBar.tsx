@@ -20,7 +20,8 @@ export default function TradeQuickBar({
 
   return (
     <div
-      className="fixed inset-x-0 z-40 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/80"
+      data-quickbar
+      className="fixed inset-x-0 z-40 bg-black"
       style={{ bottom: "var(--nav-h)", height: "var(--overlay-h)" }}
     >
       <div className="h-full w-full px-4 flex items-center gap-3">

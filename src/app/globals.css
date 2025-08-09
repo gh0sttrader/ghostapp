@@ -105,3 +105,10 @@ body {
 .has-trade-quick{
   padding-bottom: calc(var(--nav-h) + var(--overlay-h) + env(safe-area-inset-bottom));
 }
+
+[data-quickbar]{
+  background-color:#000 !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+  border-top:0 !important;              /* no faint divider */
+}
