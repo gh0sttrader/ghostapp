@@ -6,7 +6,7 @@ import { useTradeAccount } from "@/context/tradeAccount";
 import AccountSelectSheet from "@/components/AccountSelectSheet";
 
 export default function TradeQuickBar({ symbol }: { symbol: string }) {
-  const { accounts, selectedId } = useTradeAccount();
+  const { accounts, selectedId, setSelectedId } = useTradeAccount();
   const selected = accounts.find(a => a.id === selectedId);
   const [open, setOpen] = useState(false);
 
@@ -29,7 +29,6 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
           <button
             onClick={() => setOpen(true)}
             className="h-11 px-2 text-white/90 text-[15px] font-semibold flex items-center gap-1.5"
-            aria-label="Switch account"
           >
             <span>{selected.name}</span>
             <ChevronDown className="h-4 w-4 text-white/60" />
@@ -48,7 +47,13 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
         </div>
       </div>
 
-      <AccountSelectSheet open={open} onOpenChange={setOpen} />
+      <AccountSelectSheet
+        open={open}
+        onOpenChange={setOpen}
+        accounts={accounts}
+        value={selectedId}
+        onChange={setSelectedId}
+      />
     </div>
   );
 }

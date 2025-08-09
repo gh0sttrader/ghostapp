@@ -14,6 +14,7 @@ const C = createContext<Ctx | null>(null);
 
 export function TradeAccountProvider({ children }: { children: React.ReactNode }) {
   const [selectedId, setSelectedId] = useState("individual");
+  
   useEffect(() => {
     // This effect runs only on the client, where localStorage is available.
     const savedAccountId = localStorage.getItem("trade.selected");

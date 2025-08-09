@@ -112,3 +112,13 @@ body {
   backdrop-filter:none !important;
   border-top:0 !important;              /* no faint divider */
 }
+
+/* Ensure overlay always blurs */
+[data-radix-dialog-overlay]{
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+/* Kill any accent/ring overrides on radios in the sheet */
+[data-radix-dialog-content] [role="radio"] {
+  --tw-ring-color: transparent;
+}
