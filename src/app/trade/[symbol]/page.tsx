@@ -14,13 +14,12 @@ import AverageAnnualReturn from "@/components/AverageAnnualReturn";
 import { MOCK_VOO_AAR } from "@/mock/avgAnnualReturn_voo";
 import AnalystRating from "@/components/AnalystRating";
 import { WHITE_LINE } from "@/lib/chartTheme";
-import TradeHistory from "@/components/TradeHistory";
-import { MOCK_VOO_HISTORY } from "@/mock/history";
 import TradeHeaderCompact from "@/components/TradeHeaderCompact";
 import ScrollMiniHeader from "@/components/ScrollMiniHeader";
 import { Bar, rangeLabel, sliceByRange } from "@/lib/range";
 import TopRangeStrip from "@/components/TopRangeStrip";
 import TradeAttributes from "@/components/TradeAttributes";
+import HistoryList, { DUMMY_HISTORY } from "@/components/trade/HistoryList";
 
 type RangeKey = "1D" | "1W" | "1M" | "3M" | "YTD" | "1Y" | "Max";
 const RANGES: RangeKey[] = ["1D", "1W", "1M", "3M", "YTD", "1Y", "Max"];
@@ -214,18 +213,7 @@ export default function SymbolPage() {
             <AverageAnnualReturn rows={aarRows} inceptionDate={inceptionDate} />
           )}
           
-          <TradeHistory
-            events={MOCK_VOO_HISTORY}
-            initialCount={10}
-            hasMore={true}
-            onLoadMore={async () => {
-              // replace with Firestore/broker fetch later
-              return [
-                { id: "old-1", type: "BUY", date: "2024-12-10", qty: 3, price: 210.4 },
-                { id: "old-2", type: "DIVIDEND", date: "2024-11-30", amount: 8.12 },
-              ];
-            }}
-          />
+          <HistoryList items={DUMMY_HISTORY} />
 
           {currentAboutData && <AnalystRating label="Strong buy" />}
       </div>
