@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useTradeAccount } from "@/context/tradeAccount";
 import AccountSelectSheet from "@/components/trade/AccountSelectSheet";
+import TradeActionSheet from "./trade/TradeActionSheet";
 
 export default function TradeQuickBar({ symbol }: { symbol: string }) {
   const { accounts, selectedId, setSelectedId } = useTradeAccount();
   const selected = accounts.find(a => a.id === selectedId);
-  const [open, setOpen] = useState(false);
+  const [accountSheetOpen, setAccountSheetOpen] = useState(false);
+  const [tradeSheetOpen, setTradeSheetOpen] = useState(false);
 
   useEffect(() => {
     document.body.classList.add("has-trade-quick");
@@ -28,9 +30,9 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
           {/* left 50%: account selector */}
           <div className="basis-1/2 flex justify-center">
             <button
-              onClick={() => setOpen(true)}
+              onClick={() => setAccountSheetOpen(true)}
               className="h-11 px-2 text-white/90 text-[15px] font-semibold
-                         flex items-center gap-1.5"
+                       flex items-center gap-1.5"
             >
               <span>{selected.name}</span>
               <ChevronDown className="h-4 w-4 text-white/60" />
@@ -39,28 +41,30 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
 
           {/* right 50%: Trade label (UI only) */}
           <div className="basis-1/2 flex justify-center">
-            <div
-              className="h-11 px-2 text-white/90 text-[15px] font-semibold
+             <button
+                onClick={() => setTradeSheetOpen(true)}
+                className="h-11 px-2 text-white/90 text-[15px] font-semibold
                            flex items-center gap-1.5 select-none"
-              aria-disabled="true"
-            >
+              >
               <span>Trade</span>
               <ChevronDown className="h-4 w-4 text-white/60" />
-            </div>
+            </button>
           </div>
         </div>
       </div>
 
       <AccountSelectSheet
-        open={open}
-        onOpenChange={setOpen}
+        open={accountSheetOpen}
+        onOpenChange={setAccountSheetOpen}
         accounts={accounts}
         selectedId={selectedId}
         onSelect={(id) => {
           setSelectedId(id);
-          setOpen(false);
+          setAccountSheetOpen(false);
         }}
       />
+
+      <TradeActionSheet open={tradeSheetOpen} onOpenChange={setTradeSheetOpen} />
     </>
   );
 }
