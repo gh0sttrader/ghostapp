@@ -10,7 +10,7 @@ import { ChevronDown } from 'lucide-react';
 import { AccountSwitcher } from '@/components/account-switcher';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { InvestmentsList } from '@/components/investments-list';
+import { HoldingsList } from '@/components/holdings-list';
 import { ActivityList } from '@/components/activity-list';
 
 const chartData = {
@@ -136,7 +136,7 @@ export default function AccountsClient() {
           ))}
         </div>
 
-        <InvestmentsList />
+        <HoldingsList />
         <ActivityList />
 
         <AccountSwitcher
