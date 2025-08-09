@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useTradeAccount } from "@/context/tradeAccount";
 import AccountSelectSheet from "@/components/trade/AccountSelectSheet";
-import TradeActionSheet from "./trade/TradeActionSheet";
+import TradeActionsPopover from "./trade/TradeActionsPopover";
 
 export default function TradeQuickBar({ symbol }: { symbol: string }) {
   const { accounts, selectedId, setSelectedId } = useTradeAccount();
   const selectedAccount = accounts.find(a => a.id === selectedId);
 
   const [accountSheetOpen, setAccountSheetOpen] = useState(false);
-  const [tradeSheetOpen, setTradeSheetOpen] = useState(false);
+  const [tradePopoverOpen, setTradePopoverOpen] = useState(false);
 
   useEffect(() => {
     document.body.classList.add("has-trade-quick");
@@ -43,7 +43,7 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
           {/* right 50%: Trade label (UI only) */}
           <div className="basis-1/2 flex justify-center">
              <button
-                onClick={() => setTradeSheetOpen(true)}
+                onClick={() => setTradePopoverOpen(true)}
                 className="h-11 px-2 text-white/90 text-[15px] font-semibold
                            flex items-center gap-1.5 select-none"
               >
@@ -65,9 +65,9 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
         }}
       />
 
-      <TradeActionSheet
-        open={tradeSheetOpen}
-        onClose={() => setTradeSheetOpen(false)}
+      <TradeActionsPopover
+        open={tradePopoverOpen}
+        onClose={() => setTradePopoverOpen(false)}
       />
     </>
   );

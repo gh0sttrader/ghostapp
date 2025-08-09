@@ -1,89 +1,90 @@
-'use client';
+// src/components/trade/TradeActionsPopover.tsx
+"use client";
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
-import { useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { useEffect, useRef } from "react";
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  className?: string;
 };
 
-export default function TradeActionSheet({ open, onClose, className }: Props) {
-  // ESC closes
+export default function TradeActionsPopover({ open, onClose }: Props) {
+  const boxRef = useRef<HTMLDivElement | null>(null);
+
+  // close on ESC
   useEffect(() => {
     if (!open) return;
-    const h = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', h);
-    return () => window.removeEventListener('keydown', h);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  // close on outside click (but keep the rest of the page interactive)
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          {/* Dim + blur overlay, but DO NOT block clicks (so account toggle/nav remain usable) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="pointer-events-none fixed inset-0 z-[48] bg-black/45 backdrop-blur-[2px]"
-          />
-
-          {/* Centered floating card, never off-screen */}
-          <motion.div
-            initial={{ y: 24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 24, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-            className={cn(
-              'fixed inset-x-0 z-[49] mx-auto',
-              className
-            )}
-            style={{
-              // sits just above the bottom nav
-              bottom:
-                'calc(var(--nav-height,56px) + env(safe-area-inset-bottom) + 10px)',
-              width: 'min(92vw, 320px)',
-            }}
-          >
-            <div className="relative rounded-2xl border border-white/10 bg-black/85 p-3 shadow-2xl backdrop-blur">
-              {/* X close (top-right) */}
-              <button
-                aria-label="Close"
-                onClick={onClose}
-                className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/70 text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-
-              {/* Actions – condensed */}
-              <div className="flex flex-col gap-3 pt-4 pb-2">
-                <button
-                  onClick={onClose}
-                  className="h-9 w-full rounded-full bg-white text-sm font-semibold text-black"
-                >
-                  Buy
-                </button>
-                <button
-                  onClick={onClose}
-                  className="h-9 w-full rounded-full bg-white text-sm font-semibold text-black"
-                >
-                  Sell
-                </button>
-                <button
-                  onClick={onClose}
-                  className="h-9 w-full rounded-full bg-white text-sm font-semibold text-black"
-                >
-                  Short
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </>
+    // wrapper does NOT block the whole screen; only the box blurs its own backdrop
+    <div
+      className={cn(
+        "fixed z-[70] right-4",              // keep to the right
+        "bottom-[84px]",                     // ~ height of bottom nav + spacing
+        "pointer-events-none"                // allow taps elsewhere, except inside the box
       )}
-    </AnimatePresence>
+      aria-live="polite"
+    >
+      <div
+        ref={boxRef}
+        className={cn(
+          "pointer-events-auto",
+          "backdrop-blur-md bg-black/30",    // blur ONLY behind the box
+          "rounded-2xl shadow-2xl ring-1 ring-white/10",
+          "p-3 w-[220px] space-y-3 select-none"
+        )}
+      >
+        <button
+          type="button"
+          className="w-full h-10 rounded-full bg-white text-black font-medium"
+          onClick={() => {/* hook up later */}}
+        >
+          Buy
+        </button>
+        <button
+          type="button"
+          className="w-full h-10 rounded-full bg-white text-black font-medium"
+          onClick={() => {/* hook up later */}}
+        >
+          Sell
+        </button>
+        <button
+          type="button"
+          className="w-full h-10 rounded-full bg-white text-black font-medium"
+          onClick={() => {/* hook up later */}}
+        >
+          Short
+        </button>
+
+        <div className="flex justify-end">
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="h-9 w-9 rounded-full border border-white/25 text-white/80 hover:bg-white/10 grid place-items-center"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
