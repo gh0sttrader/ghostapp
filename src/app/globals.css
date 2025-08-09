@@ -98,3 +98,5 @@ body {
   .bg-up-10 { background-color: color-mix(in srgb, var(--color-up) 10%, transparent); }
   .bg-down-10 { background-color: color-mix(in srgb, var(--color-down) 10%, transparent); }
 }
+
+.has-trade-bar { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }

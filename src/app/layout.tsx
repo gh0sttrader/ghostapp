@@ -25,9 +25,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <RouteMemory />
         <EdgeSwipeBack />
-        <ClientShell>
-            <div className="pb-16">{children}</div>
-        </ClientShell>
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );
