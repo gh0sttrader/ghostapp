@@ -2,18 +2,19 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { BottomNav } from "@/components/bottom-nav";
-import TradeActionBar from "@/components/TradeActionBar";
+import TradeQuickBar from "@/components/TradeQuickBar";
 
 export default function ClientShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "";
   const m = pathname.match(/^\/trade\/([^/]+)$/);
-  const isTradeDetail = !!m;
-  const symbol = m ? decodeURIComponent(m[1]) : "";
+  const isTrade = !!m;
+  const symbol = isTrade ? decodeURIComponent(m![1]) : "";
 
   return (
     <>
       {children}
-      {isTradeDetail ? <TradeActionBar symbol={symbol} /> : <BottomNav />}
+      <BottomNav />
+      {isTrade && <TradeQuickBar symbol={symbol} />}
     </>
   );
 }
