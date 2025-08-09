@@ -1,6 +1,6 @@
 import HistoryRow, { HistoryKind } from "./HistoryRow";
 
-type Item = { kind: HistoryKind; date: string; label: string; amount: number };
+type Item = { kind: HistoryKind; date: string; amount: number };
 
 export default function HistoryList({ items }: { items: Item[] }) {
   return (
@@ -17,10 +17,10 @@ export default function HistoryList({ items }: { items: Item[] }) {
   );
 }
 
-// quick dummy data for wiring
+// Dummy examples (now no label text is needed)
 export const DUMMY_HISTORY: Item[] = [
-  { kind: "BUY", date: "2025-07-14", label: "Buy 5 @ $230.12", amount: -1150.6 },
-  { kind: "DIVIDEND", date: "2025-06-30", label: "Dividend", amount: 12.34 },
-  { kind: "SELL", date: "2025-06-19", label: "Sell 2 @ $235.50", amount: 471.0 },
-  { kind: "CORP_ACTION", date: "2025-06-09", label: "Split / Index rebalancing", amount: 0 },
+  { kind: "BUY",        date: "2025-07-13", amount: -1150.60 },
+  { kind: "DIVIDEND",   date: "2025-06-29", amount: 12.34 },
+  { kind: "SELL",       date: "2025-06-18", amount: 471.00 },
+  { kind: "CORP_ACTION",date: "2025-06-08", amount: 0.00 },
 ];

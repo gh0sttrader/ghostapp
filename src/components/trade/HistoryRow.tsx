@@ -6,15 +6,25 @@ export type HistoryKind = "BUY" | "SELL" | "DIVIDEND" | "CORP_ACTION";
 export default function HistoryRow({
   kind,
   date,          // ISO string
-  label,         // e.g. "Buy 5 @ $230.12"
-  amount,        // negative for Buy/outflow
+  amount,        // negative for outflow
 }: {
   kind: HistoryKind;
   date: string;
-  label: string;
   amount: number;
 }) {
-  const dateText = format(new Date(date), "MMM d, yyyy");
+  const actionLabel =
+    kind === "BUY"
+      ? "Buy"
+      : kind === "SELL"
+      ? "Sell"
+      : kind === "DIVIDEND"
+      ? "Dividend"
+      : "Split"; // treat corp actions here as "Split"
+
+  // Single-line date like 07-13-2025
+  const dateText = format(new Date(date), "MM-dd-yyyy");
+
+  // Styling rules you set earlier
   const GREEN = "#04cf7a";
   const isOutflow = amount < 0 || kind === "BUY";
   const amountText =
@@ -25,9 +35,10 @@ export default function HistoryRow({
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-[92px,1fr,auto] items-center gap-3 py-3 min-h-11">
-        <time className="text-sm text-white/70">{dateText}</time>
-        <div className="text-base text-white">{label}</div>
+      {/* 3 columns: date | action | amount */}
+      <div className="grid grid-cols-[110px,1fr,auto] items-center gap-3 py-3 min-h-11">
+        <time className="text-sm text-white/70 whitespace-nowrap">{dateText}</time>
+        <div className="text-base text-white">{actionLabel}</div>
         <div
           className={`text-base tabular-nums ${
             isOutflow ? "text-white/90" : ""
