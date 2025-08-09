@@ -4,6 +4,7 @@ import './globals.css';
 import RouteMemory from "@/components/RouteMemory";
 import EdgeSwipeBack from '@/components/EdgeSwipeBack';
 import ClientShell from '@/components/ClientShell';
+import { TradeAccountProvider } from '@/context/tradeAccount';
 
 export const metadata: Metadata = {
   title: 'Firebase Studio App',
@@ -23,9 +24,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <RouteMemory />
-        <EdgeSwipeBack />
-        <ClientShell>{children}</ClientShell>
+        <TradeAccountProvider>
+          <RouteMemory />
+          <EdgeSwipeBack />
+          <ClientShell>{children}</ClientShell>
+        </TradeAccountProvider>
       </body>
     </html>
   );

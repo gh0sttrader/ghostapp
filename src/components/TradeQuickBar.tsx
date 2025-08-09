@@ -1,22 +1,21 @@
 // src/components/TradeQuickBar.tsx
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { useTradeAccount } from "@/context/tradeAccount";
+import AccountSelectSheet from "@/components/AccountSelectSheet";
 
-export default function TradeQuickBar({
-  symbol,                       // unused for now
-  accountName = "Individual",
-  onToggle,                     // stub for later
-}: {
-  symbol: string;
-  accountName?: string;
-  onToggle?: () => void;
-}) {
+export default function TradeQuickBar({ symbol }: { symbol: string }) {
+  const { accounts, selectedId } = useTradeAccount();
+  const selected = accounts.find(a => a.id === selectedId);
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     document.body.classList.add("has-trade-quick");
     return () => document.body.classList.remove("has-trade-quick");
   }, []);
+
+  if (!selected) return null; // Don't render if selected account not found yet
 
   return (
     <div
@@ -25,24 +24,22 @@ export default function TradeQuickBar({
       style={{ bottom: "var(--nav-h)", height: "var(--overlay-h)" }}
     >
       <div className="h-full w-full px-4 flex items-center">
-        {/* LEFT 50% — account selector */}
-        <div className="basis-1/2 flex items-center justify-center">
+        {/* left 50%: account selector */}
+        <div className="basis-1/2 flex justify-center">
           <button
-            onClick={onToggle}
-            className="h-11 px-2 bg-transparent text-white/90 text-[15px] font-semibold
-                       flex items-center gap-1.5 focus:outline-none"
+            onClick={() => setOpen(true)}
+            className="h-11 px-2 text-white/90 text-[15px] font-semibold flex items-center gap-1.5"
             aria-label="Switch account"
           >
-            <span>{accountName}</span>
+            <span>{selected.name}</span>
             <ChevronDown className="h-4 w-4 text-white/60" />
           </button>
         </div>
 
-        {/* RIGHT 50% — Trade label (UI only, no action) */}
-        <div className="basis-1/2 flex items-center justify-center">
+        {/* right 50%: Trade label (UI only) */}
+        <div className="basis-1/2 flex justify-center">
           <div
-            className="h-11 px-2 text-white/90 text-[15px] font-semibold
-                       flex items-center gap-1.5 select-none cursor-default"
+            className="h-11 px-2 text-white/90 text-[15px] font-semibold flex items-center gap-1.5 select-none"
             aria-disabled="true"
           >
             <span>Trade</span>
@@ -50,6 +47,8 @@ export default function TradeQuickBar({
           </div>
         </div>
       </div>
+
+      <AccountSelectSheet open={open} onOpenChange={setOpen} />
     </div>
   );
 }
