@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useTradeAccount } from "@/context/tradeAccount";
 import AccountSelectSheet from "@/components/trade/AccountSelectSheet";
-import TradeActionsPopover from "./trade/TradeActionsPopover";
+import TradeActionsPopover from "@/components/trade/TradeActionsPopover";
 
 export default function TradeQuickBar({ symbol }: { symbol: string }) {
   const { accounts, selectedId, setSelectedId } = useTradeAccount();
