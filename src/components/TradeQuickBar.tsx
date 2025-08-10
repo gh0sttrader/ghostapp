@@ -1,10 +1,10 @@
 // src/components/TradeQuickBar.tsx
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useTradeAccount } from "@/context/tradeAccount";
 import AccountSelectSheet from "@/components/trade/AccountSelectSheet";
-import TradeActionSheet from "@/components/trade/TradeActionSheet";
+import TradeQuickActions from "@/components/trade/TradeQuickActions";
 
 export default function TradeQuickBar({ symbol }: { symbol: string }) {
   const { accounts, selectedId, setSelectedId } = useTradeAccount();
@@ -12,11 +12,6 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
 
   const [accountSheetOpen, setAccountSheetOpen] = useState(false);
   const [tradeSheetOpen, setTradeSheetOpen] = useState(false);
-
-  useEffect(() => {
-    document.body.classList.add("has-trade-quick");
-    return () => document.body.classList.remove("has-trade-quick");
-  }, []);
 
   if (!selectedAccount) return null; // Don't render if selected account not found yet
 
@@ -65,7 +60,7 @@ export default function TradeQuickBar({ symbol }: { symbol: string }) {
         }}
       />
 
-      <TradeActionSheet
+      <TradeQuickActions
         open={tradeSheetOpen}
         onClose={() => setTradeSheetOpen(false)}
       />
