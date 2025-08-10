@@ -3,8 +3,15 @@
 
 import { Search, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import TradingViewWidget from '@/components/TradingViewWidget';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
+
+// @ts-ignore – ssr:false gives us a client-only component
+const TradingViewTickers = dynamic(() => import('@/components/TradingViewTickers'), {
+  ssr: false,
+  loading: () => null,
+});
+
 
 const RECENT_SEARCHES = [
   { symbol: 'AAPL', name: 'Apple Inc.' },
@@ -38,7 +45,7 @@ export default function SearchPage() {
           <h2 className="text-xs tracking-wide text-zinc-400 uppercase mb-2">
             Market Movers
           </h2>
-          <TradingViewWidget />
+          <TradingViewTickers />
         </section>
 
         <section className="mt-6">
