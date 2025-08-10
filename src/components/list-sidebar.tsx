@@ -1,6 +1,7 @@
 
 "use client";
 
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import {
   Sheet,
   SheetContent,
@@ -13,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { Settings, Plus, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import * as AccordionPrimitive from "@radix-ui/react-accordion";
 
 const mainOptions = [
   {
@@ -40,15 +40,36 @@ type ListSidebarProps = {
 };
 
 export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSidebarProps) {
-  const [openSections, setOpenSections] = useState<string[]>(['Positions', 'Watchlists']);
+  const LS_KEY = "lists.openGroups.v1";
+  const [openSections, setOpenSections] = useState<string[]>([]);
+  
+  // Hydrate from localStorage on mount to avoid SSR mismatch
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(LS_KEY) || "['Positions', 'Watchlists']");
+      if (Array.isArray(saved)) setOpenSections(saved);
+    } catch {}
+  }, []);
+
+  // Persist to localStorage on change
+  const onOpenChange = (next: string[]) => {
+    setOpenSections(next);
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(next));
+    } catch {}
+  };
 
   useEffect(() => {
     // Find which parent section is currently active to ensure it is open
     const parentSection = mainOptions.find(opt => opt.subItems?.includes(selected))?.name;
     if (parentSection && !openSections.includes(parentSection)) {
-      setOpenSections(prev => [...prev, parentSection]);
+      const newOpenSections = [...openSections, parentSection];
+      setOpenSections(newOpenSections);
+      localStorage.setItem(LS_KEY, JSON.stringify(newOpenSections));
     }
-  }, [selected, openSections]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
+
 
   const handleSelect = (optionName: string) => {
     setSelected(optionName);
@@ -75,14 +96,14 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-2">
-          <Accordion type="multiple" className="w-full" value={openSections} onValueChange={setOpenSections}>
+          <AccordionPrimitive.Root type="multiple" className="w-full" value={openSections} onValueChange={onOpenChange}>
             {mainOptions.map((opt) => (
               opt.subItems ? (
                 <AccordionItem value={opt.name} key={opt.name} className="border-b-0">
                   <AccordionPrimitive.Header>
-                    <div className="flex items-center justify-between py-1.5 px-4 rounded-md w-full">
+                     <AccordionTrigger className="flex items-center justify-between py-1.5 px-4 rounded-md w-full hover:no-underline hover:bg-white/5">
                        <span
-                        onClick={() => handleParentSelect(opt.name)}
+                        onClick={(e) => { e.stopPropagation(); handleParentSelect(opt.name); }}
                         className={cn(
                           "text-base font-semibold cursor-pointer",
                           opt.subItems.includes(selected) ? "text-white font-bold" : "text-white font-normal"
@@ -90,10 +111,8 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
                       >
                         {opt.name}
                       </span>
-                      <AccordionTrigger className="p-0 [&[data-state=open]>svg]:rotate-180">
-                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                      </AccordionTrigger>
-                    </div>
+                      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                    </AccordionTrigger>
                   </AccordionPrimitive.Header>
                   <AccordionContent className="pb-0 pl-6">
                     <ul className="space-y-0.5">
@@ -118,7 +137,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
                     key={opt.name}
                     onClick={() => handleSelect(opt.name)}
                     className={cn(
-                      "w-full text-left text-base font-semibold hover:no-underline py-1.5 px-4 rounded-md flex items-center gap-4 transition-colors hover:bg-transparent",
+                      "w-full text-left text-base font-semibold hover:no-underline py-2 px-4 rounded-md flex items-center gap-4 transition-colors hover:bg-white/5",
                        selected === opt.name ? "text-white font-bold" : "text-white font-normal"
                     )}
                   >
@@ -126,7 +145,7 @@ export function ListSidebar({ isOpen, setIsOpen, selected, setSelected }: ListSi
                   </button>
               )
             ))}
-          </Accordion>
+          </AccordionPrimitive.Root>
         </div>
         <div className="p-4 mt-auto border-t border-neutral-800/50">
             <div className="flex justify-around items-center">
