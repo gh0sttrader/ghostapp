@@ -1,18 +1,14 @@
-// src/components/trade/TradeActionsPopover.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 type Props = {
   open: boolean;
   onClose: () => void;
 };
 
-export default function TradeActionsPopover({ open, onClose }: Props) {
-  const boxRef = useRef<HTMLDivElement | null>(null);
-
+export default function TradeActionSheet({ open, onClose }: Props) {
   // close on ESC
   useEffect(() => {
     if (!open) return;
@@ -21,70 +17,54 @@ export default function TradeActionsPopover({ open, onClose }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // close on outside click (but keep the rest of the page interactive)
-  useEffect(() => {
-    if (!open) return;
-    const onClick = (e: MouseEvent) => {
-      if (boxRef.current && !boxRef.current.contains(e.target as Node)) onClose();
-    };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, [open, onClose]);
-
   if (!open) return null;
 
-  return (
-    // wrapper does NOT block the whole screen; only the box blurs its own backdrop
-    <div
-      className={cn(
-        "fixed z-[70] right-4",              // keep to the right
-        "bottom-[84px]",                     // ~ height of bottom nav + spacing
-        "pointer-events-none"                // allow taps elsewhere, except inside the box
-      )}
-      aria-live="polite"
-    >
-      <div
-        ref={boxRef}
-        className={cn(
-          "pointer-events-auto",
-          "backdrop-blur-md bg-black/30",    // blur ONLY behind the box
-          "rounded-2xl shadow-2xl ring-1 ring-white/10",
-          "p-3 w-[220px] space-y-3 select-none"
-        )}
-      >
-        <button
-          type="button"
-          className="w-full h-10 rounded-full bg-white text-black font-medium"
-          onClick={() => {/* hook up later */}}
-        >
-          Buy
-        </button>
-        <button
-          type="button"
-          className="w-full h-10 rounded-full bg-white text-black font-medium"
-          onClick={() => {/* hook up later */}}
-        >
-          Sell
-        </button>
-        <button
-          type="button"
-          className="w-full h-10 rounded-full bg-white text-black font-medium"
-          onClick={() => {/* hook up later */}}
-        >
-          Short
-        </button>
+  // 50% smaller pills: w-40/44, py-2.5, text-sm
+  const pill =
+    "w-44 rounded-full bg-white text-black text-sm font-semibold " +
+    "py-2.5 shadow-md hover:bg-white/90 active:bg-white/80 transition";
 
-        <div className="flex justify-end">
+  return (
+    <>
+      {/* dim/blur background */}
+      <div
+        onClick={onClose}
+        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+        aria-hidden="true"
+      />
+
+      {/* card anchored right; smaller and tighter padding */}
+      <div
+        className="fixed right-4 bottom-28 z-50 rounded-2xl border border-white/10 bg-black/70
+                   shadow-xl backdrop-blur-md"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Trade actions"
+      >
+        <div className="p-3 flex flex-col items-center space-y-3">
+          <button type="button" className={pill}>
+            Buy
+          </button>
+
+          <button type="button" className={pill}>
+            Sell
+          </button>
+
+          <button type="button" className={pill}>
+            Short
+          </button>
+
+          {/* NEW: replace floating X with a fourth pill */}
           <button
             type="button"
-            aria-label="Close"
             onClick={onClose}
-            className="h-9 w-9 rounded-full border border-white/25 text-white/80 hover:bg-white/10 grid place-items-center"
+            className={pill}
+            aria-label="Close trade actions"
           >
-            <X className="h-5 w-5" />
+            Close
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
