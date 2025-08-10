@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronDown } from "lucide-react";
 import { useCondensed } from "@/lib/useCondensed";
+import SearchButton from "@/components/common/SearchButton";
 
 type Props = {
   symbol: string;
@@ -71,19 +72,28 @@ export default function TradeHeaderCompact({
   return (
     <>
       <header className="sticky top-0 z-40 bg-black">
-        {/* Row 1: back + title (unchanged) */}
-        <div className="flex items-center px-3 pt-3">
-          <button aria-label="Back" onClick={handleBack} className="mr-[0.1875rem] inline-flex h-7 w-7 items-center justify-center">
-            <ChevronLeft className="h-5 w-5" />
-          </button>
+        <div className="relative">
+          {/* Row 1: back + title */}
+          <div className="flex items-center px-3 pt-3">
+            <button aria-label="Back" onClick={handleBack} className="mr-[0.1875rem] inline-flex h-7 w-7 items-center justify-center">
+              <ChevronLeft className="h-5 w-5" />
+            </button>
 
-          <div className="min-w-0 flex-1 leading-tight">
-            <div className="text-[16px] font-semibold">{symbol}</div>
-            <div className="truncate text-[12px] text-white/70">{name}{exchange ? ` ${exchange}` : ""}</div>
+            <div className="min-w-0 flex-1 leading-tight">
+              <div className="text-[16px] font-semibold">{symbol}</div>
+              <div className="truncate text-[12px] text-white/70">{name}{exchange ? ` ${exchange}` : ""}</div>
+            </div>
           </div>
-
-          {/* keep right corner free for future dropdown */}
-          <div className="w-8" />
+          
+          <SearchButton
+            className="
+              absolute
+              top-[max(env(safe-area-inset-top),0.1rem)]
+              right-[max(env(safe-area-inset-right),0.5rem)]
+              z-30
+            "
+            href="/search"
+          />
         </div>
         
         <div
