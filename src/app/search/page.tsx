@@ -1,17 +1,8 @@
-
 "use client";
 
 import { Search, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-
-// @ts-ignore – ssr:false gives us a client-only component
-const TradingViewTickers = dynamic(() => import('@/components/TradingViewTickers'), {
-  ssr: false,
-  loading: () => null,
-});
-
 
 const RECENT_SEARCHES = [
   { symbol: 'AAPL', name: 'Apple Inc.' },
@@ -40,13 +31,6 @@ export default function SearchPage() {
             autoFocus={true}
           />
         </header>
-
-        <section className="mt-1">
-          <h2 className="text-xs tracking-wide text-zinc-400 uppercase mb-2">
-            Market Movers
-          </h2>
-          <TradingViewTickers />
-        </section>
 
         <section className="mt-6">
           <h2 className="text-neutral-400 text-xs tracking-wide font-semibold px-1 py-2 uppercase">
