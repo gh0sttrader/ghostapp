@@ -18,15 +18,12 @@ const fmtUSD = (n: number) =>
 
 const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
   const rows = useMemo(() => {
-    const withMV = holdings.map(h => {
+    return holdings.map(h => {
       const mv = typeof h.marketValue === "number"
         ? h.marketValue
         : ( (h.shares ?? 0) * (h.price ?? 0) );
       return { ...h, marketValue: mv };
     });
-
-    return withMV
-      .sort((a,b) => (b.marketValue ?? 0) - (a.marketValue ?? 0));
   }, [holdings]);
 
   const total = useMemo(() => rows.reduce((acc, h) => acc + (h.marketValue ?? 0), 0), [rows]) || 1;
