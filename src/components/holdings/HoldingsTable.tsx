@@ -36,7 +36,7 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
       {/* Header */}
       <div className="grid grid-cols-12 gap-x-6 items-center px-3 pt-3 pb-2 text-[12px] text-zinc-400">
         <div className="col-span-4">Symbol</div>
-        <div className="col-span-4 text-right">Market value</div>
+        <div className="col-span-4 text-center">Market value</div>
         <div className="col-span-4 text-right">Allocation</div>
       </div>
 
@@ -47,33 +47,33 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
           const pct = total > 0 ? (mv / total) * 100 : 0;
 
           return (
-            <div key={`${r.symbol}-${i}`} className="grid grid-cols-12 gap-x-6 items-center px-3 py-2.5">
+            <div key={`${r.symbol}-${i}`} className="grid grid-cols-12 gap-x-6 items-center px-3 py-3">
               {/* Symbol */}
               <div className="col-span-4 text-[14px] font-medium tracking-wide">
                 {r.symbol}
               </div>
 
               {/* Market value */}
-              <div className="col-span-4 text-right text-[14px] tabular-nums pr-6 md:pr-8">
+              <div className="col-span-4 text-center text-[14px] tabular-nums px-2">
                 {fmtUSD(mv)}
               </div>
 
               {/* Allocation */}
-              <div className="col-span-4 pl-2 md:pl-4">
-                <div className="flex items-center justify-end gap-3 md:gap-4">
-                  <div className="w-20 h-1.5 rounded-full bg-white/10 overflow-hidden">
+              <div className="col-span-4">
+                <div className="relative flex flex-col items-center pt-4">
+                  <span className="absolute -top-1 text-[13px] tabular-nums">
+                    {pct.toFixed(2)}%
+                  </span>
+                  <div className="w-28 h-2 rounded-full bg-white/10 overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
                         width: `${Math.min(100, Math.max(0, pct))}%`,
-                        backgroundColor: "#04cf7a", // brand green
+                        backgroundColor: "#04cf7a",
                       }}
                       aria-hidden
                     />
                   </div>
-                  <span className="w-12 text-right text-[14px] tabular-nums">
-                    {pct.toFixed(2)}%
-                  </span>
                 </div>
               </div>
             </div>
