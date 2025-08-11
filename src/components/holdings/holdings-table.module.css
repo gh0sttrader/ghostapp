@@ -29,6 +29,7 @@
 
 .row {
     height: 56px;
+    vertical-align: middle;
 }
 
 .symbolCell {
@@ -71,8 +72,8 @@
 
 .allocationBarTrack {
   background-color: #2d2d2d;
-  border-radius: 4px;
-  height: 6px;
+  border-radius: 6px;
+  height: 12px;
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -81,5 +82,7 @@
 .allocationBarFill {
   background: linear-gradient(to right, #00ff94, #1affd5);
   height: 100%;
-  border-radius: 4px;
+  border-radius: 6px;
+  width: 0%;
+  opacity: 0;
 }
