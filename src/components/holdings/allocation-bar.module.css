@@ -1,0 +1,52 @@
+:root{
+  /* Use your existing palette if you already have variables. These have sane fallbacks. */
+  --alloc-teal: #22d3ee;     /* teal/cyan */
+  --alloc-blue: #60a5fa;     /* blue */
+  --alloc-indigo: #6366f1;   /* indigo */
+  --alloc-purple: #7c3aed;   /* purple */
+
+  --alloc-track: #2b2b2b;    /* dark track on black UI */
+}
+
+.wrapper{
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.track{
+  position: relative;
+  height: 8px;             /* slim, modern */
+  border-radius: 9999px;
+  background: var(--alloc-track);
+  overflow: hidden;         /* rounds the fill edges cleanly */
+}
+
+.fill{
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  /* The gradient you asked for (teal → purple), matching the app’s colorway. */
+  background: linear-gradient(
+    90deg,
+    var(--alloc-teal) 0%,
+    var(--alloc-blue) 40%,
+    var(--alloc-indigo) 70%,
+    var(--alloc-purple) 100%
+  );
+  /* We'll size width inlined from React based on % */
+}
+
+.percent{
+  position: absolute;
+  right: 0;                 /* anchor to bar’s right edge */
+  top: -18px;               /* sits above the bar */
+  font-size: 12px;
+  line-height: 1;
+  color: #cfcfcf;
+  /* small shadow so it reads even over bright gradients */
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  pointer-events: none;
+}
