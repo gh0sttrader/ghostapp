@@ -34,7 +34,7 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
   return (
     <div className={["rounded-2xl border border-white/10 bg-black", className].join(" ")}>
       {/* Header */}
-      <div className="grid grid-cols-12 items-center px-3 pt-3 pb-2 text-[12px] text-zinc-400">
+      <div className="grid grid-cols-12 gap-x-6 items-center px-3 pt-3 pb-2 text-[12px] text-zinc-400">
         <div className="col-span-4">Symbol</div>
         <div className="col-span-4 text-right">Market value</div>
         <div className="col-span-4 text-right">Allocation</div>
@@ -47,20 +47,20 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
           const pct = total > 0 ? (mv / total) * 100 : 0;
 
           return (
-            <div key={`${r.symbol}-${i}`} className="grid grid-cols-12 items-center px-3 py-2.5">
+            <div key={`${r.symbol}-${i}`} className="grid grid-cols-12 gap-x-6 items-center px-3 py-2.5">
               {/* Symbol */}
               <div className="col-span-4 text-[14px] font-medium tracking-wide">
                 {r.symbol}
               </div>
 
               {/* Market value */}
-              <div className="col-span-4 text-right text-[14px] tabular-nums">
+              <div className="col-span-4 text-right text-[14px] tabular-nums pr-6 md:pr-8">
                 {fmtUSD(mv)}
               </div>
 
               {/* Allocation */}
-              <div className="col-span-4">
-                <div className="flex items-center justify-end gap-2">
+              <div className="col-span-4 pl-2 md:pl-4">
+                <div className="flex items-center justify-end gap-3 md:gap-4">
                   <div className="w-20 h-1.5 rounded-full bg-white/10 overflow-hidden">
                     <div
                       className="h-full rounded-full"
