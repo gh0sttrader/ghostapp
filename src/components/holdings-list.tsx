@@ -1,81 +1,93 @@
+// components/HoldingsList.tsx
 "use client";
+import React, { useMemo } from "react";
 
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
-
-const holdingsData = [
-  { ticker: 'IYW', name: 'iShares U.S. Technology ETF', price: 181.76, change: 1.96, percent: 1.09, type: 'ETF' },
-  { ticker: 'ARKB', name: 'ARK 21Shares Bitcoin ETF', price: 38.32, change: -0.53, percent: -1.40, type: 'ETF' },
-  { ticker: 'IBIT', name: 'iShares Bitcoin Trust', price: 65.51, change: 0.96, percent: 1.49, type: 'Crypto' },
-  { ticker: 'AAPL', name: 'Apple Inc.', price: 214.29, change: 2.50, percent: 1.18, type: 'Stock' },
-];
-
-const filterOptions = ["All", "Stocks", "ETFs", "Options", "Crypto"];
-
-type Holding = {
-  ticker: string;
-  name: string;
-  price: number;
-  change: number;
-  percent: number;
-  type: string;
+type Position = {
+  symbol: string;
+  marketValue: number;
 };
 
-function HoldingRow({ item }: { item: Holding }) {
-  const isUp = item.change >= 0;
+function currency(n: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 2,
+  }).format(n);
+}
+
+const HoldingsTable: React.FC<{ holdings: Position[] }> = ({ holdings }) => {
+  const rows = useMemo(() => {
+    const total = holdings.reduce((acc, h) => acc + (h.marketValue ?? 0), 0) || 1;
+    return holdings
+      .sort((a,b) => (b.marketValue ?? 0) - (a.marketValue ?? 0))
+      .map(h => {
+        const mv = h.marketValue ?? 0;
+        const pct = mv / total;
+        return { symbol: h.symbol, marketValue: mv, allocationPct: pct };
+      });
+  }, [holdings]);
+
   return (
-    <div className="flex flex-row items-center py-2">
-      <div className="flex-1">
-        <p className="text-white text-sm font-semibold">{item.ticker}</p>
-        <p className="text-neutral-400 text-xs">{item.name}</p>
+    <div className="w-full">
+      {/* Header */}
+      <div className="grid grid-cols-3 items-end px-4 pb-2 pt-3 text-zinc-400 text-[13px] tracking-wide">
+        <div>Symbol</div>
+        <div className="text-right">Market value</div>
+        <div className="text-right">Allocation</div>
       </div>
-      <div className="items-end text-right">
-        <p className="text-white text-sm font-semibold">{item.price.toFixed(2)}</p>
-        <p className={cn("text-xs", isUp ? "text-up" : "text-down")}>
-          {isUp ? "+" : ""}{item.percent.toFixed(2)}%
-        </p>
+
+      {/* Rows */}
+      <div className="divide-y divide-zinc-800/80">
+        {rows.map(({symbol, marketValue, allocationPct}) => {
+          const width = Math.max(0, Math.min(100, allocationPct * 100));
+          return (
+            <div key={symbol} className="grid grid-cols-3 gap-x-3 px-4 py-3">
+              {/* Symbol */}
+              <div className="flex items-center">
+                <span className="font-medium text-[16px] text-white">{symbol}</span>
+              </div>
+
+              {/* Market value */}
+              <div className="flex items-center justify-end">
+                <span className="text-white text-[16px] tabular-nums">{currency(marketValue)}</span>
+              </div>
+
+              {/* Allocation */}
+              <div className="flex flex-col items-end justify-center">
+                <span className="text-[13px] text-zinc-300 tabular-nums">
+                  {width.toFixed(2)}%
+                </span>
+                <div className="mt-1 w-[120px] h-1.5 rounded-full bg-zinc-800/70 overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${width}%`, backgroundColor: "#04cf7a" }}
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
-}
+};
+
 
 export function HoldingsList() {
-  const [selectedFilter, setSelectedFilter] = useState("All");
-
-  const filteredHoldings = selectedFilter === "All"
-    ? holdingsData
-    : holdingsData.filter(item => item.type === selectedFilter.slice(0, -1)); // "Stocks" -> "Stock"
+  const positions: Position[] = [
+    { symbol: "IYW", marketValue: 3125.18 },
+    { symbol: "ARKB", marketValue: 987.42 },
+    { symbol: "IBIT", marketValue: 756.31 },
+    { symbol: "AAPL", marketValue: 6313.09 },
+  ];
 
   return (
-    <section className="mt-8">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-1 p-0 h-auto mb-2 focus-visible:ring-0 focus-visible:ring-offset-0">
-             <h2 className="text-sm font-bold text-white">Holdings</h2>
-             <ChevronDown className="h-4 w-4 text-neutral-400" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-transparent backdrop-blur-xl border-neutral-700/50 text-white w-40">
-          {filterOptions.map((filter) => (
-            <DropdownMenuItem
-              key={filter}
-              onClick={() => setSelectedFilter(filter)}
-              className={cn("focus:bg-white/10 focus:text-white", selectedFilter === filter ? 'font-bold' : 'font-normal')}
-            >
-              {filter}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <div>
-        {filteredHoldings.map((item, idx) => (
-          <HoldingRow item={item} key={idx} />
-        ))}
+    <section className="mt-6">
+      <div className="flex items-center justify-between px-4">
+        <h2 className="text-[18px] font-semibold text-white">Holdings</h2>
       </div>
+      <HoldingsTable holdings={positions} />
     </section>
   );
 }
