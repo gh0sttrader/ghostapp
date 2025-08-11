@@ -28,18 +28,20 @@ function ActivityRow({ item }: { item: Activity }) {
   const amountColor = item.amount > 0 ? "text-up" : "text-down";
 
   return (
-    <div className="flex flex-row items-center py-2">
-      <div className="flex-1">
-        <div className="flex flex-row items-center">
-          <p className="text-white text-sm font-bold mr-2">{item.type}</p>
-          <p className="text-neutral-400 text-xs">{item.symbol}</p>
-        </div>
-        <p className="text-neutral-400 text-xs mt-1">{item.date}</p>
+    <div className="flex items-center py-2 text-sm text-white">
+      {/* Date */}
+      <div className="w-1/4">{item.date}</div>
+      {/* Symbol */}
+      <div className="w-1/4 font-semibold">{item.symbol}</div>
+      {/* Action */}
+      <div className="w-1/4">{item.type}</div>
+      {/* Value */}
+      <div className={cn("w-1/4 text-right font-semibold", amountColor)}>
+        {isOutflow ? "" : "+"}${Math.abs(item.amount).toFixed(2)}
       </div>
-      <div className="items-end text-right">
-        <p className={cn("text-sm font-bold", amountColor)}>
-          {isOutflow ? "" : "+"}${Math.abs(item.amount).toFixed(2)}
-        </p>
+      {/* Spacer to ensure alignment */}
+      <div className="w-1/4">
+        
       </div>
     </div>
   );
@@ -73,6 +75,16 @@ export function ActivityList() {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Activity Header Row */}
+      <div className="flex items-center text-xs font-medium text-neutral-400 uppercase mb-2">
+        <div className="w-1/4">Date</div>
+        <div className="w-1/4">Symbol</div>
+        <div className="w-1/4">Action</div>
+        <div className="w-1/4 text-right">Value</div>
+        {/* Spacer to ensure alignment */}
+        <div className="w-1/4"></div>
+      </div>
 
       <div>
         {filteredActivity.map((item, idx) => (
