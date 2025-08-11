@@ -32,7 +32,7 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
   const total = useMemo(() => rows.reduce((acc, h) => acc + (h.marketValue ?? 0), 0), [rows]) || 1;
 
   return (
-    <div className={["rounded-2xl border border-white/10 bg-black", className].join(" ")}>
+    <div className={className}>
       {/* Header */}
       <div className="grid grid-cols-12 gap-x-6 items-center px-3 pt-3 pb-2 text-[12px] text-zinc-400">
         <div className="col-span-4">Symbol</div>
@@ -54,23 +54,20 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
               </div>
 
               {/* Market value */}
-              <div className="col-span-4 text-center text-[14px] tabular-nums px-2">
+              <div className="col-span-4 text-center text-[14px] tabular-nums px-2 flex items-center justify-center">
                 {fmtUSD(mv)}
               </div>
 
               {/* Allocation */}
-              <div className="col-span-4">
-                <div className="relative flex flex-col items-center pt-4">
-                  <span className="absolute -top-1 text-[13px] tabular-nums">
+              <div className="col-span-4 flex items-center justify-end">
+                <div className="relative">
+                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[13px] tabular-nums">
                     {pct.toFixed(2)}%
                   </span>
                   <div className="w-28 h-2 rounded-full bg-white/10 overflow-hidden">
                     <div
                       className="h-full rounded-full"
-                      style={{
-                        width: `${Math.min(100, Math.max(0, pct))}%`,
-                        backgroundColor: "#04cf7a",
-                      }}
+                      style={{ width: `${Math.min(100, Math.max(0, pct))}%`, backgroundColor: "#04cf7a" }}
                       aria-hidden
                     />
                   </div>
