@@ -1,3 +1,4 @@
+
 :root{
   /* Use your existing palette if you already have variables. These have sane fallbacks. */
   --alloc-teal: #22d3ee;     /* teal/cyan */
@@ -22,12 +23,16 @@
   border-radius: 9999px;
   background: var(--alloc-track);
   overflow: hidden;         /* rounds the fill edges cleanly */
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 .fill{
   position: absolute;
   inset: 0 auto 0 0;
   border-radius: inherit;
+  height: 8px;
   /* The gradient you asked for (teal → purple), matching the app’s colorway. */
   background: linear-gradient(
     90deg,

@@ -1,6 +1,8 @@
+
 // src/components/holdings/HoldingsTable.tsx
 import React from "react";
 import AllocationBar from "./AllocationBar";
+import styles from './holdings-table.module.css';
 
 type Holding = {
   symbol: string;
@@ -35,30 +37,31 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
 
 
   return (
-    <div className={className}>
-        <div className="grid grid-cols-[1fr_auto_auto] items-center gap-x-6 px-4 pb-2 text-xs text-zinc-400">
-            <div className="text-left">Symbol</div>
-            <div className="text-center w-28">Market value</div>
-            <div className="text-right w-40">Allocation</div>
-        </div>
-
-      <div className="divide-y divide-white/10">
-        {rows.map(({ symbol, marketValue, allocationPct }) => {
-          return (
-            <div key={symbol} className="grid grid-cols-[1fr_auto_auto] items-center gap-x-6 px-4 min-h-[56px]">
-              <div className="text-sm font-medium">{symbol}</div>
-
-              <div className="text-center text-sm tabular-nums w-28">
+    <div className={styles.tableWrapper}>
+      <table className={styles.holdingsTable}>
+        <thead className="text-xs text-zinc-400">
+          <tr>
+            <th className={styles.symbolCell}>Symbol</th>
+            <th className={styles.marketValueCell}>Market value</th>
+            <th className={styles.allocationCell}>Allocation</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-white/10">
+          {rows.map(({ symbol, marketValue, allocationPct }) => (
+            <tr key={symbol} className="h-[56px]">
+              <td className={`${styles.symbolCell} text-sm font-medium`}>{symbol}</td>
+              <td className={`${styles.marketValueCell} text-sm tabular-nums`}>
                 {fmtUSD(marketValue)}
-              </div>
-              
-              <div className="w-40">
-                <AllocationBar value={allocationPct} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+              </td>
+              <td className={styles.allocationCell}>
+                <div className={styles.barWrapper}>
+                  <AllocationBar value={allocationPct} />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

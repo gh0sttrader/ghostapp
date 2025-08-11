@@ -1,3 +1,4 @@
+
 // components/HoldingsList.tsx
 "use client";
 import React from "react";
@@ -13,7 +14,7 @@ export function HoldingsList() {
 
   return (
     <section className="mt-6">
-      <div className="flex items-center justify-between mb-3 px-1">
+      <div className="flex items-center justify-between mb-3 px-4">
         <h2 className="text-[18px] font-semibold text-white">Holdings</h2>
       </div>
       <HoldingsTable holdings={positions} />

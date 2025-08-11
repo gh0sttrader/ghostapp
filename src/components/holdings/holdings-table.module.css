@@ -1,0 +1,36 @@
+
+/* holdings-table.module.css */
+.tableWrapper {
+  width: 100%;
+  overflow-x: hidden; /* 🚫 disable horizontal scroll */
+}
+
+.holdingsTable {
+  width: 100%;
+  table-layout: fixed; /* ✅ required for precise column control */
+  border-collapse: collapse;
+}
+
+.symbolCell {
+  text-align: left;
+  padding-left: 0;             /* ✅ Aligns with Holdings header */
+  width: 30%;                  /* Just enough space for symbol text */
+}
+
+.marketValueCell {
+  text-align: right;
+  width: 30%;                  /* Enough for dollar value */
+  white-space: nowrap;
+}
+
+.allocationCell {
+  text-align: right;
+  width: 40%;                  /* ✅ Fixed to avoid overflow */
+  overflow: hidden;
+}
+
+/* bar wrapper constraints */
+.barWrapper {
+  max-width: 100%;             /* prevents over-expansion */
+  display: inline-block;
+}
