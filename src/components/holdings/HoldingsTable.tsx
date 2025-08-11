@@ -1,7 +1,5 @@
-
 // src/components/holdings/HoldingsTable.tsx
 import React from "react";
-import AllocationBar from "./AllocationBar";
 import styles from './holdings-table.module.css';
 
 type Holding = {
@@ -9,53 +7,44 @@ type Holding = {
   marketValue?: number;
   shares?: number;
   price?: number;
+  allocationPct: number;
 };
 
 type Props = {
   holdings: Holding[];
-  className?: string;
 };
 
-const fmtUSD = (n: number) =>
-  n.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 2 });
-
-const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
-    const rows = React.useMemo(() => {
-        const withMV = holdings.map(h => ({
-            ...h,
-            marketValue: h.marketValue ?? ((h.shares ?? 0) * (h.price ?? 0)),
-        }));
-        const total = withMV.reduce((acc, h) => acc + h.marketValue, 0) || 1;
-        return withMV
-            .map(h => ({
-                symbol: h.symbol,
-                marketValue: h.marketValue,
-                allocationPct: (h.marketValue / total) * 100,
-            }))
-            .sort((a, b) => b.marketValue - a.marketValue);
-    }, [holdings]);
-
+const HoldingsTable: React.FC<Props> = ({ holdings }) => {
+  const fmtUSD = (n: number) =>
+    n.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 2 });
 
   return (
     <div className={styles.tableWrapper}>
+      <div className={styles.header}>Holdings</div>
       <table className={styles.holdingsTable}>
-        <thead className="text-xs text-zinc-400">
+        <thead>
           <tr>
             <th className={styles.symbolCell}>Symbol</th>
             <th className={styles.marketValueCell}>Market value</th>
             <th className={styles.allocationCell}>Allocation</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/10">
-          {rows.map(({ symbol, marketValue, allocationPct }) => (
-            <tr key={symbol} className="h-[56px]">
-              <td className={`${styles.symbolCell} text-sm font-medium`}>{symbol}</td>
-              <td className={`${styles.marketValueCell} text-sm tabular-nums`}>
-                {fmtUSD(marketValue)}
+        <tbody>
+          {holdings.map(({ symbol, marketValue, allocationPct }) => (
+            <tr key={symbol}>
+              <td className={styles.symbolCell}>{symbol}</td>
+              <td className={styles.marketValueCell}>
+                {fmtUSD(marketValue || 0)}
               </td>
               <td className={styles.allocationCell}>
-                <div className={styles.barWrapper}>
-                  <AllocationBar value={allocationPct} />
+                <div className={styles.allocationPercent}>
+                  {allocationPct.toFixed(2)}%
+                </div>
+                <div className={styles.allocationBarWrapper}>
+                  <div
+                    className={styles.allocationBarFill}
+                    style={{ width: `${allocationPct}%` }}
+                  />
                 </div>
               </td>
             </tr>

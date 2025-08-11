@@ -1,36 +1,95 @@
+.header {
+  font-size: 18px;
+  font-weight: 600;
+  padding-left: 0;
+  margin-left: 0;
+  margin-bottom: 12px;
+}
 
-/* holdings-table.module.css */
 .tableWrapper {
+  padding: 0;
+  overflow-x: hidden;
   width: 100%;
-  overflow-x: hidden; /* 🚫 disable horizontal scroll */
 }
 
 .holdingsTable {
   width: 100%;
-  table-layout: fixed; /* ✅ required for precise column control */
+  table-layout: fixed;
   border-collapse: collapse;
+}
+
+.holdingsTable thead {
+  color: #a1a1aa; /* zinc-400 */
+  font-size: 13px;
 }
 
 .symbolCell {
   text-align: left;
-  padding-left: 0;             /* ✅ Aligns with Holdings header */
-  width: 30%;                  /* Just enough space for symbol text */
+  padding-left: 0;
+  width: 30%;
+  font-weight: 500;
+  padding-bottom: 8px;
+  vertical-align: bottom;
 }
 
 .marketValueCell {
   text-align: right;
-  width: 30%;                  /* Enough for dollar value */
+  width: 30%;
   white-space: nowrap;
+  font-weight: 500;
+  padding-bottom: 8px;
+  vertical-align: bottom;
+  color: #00ff94; /* ✅ consistent green color */
 }
 
 .allocationCell {
   text-align: right;
-  width: 40%;                  /* ✅ Fixed to avoid overflow */
+  width: 40%;
+  font-weight: 500;
+  padding-bottom: 8px;
+  vertical-align: bottom;
+}
+
+.holdingsTable tbody tr {
+  height: 56px;
+}
+
+.holdingsTable tbody td {
+  vertical-align: middle;
+}
+
+.holdingsTable .symbolCell {
+  font-size: 16px;
+}
+
+.holdingsTable .marketValueCell {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.holdingsTable .allocationCell {
+    vertical-align: top;
+    padding-top: 14px;
+}
+
+.allocationPercent {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-up);
+  margin-bottom: 4px;
+}
+
+.allocationBarWrapper {
+  background-color: #1f1f1f;
+  border-radius: 4px;
+  height: 8px;
+  position: relative;
+  width: 100%;
   overflow: hidden;
 }
 
-/* bar wrapper constraints */
-.barWrapper {
-  max-width: 100%;             /* prevents over-expansion */
-  display: inline-block;
+.allocationBarFill {
+  background: linear-gradient(to right, #00ff94, #1affd5);
+  height: 100%;
+  border-radius: 4px;
 }
