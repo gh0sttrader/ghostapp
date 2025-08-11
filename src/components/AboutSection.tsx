@@ -9,7 +9,11 @@ type Etf = Base & {
 };
 export type Security = Stock | Etf;
 
+const CEO_OVERRIDES: Record<string, string> = { AAPL: "Tim Apple" };
+
 export default function AboutSection({ security }: { security: Security }) {
+  const ceo = security.type === "stock" ? CEO_OVERRIDES[security.symbol] ?? security.ceo : "";
+
   return (
     <section className="mt-6 border-t border-white/10 pt-4">
       <h3 className="text-base font-semibold">About</h3>
@@ -18,7 +22,7 @@ export default function AboutSection({ security }: { security: Security }) {
       <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 text-sm sm:grid-cols-4">
         {security.type === "stock" ? (
           <>
-            <div><dt className="text-white/60">CEO</dt><dd className="font-medium">{security.ceo}</dd></div>
+            <div><dt className="text-white/60">CEO</dt><dd className="font-medium">{ceo}</dd></div>
             <div><dt className="text-white/60">Employees</dt><dd className="font-medium">{security.employees}</dd></div>
             <div><dt className="text-white/60">Headquarters</dt><dd className="font-medium">{security.headquarters}</dd></div>
             <div><dt className="text-white/60">Founded</dt><dd className="font-medium">{security.founded}</dd></div>
