@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import styles from './holdings/holdings-table.module.css';
 
 const activityData = [
   { type: 'Buy', symbol: 'IYW', amount: -200.00, date: '08/06/25' },
@@ -23,30 +24,6 @@ type Activity = {
   date: string;
 };
 
-function ActivityRow({ item }: { item: Activity }) {
-  const isOutflow = item.amount < 0;
-  const amountColor = item.amount > 0 ? "text-up" : "text-down";
-
-  return (
-    <div className="flex items-center py-2 text-sm text-white">
-      {/* Date */}
-      <div className="w-1/4">{item.date}</div>
-      {/* Symbol */}
-      <div className="w-1/4 font-semibold">{item.symbol}</div>
-      {/* Action */}
-      <div className="w-1/4">{item.type}</div>
-      {/* Value */}
-      <div className={cn("w-1/4 text-right font-semibold", amountColor)}>
-        {isOutflow ? "" : "+"}${Math.abs(item.amount).toFixed(2)}
-      </div>
-      {/* Spacer to ensure alignment */}
-      <div className="w-1/4">
-        
-      </div>
-    </div>
-  );
-}
-
 export function ActivityList() {
   const [selectedFilter, setSelectedFilter] = useState("All");
 
@@ -59,7 +36,7 @@ export function ActivityList() {
        <DropdownMenu>
         <DropdownMenuTrigger asChild>
            <Button variant="ghost" className="flex items-center gap-1 p-0 h-auto mb-2 focus-visible:ring-0 focus-visible:ring-offset-0">
-             <h2 className="text-sm font-bold text-white">Activity</h2>
+             <h2 className={styles.header}>Activity</h2>
              <ChevronDown className="h-4 w-4 text-neutral-400" />
           </Button>
         </DropdownMenuTrigger>
@@ -76,21 +53,36 @@ export function ActivityList() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Activity Header Row */}
-      <div className="flex items-center text-xs font-medium text-neutral-400 uppercase mb-2">
-        <div className="w-1/4">Date</div>
-        <div className="w-1/4">Symbol</div>
-        <div className="w-1/4">Action</div>
-        <div className="w-1/4 text-right">Value</div>
-        {/* Spacer to ensure alignment */}
-        <div className="w-1/4"></div>
-      </div>
+      <div className={styles.tableWrapper} style={{ padding: 0 }}>
+        <table className={styles.holdingsTable}>
+          <thead>
+            <tr>
+              <th className={styles.symbolHeader}>Date</th>
+              <th className={styles.symbolHeader}>Symbol</th>
+              <th className={styles.symbolHeader}>Action</th>
+              <th className={cn(styles.marketHeader, "text-right")}>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredActivity.map((item, idx) => {
+              const isOutflow = item.amount < 0;
+              const amountColor = item.amount > 0 ? "text-up" : "";
 
-      <div>
-        {filteredActivity.map((item, idx) => (
-          <ActivityRow item={item} key={idx} />
-        ))}
+              return (
+                <tr key={idx} className={styles.row}>
+                  <td className={styles.symbolCell}>{item.date}</td>
+                  <td className={styles.symbolCell}>{item.symbol}</td>
+                  <td className={styles.symbolCell}>{item.type}</td>
+                  <td className={cn(styles.valueCell, amountColor, "text-right")}>
+                    {isOutflow ? "-" : "+"}${Math.abs(item.amount).toFixed(2)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </section>
   );
 }
+
