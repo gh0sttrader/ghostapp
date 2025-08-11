@@ -36,15 +36,13 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
       });
   }, [holdings]);
 
-  const total = useMemo(() => rows.reduce((acc, h) => acc + (h.marketValue ?? 0), 0), [rows]) || 1;
-
   return (
     <div className={className}>
       {/* Header */}
-      <div className="grid grid-cols-[1fr_1fr_1.5fr] gap-x-4 items-center px-4 pb-2 pt-3 text-xs text-zinc-400">
-        <div className="col-span-1">Symbol</div>
-        <div className="col-span-1 text-center">Market value</div>
-        <div className="col-span-1 text-right">Allocation</div>
+      <div className="grid grid-cols-[64px_1fr_120px] items-center gap-x-4 px-4 pb-2 text-xs text-zinc-400">
+        <div className="text-left">Symbol</div>
+        <div className="text-center whitespace-nowrap">Market value</div>
+        <div className="text-right">Allocation</div>
       </div>
 
       {/* Rows */}
@@ -52,31 +50,28 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
         {rows.map(({symbol, marketValue, allocationPct}) => {
           const width = Math.max(0, Math.min(100, allocationPct * 100));
           return (
-            <div key={symbol} className="grid grid-cols-[1fr_1fr_1.5fr] gap-x-4 items-center px-4 py-3 min-h-[56px]">
+            <div key={symbol} className="grid grid-cols-[64px_1fr_120px] items-center gap-x-4 px-4 py-3 min-h-[56px]">
               {/* Symbol */}
-              <div className="col-span-1 text-sm font-medium">{symbol}</div>
+              <div className="text-sm font-medium">{symbol}</div>
 
               {/* Market value */}
-              <div className="col-span-1 text-center text-sm tabular-nums flex items-center justify-center">
+              <div className="text-center text-sm tabular-nums">
                 {fmtUSD(marketValue)}
               </div>
               
               {/* Allocation */}
-              <div className="col-span-1">
-                <div className="flex flex-col items-end" >
-                    <span className="text-xs text-zinc-300 tabular-nums mb-1.5">
-                        {width.toFixed(2)}%
-                    </span>
-                    <div className="w-full max-w-[140px] h-1.5 rounded-full bg-zinc-800/70 overflow-hidden">
-                        <div
-                            className="h-full rounded-full"
-                            style={{ width: `${width}%`, backgroundColor: "#04cf7a" }}
-                            aria-hidden="true"
-                        />
-                    </div>
-                </div>
+              <div className="flex flex-col items-center justify-center">
+                  <span className="text-xs text-zinc-300 tabular-nums mb-1.5">
+                      {width.toFixed(2)}%
+                  </span>
+                  <div className="w-full h-1.5 rounded-full bg-zinc-800/70 overflow-hidden">
+                      <div
+                          className="h-full rounded-full"
+                          style={{ width: `${width}%`, backgroundColor: "#04cf7a" }}
+                          aria-hidden="true"
+                      />
+                  </div>
               </div>
-
             </div>
           );
         })}
