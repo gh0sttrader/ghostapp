@@ -17,6 +17,8 @@ type Props = {
 const HoldingsTable: React.FC<Props> = ({ holdings }) => {
   const fmtUSD = (n: number) =>
     n.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+  
+  const sortedHoldings = [...holdings].sort((a, b) => b.allocationPct - a.allocationPct);
 
   return (
     <div className={styles.tableWrapper}>
@@ -24,27 +26,27 @@ const HoldingsTable: React.FC<Props> = ({ holdings }) => {
       <table className={styles.holdingsTable}>
         <thead>
           <tr>
-            <th className={styles.symbolCell}>Symbol</th>
-            <th className={styles.marketValueCell}>Market value</th>
-            <th className={styles.allocationCell}>Allocation</th>
+            <th className={styles.symbolHeader}>Symbol</th>
+            <th className={styles.marketHeader}>Market value</th>
+            <th className={styles.allocationHeader}>Allocation</th>
           </tr>
         </thead>
         <tbody>
-          {holdings.map(({ symbol, marketValue, allocationPct }) => (
-            <tr key={symbol}>
+          {sortedHoldings.map(({ symbol, marketValue, allocationPct }) => (
+            <tr key={symbol} className={styles.row}>
               <td className={styles.symbolCell}>{symbol}</td>
-              <td className={styles.marketValueCell}>
-                {fmtUSD(marketValue || 0)}
-              </td>
+              <td className={styles.valueCell}>{fmtUSD(marketValue || 0)}</td>
               <td className={styles.allocationCell}>
-                <div className={styles.allocationPercent}>
-                  {allocationPct.toFixed(2)}%
-                </div>
                 <div className={styles.allocationBarWrapper}>
-                  <div
-                    className={styles.allocationBarFill}
-                    style={{ width: `${allocationPct}%` }}
-                  />
+                  <div className={styles.allocationPercent}>
+                    {allocationPct.toFixed(2)}%
+                  </div>
+                  <div className={styles.allocationBarTrack}>
+                    <div
+                      className={styles.allocationBarFill}
+                      style={{ width: `${allocationPct}%` }}
+                    />
+                  </div>
                 </div>
               </td>
             </tr>
@@ -55,4 +57,4 @@ const HoldingsTable: React.FC<Props> = ({ holdings }) => {
   );
 };
 
-export default React.memo(HoldingsTable);
+export default HoldingsTable;
