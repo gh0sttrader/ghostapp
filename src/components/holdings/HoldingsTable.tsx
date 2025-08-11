@@ -18,12 +18,22 @@ const fmtUSD = (n: number) =>
 
 const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
   const rows = useMemo(() => {
-    return holdings.map(h => {
+    const withMV = holdings.map(h => {
       const mv = typeof h.marketValue === "number"
         ? h.marketValue
         : ( (h.shares ?? 0) * (h.price ?? 0) );
       return { ...h, marketValue: mv };
     });
+
+    const total = withMV.reduce((acc, h) => acc + (h.marketValue ?? 0), 0) || 1;
+
+    return withMV
+      .sort((a,b) => (b.marketValue ?? 0) - (a.marketValue ?? 0))
+      .map(h => {
+        const mv = h.marketValue ?? 0;
+        const pct = mv / total;
+        return { symbol: h.symbol, marketValue: mv, allocationPct: pct };
+      });
   }, [holdings]);
 
   const total = useMemo(() => rows.reduce((acc, h) => acc + (h.marketValue ?? 0), 0), [rows]) || 1;
@@ -31,41 +41,39 @@ const HoldingsTable: React.FC<Props> = ({ holdings, className }) => {
   return (
     <div className={className}>
       {/* Header */}
-      <div className="grid grid-cols-12 gap-x-6 items-center px-3 pt-3 pb-2 text-[12px] text-zinc-400">
-        <div className="col-span-4">Symbol</div>
-        <div className="col-span-4 text-center">Market value</div>
-        <div className="col-span-4 text-right">Allocation</div>
+      <div className="grid grid-cols-[1fr_1fr_1.5fr] gap-x-4 items-center px-4 pb-2 pt-3 text-xs text-zinc-400">
+        <div className="col-span-1">Symbol</div>
+        <div className="col-span-1 text-center">Market value</div>
+        <div className="col-span-1 text-right">Allocation</div>
       </div>
 
       {/* Rows */}
       <div className="divide-y divide-white/10">
-        {rows.map((r, i) => {
-          const marketValue = r.marketValue ?? 0;
-          const pct = total > 0 ? (marketValue / total) * 100 : 0;
+        {rows.map(({symbol, marketValue, allocationPct}) => {
+          const width = Math.max(0, Math.min(100, allocationPct * 100));
           return (
-            <div key={`${r.symbol}-${i}`} className="grid grid-cols-12 gap-x-6 items-center px-3 py-3 min-h-[56px]">
+            <div key={symbol} className="grid grid-cols-[1fr_1fr_1.5fr] gap-x-4 items-center px-4 py-3 min-h-[56px]">
               {/* Symbol */}
-              <div className="col-span-4 text-[14px]">{r.symbol}</div>
+              <div className="col-span-1 text-sm font-medium">{symbol}</div>
 
-              {/* Market value — centered & vertically aligned */}
-              <div className="col-span-4 text-center text-[14px] tabular-nums flex items-center justify-center">
+              {/* Market value */}
+              <div className="col-span-1 text-center text-sm tabular-nums flex items-center justify-center">
                 {fmtUSD(marketValue)}
               </div>
               
               {/* Allocation */}
-              <div className="col-span-4 flex items-center justify-end">
-                <div className="relative">
-                  {/* % label above the bar, centered; this does NOT push the bar down */}
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[13px] tabular-nums text-zinc-400">
-                    {pct.toFixed(2)}%
-                  </span>
-                  {/* bar is vertically centered in the row, matching the MV text alignment */}
-                  <div className="w-28 h-2 rounded-full bg-white/10 overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: `${Math.min(100, Math.max(0, pct))}%`, backgroundColor: "#04cf7a" }}
-                    />
-                  </div>
+              <div className="col-span-1">
+                <div className="flex flex-col items-end" >
+                    <span className="text-xs text-zinc-300 tabular-nums mb-1.5">
+                        {width.toFixed(2)}%
+                    </span>
+                    <div className="w-full max-w-[140px] h-1.5 rounded-full bg-zinc-800/70 overflow-hidden">
+                        <div
+                            className="h-full rounded-full"
+                            style={{ width: `${width}%`, backgroundColor: "#04cf7a" }}
+                            aria-hidden="true"
+                        />
+                    </div>
                 </div>
               </div>
 
