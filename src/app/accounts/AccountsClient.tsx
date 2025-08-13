@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { HoldingsList } from '@/components/holdings-list';
 import { ActivityList } from '@/components/activity-list';
+import styles from '@/components/holdings/holdings-table.module.css';
 
 const chartData = {
   '1D': [
@@ -101,14 +102,15 @@ export default function AccountsClient() {
 
         <section className="mb-2">
           <p className="text-2xl font-bold">$10,182.17</p>
-          <div className="flex gap-4 text-xs">
-             <p className={cn("text-xs", currentReturn.isPositive ? "text-up" : "text-down")}>
-              {currentReturn.isPositive ? '+' : ''}${currentReturn.amount.toFixed(2)} ({currentReturn.isPositive ? '+' : ''}{currentReturn.percent.toFixed(2)}%) {activeTimeframe}
+          <div className="row-compact flex items-center gap-4 text-xs !py-1">
+             <p className={cn("value-compact", currentReturn.isPositive ? "text-up" : "text-down")}>
+              {currentReturn.isPositive ? '+' : ''}${currentReturn.amount.toFixed(2)} ({currentReturn.isPositive ? '+' : ''}{currentReturn.percent.toFixed(2)}%)
             </p>
+            <p className="label-compact">{activeTimeframe}</p>
           </div>
         </section>
 
-        <section className="mb-2 bg-black rounded-lg">
+        <section className="mb-2 bg-black rounded-lg pointer-events-none">
           <ChartContainer config={chartConfig} className="aspect-video h-[120px] w-full">
             <LineChart accessibilityLayer data={chartData[activeTimeframe as keyof typeof chartData]} margin={{ top: 10, bottom: 0, left: 5, right: 5 }}>
               <Line dataKey="value" type="monotone" stroke="var(--color-value)" strokeWidth={2} dot={false} />
@@ -137,6 +139,10 @@ export default function AccountsClient() {
         </div>
 
         <HoldingsList />
+        <section className="mt-8">
+            <h2 className={styles.header}>Asset Allocation</h2>
+            <div className="h-6" />
+        </section>
         <ActivityList />
 
         <AccountSwitcher
