@@ -33,14 +33,7 @@
   inset: 0 auto 0 0;
   border-radius: inherit;
   height: 8px;
-  /* The gradient you asked for (teal → purple), matching the app’s colorway. */
-  background: linear-gradient(
-    90deg,
-    var(--alloc-teal) 0%,
-    var(--alloc-blue) 40%,
-    var(--alloc-indigo) 70%,
-    var(--alloc-purple) 100%
-  );
+  background: linear-gradient(90deg, #4F0F99 0%, #2b52ba 100%); /* Gradient from deep purple to blue */
   /* We'll size width inlined from React based on % */
 }
 

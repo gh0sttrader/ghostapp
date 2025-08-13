@@ -1,6 +1,7 @@
 // src/components/holdings/HoldingsTable.tsx
 import React from "react";
 import styles from './holdings-table.module.css';
+import AllocationBar from '@/components/holdings/AllocationBar';
 
 type Holding = {
   symbol: string;
@@ -37,17 +38,8 @@ const HoldingsTable: React.FC<Props> = ({ holdings }) => {
               <td className={styles.symbolCell}>{symbol}</td>
               <td className={styles.valueCell}>{fmtUSD(marketValue || 0)}</td>
               <td className={styles.allocationCell}>
-                <div className={styles.allocationBarWrapper}>
-                  <div className={styles.allocationPercent}>
-                    {allocationPct.toFixed(2)}%
-                  </div>
-                  <div className={styles.allocationBarTrack}>
-                    <div
-                      className={styles.allocationBarFill}
-                      style={{ width: `${allocationPct}%` }}
-                    />
-                  </div>
-                </div>
+                {/* Use the AllocationBar component */}
+                <AllocationBar value={allocationPct} />
               </td>
             </tr>
           ))}
