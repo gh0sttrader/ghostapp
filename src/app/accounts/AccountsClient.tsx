@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { HoldingsList } from '@/components/holdings-list';
 import { ActivityList } from '@/components/activity-list';
-import styles from '@/components/holdings/holdings-table.module.css';
+import AssetAllocationSection from '@/components/AssetAllocationSection';
 
 const chartData = {
   '1D': [
@@ -139,10 +139,11 @@ export default function AccountsClient() {
         </div>
 
         <HoldingsList />
-        <section className="mt-8">
-            <h2 className={styles.header}>Asset Allocation</h2>
-            <div className="h-6" />
-        </section>
+        
+        <div className="mt-8">
+          <AssetAllocationSection />
+        </div>
+        
         <ActivityList />
 
         <AccountSwitcher
