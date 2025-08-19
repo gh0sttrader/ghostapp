@@ -4,11 +4,11 @@
 export default function AssetAllocationSection() {
   const COLORS = ["#6D28D9","#5B21B6","#3B82F6","#38BDF8","#22D3EE","#2DD4BF"];
   const sectors = [
-    { name: "Info Tech", value: 41.2 },
+    { name: "Information Technology", value: 41.2 },
     { name: "Healthcare", value: 14.6 },
     { name: "Financials", value: 12.3 },
-    { name: "Comm.", value: 11.8 },
-    { name: "Cons. Discr.", value: 10.1 },
+    { name: "Communication Services", value: 11.8 },
+    { name: "Consumer Discretionary", value: 10.1 },
     { name: "Industrials", value: 10.0 },
   ];
 
